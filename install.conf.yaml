@@ -26,6 +26,8 @@
         path: config/sxhkd
     ~/.config/thefuck:
         path: config/thefuck
+    ~/.config/ranger:
+        path: config/ranger
     ~/.mpd: mpd
     ~/.ncmpcpp: ncmpcpp
     ~/.asoundrc: asoundrc
@@ -35,4 +37,5 @@
     ~/.xbindkeysrc: xbindkeysrc
     ~/.Xresources.def: Xresources.def
     ~/.zsh_aliases: zsh_aliases
+    ~/.tmux.conf: tmux.conf
     ~/bin: bin
