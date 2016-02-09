@@ -2,7 +2,7 @@
 	name = pinusc
 	email = giuseppe.stelluto@gmail.com
 [core]
-	editor = vim
+	editor = nvim
 [push]
 	default = simple
 [alias]
