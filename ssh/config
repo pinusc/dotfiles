@@ -1,0 +1,3 @@
+Host pi
+  HostName gargantucervello
+  User pi

@@ -1,0 +1,9 @@
+[user]
+	name = pinusc
+	email = giuseppe.stelluto@gmail.com
+[core]
+	editor = vim
+[push]
+	default = simple
+[alias]
+	graph = log --graph --oneline --decorate

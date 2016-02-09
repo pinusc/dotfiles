@@ -1,0 +1,14 @@
+- clean: ['~']
+
+- link:
+    ~/.profile: profile
+    ~/.gitconfig: gitconfig
+    ~/.ssh/config:
+        path: ssh/config
+        create: true
+    ~/.zprofile: zprofile
+    ~/.zshenv: zshenv
+    ~/.zshrc: zshrc
+    ~/.Xmodmap: Xmodmap
+
+
