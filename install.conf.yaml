@@ -10,5 +10,29 @@
     ~/.zshenv: zshenv
     ~/.zshrc: zshrc
     ~/.Xmodmap: Xmodmap
-
-
+    ~/.config/bspwm:
+        path: config/bspwm
+    ~/.config/cava:
+        path: config/cava
+    ~/.config/cmus:
+        path: config/cmus
+    ~/.config/dunst:
+        path: config/dunst
+    ~/.config/htop:
+        path: config/htop
+    ~/.config/pianobar:
+        path: config/pianobar
+    ~/.config/sxhkd:
+        path: config/sxhkd
+    ~/.config/thefuck:
+        path: config/thefuck
+    ~/.mpd: mpd
+    ~/.ncmpcpp: ncmpcpp
+    ~/.asoundrc: asoundrc
+    ~/.dmenurc: dmenurc
+    ~/.editorconfig: editorconfig
+    ~/.fehbg: fehbg
+    ~/.xbindkeysrc: xbindkeysrc
+    ~/.Xresources.def: Xresources.def
+    ~/.zsh_aliases: zsh_aliases
+    ~/bin: bin

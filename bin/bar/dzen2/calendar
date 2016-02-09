@@ -1,0 +1,15 @@
+#!/bin/zsh
+source bin/colors.sh
+
+getcurpos() {
+    xdotool getmouselocation | egrep -oh "[0-9]+" | head -n 2
+}
+w=170
+x=$(( $(getcurpos | head -n 1) + 10 - w / 2))
+y=$(( $(getcurpos | tail -n 1) + 10 ))
+y=40
+text=$(cal -m | tail -n +2)
+l=$(($(echo "$text" | wc -l) - 1))
+text="^fg($c_blue)$text[0,21]^fg()$text[22,-1]"
+
+echo "$text" | dzen2 -p -x $x -y $y -w $w -l $l -sa 'l' -ta 'c' -title-name 'popup_sysinfo' -e 'onstart=uncollapse;button1=exit;leaveslave=exit' -fn "Source Code Pro for Powerline"

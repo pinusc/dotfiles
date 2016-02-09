@@ -1,0 +1,50 @@
+#!/bin/bash
+source ~/bin/colors.sh
+
+# FOREGROUND
+COLOR_FOREGROUND="#FF999999"
+COLOR_OCCUPIED_FG="$COLOR_FOREGROUND"
+COLOR_FREE_FG="#FF$base03_nohash"
+COLOR_URGENT_FG="#FF$base08_nohash"
+COLOR_FOCUSED_FG="#FF$base0D_nohash"
+# unused
+COLOR_ACTIVE_MONITOR_FG="#FF$base00_nohash"
+COLOR_INACTIVE_MONITOR_FG="#FF$base03_nohash"
+COLOR_LAYOUT_FG="#FF$base0A_nohash"
+COLOR_TITLE_FG="#FF$base00_nohash"
+# default
+# (these colors are explicitly set but really the default)
+COLOR_FOCUSED_OCCUPIED_FG="$COLOR_FOCUSED_FG"
+COLOR_FOCUSED_URGENT_FG="$COLOR_FOCUSED_FG"
+COLOR_FOCUSED_FREE_FG="$COLOR_FOCUSED_FG"
+COLOR_STATUS_FG="$COLOR_FOREGROUND"
+
+# BACKGROUND
+COLOR_BACKGROUND="#FF$base00_nohash"
+COLOR_FOCUSED_OCCUPIED_BG="#FF$base02_nohash"
+COLOR_FOCUSED_FREE_BG="#FF$base02_nohash"
+COLOR_FOCUSED_URGENT_BG="#FF$base08_nohash"
+# default
+# (these colors are explicitly set but really the default)
+COLOR_OCCUPIED_BG="#FF$base00_nohash"
+COLOR_FREE_BG="#FF$base00_nohash"
+COLOR_URGENT_BG="#FF$base00_nohash"
+COLOR_LAYOUT_BG="#FF$base00_nohash"
+COLOR_STATUS_BG="#FF$base00_nohash"
+# unused
+COLOR_ACTIVE_MONITOR_BG="#FF$base0B_nohash"
+COLOR_INACTIVE_MONITOR_BG="#FF$base00_nohash"
+COLOR_TITLE_BG="#FF$base08_nohash"
+
+COLOR_POMODORO_ACTIVE="#FF$base08_nohash"
+COLOR_POMODORO_PAUSE="#FF$base0B_nohash"
+COLOR_POMODORO_INACTIVE="$COLOR_FOREGROUND"
+
+COLOR_CLOCK="$COLOR_POMODORO_PAUSE"
+COLOR_DATE="#FF$base0A_nohash"
+
+SEP_R="\ue0b0"
+#SEP_R=""
+SEP_L="\ue0b2"
+POWERLINE_SEP_S_R="\ue0b1"
+POWERLINE_SEP_S_L="\ue0b3"

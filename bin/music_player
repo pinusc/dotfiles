@@ -1,0 +1,22 @@
+#!/bin/bash
+
+DESKTOP="^7"
+GEOMETRY="100x20" 
+
+VISUALIZER_NAME="cava_window"
+VISUALIZER_COMMAND="cava"
+
+PLAYER_NAME="ncmpcpp_window"
+PLAYER_COMMAND="ncmpcpp"
+
+if [ $1 != "-nk" ]; then
+    pkill ${PLAYER_COMMAND% *}
+    pkill ${VISUALIZER_COMMAND% *}
+fi
+bspc rule -a cava_window -o follow=on pseudo_tiled=on desktop=$DESKTOP split_dir=down
+
+urxvt -geometry "$GEOMETRY" -name "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
+
+bspc rule -a ncmpcpp_window -o follow=on pseudo_tiled=on desktop=$DESKTOP split_dir=up
+
+urxvt -geometry "$GEOMETRY" -name "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &

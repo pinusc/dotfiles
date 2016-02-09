@@ -1,0 +1,168 @@
+#! /bin/zsh
+
+PANEL_FIFO=/tmp/panel-fifo
+PANEL_FIFO_2=/tmp/panel-fifo-2
+PANEL_HEIGHT=27
+PANEL_Y=5
+#PANEL_FONT_FAMILY="Source Code Pro for Powerline:size=12"
+PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
+ICON_FONT="FontAwesome:size=14"
+ICON_FONT_2="untitled\-font\-1:size=18"
+dzencommand_music="~/bin/bar/dzen2/scripts/mpdzen"
+#ICON_FONT2="fontcustom:size=17"
+# export PANEL_FIFO PANEL_HEIGHT PANEL_FONT_FAMILY
+
+if [ $(pgrep -cx panel) -gt 1 ] ; then
+    printf "%s\n" "The panel is already running." >&2 exit 1
+fi
+
+# trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
+
+[ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
+mkfifo "$PANEL_FIFO"
+[ -e "$PANEL_FIFO_2" ] && rm "$PANEL_FIFO_2"
+mkfifo "$PANEL_FIFO_2"
+
+bspc config top_padding 35
+bspc control --subscribe > "$PANEL_FIFO" &
+bspc control --subscribe > "$PANEL_FIFO_2" &
+
+# window title
+# xtitle -sf 'T%s' > "$PANEL_FIFO" &
+
+# clock
+while true;
+do
+    # echo 'C\uf017'$(date +"%l:%M %p");
+    echo 'C\uf017 '$(fuzzyclock);
+    sleep 30;
+done > "$PANEL_FIFO" &
+
+# date
+while true; do 
+    dzen_cal="zsh ~/bin/bar/dzen2/calendar"
+    echo "D%{A:$dzen_cal:}\uf073 $(date +'%b %d')%{A}"
+    sleep 60
+done > $PANEL_FIFO &
+
+# battery
+#while true;
+#do
+#BATT_LEVEL=$(acpi -b | grep -o '[[:digit:]]\+%' | sed 's/%//')
+#	if [ $BATT_LEVEL -ge 80 ]
+#		then
+#			echo 'B\uf116' $BATT_LEVEL%
+#	fi
+#
+#	if [ $BATT_LEVEL -ge 30 -a $BATT_LEVEL -lt 80 ]
+#		then
+#			echo 'B\uf117' $BATT_LEVEL%
+#	fi
+#
+#	if [ $BATT_LEVEL -lt 30 ]
+#		then
+#			echo 'B%{T3}\uf115%{T1}' $BATT_LEVEL%
+#	fi
+
+
+#	sleep 30;
+#done > "$PANEL_FIFO" &
+
+# alsa volume
+while true;
+do
+    #ALSA_VOLUME=$(amixer get Master | grep 'Front Left: Playback' | grep -o '...%' | sed 's/\[//' | sed 's/%//' | sed 's/ //')
+    #ALSA_STATE=$(amixer get Master | grep 'Front Left: Playback' | grep -o '\[on]')
+    ALSA_STATE=1
+    # ALSA_VOLUME=$(check_volume 1)
+    # ALSA_VOLUME=${ALSA_VOLUME%?}
+    ALSA_VOLUME=$(amixer get Master | tail -n 1 | cut -d '[' -f 2 | sed 's/%.*//g')
+    if [ $ALSA_STATE ]
+    then
+        if [[ $ALSA_VOLUME -ge 70 ]]
+        then
+            echo V'\uf028' $ALSA_VOLUME
+        fi
+        if [[ $ALSA_VOLUME -gt 0 && $ALSA_VOLUME -lt 70 ]]
+        then
+            echo V'\uf027' $ALSA_VOLUME
+        fi
+        if [[ $ALSA_VOLUME -eq 0 ]]
+        then
+            echo V'\uf026' $ALSA_VOLUME
+        fi
+    else
+        echo V'\uf026' $ALSA_VOLUME
+    fi
+    sleep 5.0
+done > $PANEL_FIFO &
+
+#IP
+while true; do
+    echo -e I'\uf041' $(curl -s icanhazip.com)
+    sleep 10
+done > $PANEL_FIFO_2 &
+
+
+# wifi
+#while true;
+#do
+#WIFI_SSID=$(iw wlp2s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
+#WIFI_SIGNAL=$(iw wlp2s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
+#	echo L'\uf1eb' $WIFI_SSID '|' $WIFI_SIGNAL 'dBm'
+#	sleep 10
+#done > $PANEL_FIFO &
+
+# music controls
+while true;
+do
+    SONG_NAME=$(mpc -f "%title%" | head -n1)
+    if [ "${#SONG_NAME}" -gt 25 ]; then
+        SONG_NAME="${SONG_NAME:0:25}..."
+    fi
+    if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
+        if [[ -n $(mpc status | grep paused) ]]
+        then
+            echo "R%{T3}%{A:mpc prev:}\uf048%{A} %{A:mpc play:}\uf04b%{A}  %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
+        else
+            echo "R%{T3}%{A:mpc prev:}\uf048%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}\uf04c%{A}%{A} %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
+        fi
+    fi
+
+    sleep 1
+done > $PANEL_FIFO &
+
+# music play only
+while true;
+do
+    SONG_NAME=$(mpc | head -n1)
+    if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
+        if [[ -n $(mpc status | grep paused) ]]
+        then
+            command="play"
+            icon="\uf04b"
+        else
+            command="pause"
+            icon="\uf04c"
+        fi
+        echo "m%{A:mpc $command:}%{A3:$dzencommand_music:}$icon%{A}%{A}"
+        # echo "m%{A:mpc $command:}$icon%{A}"
+    fi
+
+    sleep 1
+done > $PANEL_FIFO_2 &
+
+#pomodoro
+while true; do
+    echo "P$(pomodoro -r -h)"
+    sleep 1
+done > $PANEL_FIFO &
+
+. panel_colors
+
+
+
+cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -a 20 -g 1350x$PANEL_HEIGHT+5+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+
+cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1430x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+wait

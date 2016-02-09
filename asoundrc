@@ -1,0 +1,42 @@
+pcm.eq {
+    type ladspa
+
+    # The output from the EQ can either go direct to a hardware device
+    # (if you have a hardware mixer, e.g. SBLive/Audigy) or it can go
+    # to the software mixer shown here.
+    #slave.pcm "plughw:0,0"
+    slave.pcm "plug:dmix"
+
+    # Sometimes you may need to specify the path to the plugins,
+    # especially if you have just installed them.  Once you have logged
+    # out/restarted this should not be necessary, but if you get errors
+    # about being unable to find plugins, try uncommenting this.
+    #path "/usr/lib/ladspa"
+
+    plugins [
+    {
+        label mbeq
+        id 1197
+        input {
+            # The following setting is just an example, edit to your own taste:
+            # bands: 50hz, 100hz, 156hz, 220hz, 311hz, 440hz, 622hz, 880hz, 1250hz, 1750hz, 25000hz,
+            # 50000hz, 10000hz, 20000hz
+            controls [ -5 -5 -5 -5 -5 -10 -20 -15 -10 -10 -10 -10 -10 -3 -2 ]
+            }
+        }
+    ]
+}
+
+# Redirect the default device to go via the EQ - you may want to do
+# this last, once you are sure everything is working.  Otherwise all
+# your audio programs will break/crash if something has gone wrong.
+pcm.!default {
+    type plug
+    slave.pcm "eq"
+}
+
+# Redirect the OSS emulation through the EQ too (when programs are running through "aoss")
+pcm.dsp0 {
+    type plug
+    slave.pcm "eq"
+}

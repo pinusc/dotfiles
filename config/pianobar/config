@@ -1,0 +1,6 @@
+user = giuseppe.stelluto@gmail.com
+password = peppe99
+#audio_quality = high
+control_proxy = http://198.11.173.5:3128
+#TLS_FINGERPRINT = 2D0AFDAFA16F4B5C0A43F3CB1D4752F9535507C0
+tls_fingerprint = 13CC51AC0C31CD96C55015C76914360F7AC41A00

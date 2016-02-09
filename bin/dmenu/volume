@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source ~/.dmenurc
+$dmenu_command -p '       Set volume %:' <<< "$(ponymix get-volume)"$'\n'"mute" | sed -n '/^[1-9]\?[0-9]$\|100\|^mute$/{s/[1-9]\?[0-9]\|100/ponymix set-volume &/ep; s/mute/ponymix toggle/ep; q}; q1'

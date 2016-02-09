@@ -1,0 +1,18 @@
+#!/bin/bash
+lock="/home/pinusc/.config/lock.png"
+scrot -d 0 /tmp/screen.png
+#convert /tmp/screenshot.png -blur 0x5 /tmp/screenshotblur.png &> /tmp/log1
+convert /tmp/screen.png -scale 10% -scale 1000% /tmp/screen.png
+convert /tmp/screen.png .config/lock.png -geometry +552+252 -composite -matte /tmp/screen.png
+
+pkill panel
+i3lock -u -b -i /tmp/screen.png
+panel &
+# trap "killall conky" EXIT
+# conky -c dotfiles/conkyrc2 &> /dev/null &
+
+# pid_conky=$!
+
+# wait $pid_i3
+
+# killall conky

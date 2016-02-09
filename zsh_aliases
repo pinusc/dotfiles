@@ -1,0 +1,78 @@
+alias upfont="sudo fc-cache -fv"
+alias cal="cal -m" # Monday it's always the first day of the week here!
+alias tmux="tmux -2"
+alias tmuxx="tmux"
+alias pingg="ping -a www.google.com"
+alias todo="~/gits/todo.txt_cli-2.10/todo.sh"
+alias shd="systemctl poweroff"
+alias rbt="systemctl reboot"
+alias sus="lock & systemctl suspend"
+alias hyb="lock & systemctl hibernate"
+alias v="source venv/bin/activate"
+alias d="deactivate"
+alias sshfse='sshfs pi@gargantucervello:Elements Elements'
+alias nfs4e='sudo mount.nfs4 gargantucervello:/mnt/Elements $HOME/Elements rsize=16384,wsize=16384'
+alias setclip='xclip -selection c'
+alias getclip='xclip -selection clipboard -o'
+
+#shortucts for programs
+#alias popcorntime="builds/popcorntime/Popcorn-Time"
+alias pop="xset s off;xset -dpms;xset s noblank;popcorntime"
+alias peermpv="peerflix -l --mpv"
+alias peervlc="peerflix -l --vlc"
+alias mus='nfs4e && mpd && music_player'
+alias subl3='/home/pinusc/builds/sublime_text_3/sublime_text'
+alias chrome='google-chrome-stable'
+alias chrometor='google-chrome-stable --proxy-server="socks://localhost:9050"'
+
+#fast edit shiortcuts
+alias vim="/usr/bin/nvim"
+alias vvim="/usr/bin/vim"
+alias :e=nvim
+alias :q=exit
+alias preztorc=":e ~/.zpreztorc"
+alias aliasrc=":e ~/.zsh_aliases"
+alias zshrc=":e ~/.zshrc"
+alias bspwmrc=":e ~/.config/bspwm/bspwmrc"
+alias sxhkdrc=":e ~/.config/sxhkd/sxhkdrc"
+alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresources"
+
+# fasd 
+#
+# alias v="f -e vim"
+alias v='f -t -e vim -b viminfo'
+alias a='fasd -a'        # any
+alias s='fasd -si'       # show / search / select
+alias d='fasd -d'        # directory
+alias f='fasd -f'        # file
+alias sd='fasd -sid'     # interactive directory selection
+alias sf='fasd -sif'     # interactive file selection
+alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+alias zz='fasd_cd -d -i' # cd with interactive selection
+
+addalias() {
+    echo "alias $1=\"$2\"" >> ~/.zsh_aliases
+}
+
+getwmname() {
+    xprop |awk '/WM_CLASS/{print $4}'
+}
+
+# return coordinates in the form 
+# x y 0 0
+# use head and tail to get x and y
+getcurpos() {
+    xdotool getmouselocation | egrep -oh "[0-9]+" | head -n 2
+}
+
+#pacman
+FRONTEND="pacaur"
+alias pac="$FRONTEND"
+alias paci="$FRONTEND -S"
+alias pacs="$FRONTEND -Ss"
+alias pacu="$FRONTEND -Syu"
+alias pacrem="$FRONTEND -Rns"
+alias pacq="$FRONTEND -Qq"
+alias pacx=pacrem
+
+#other aliases
