@@ -3,14 +3,14 @@ alias cal="cal -m" # Monday it's always the first day of the week here!
 alias tmux="tmux -2"
 alias tmuxx="tmux"
 alias pingg="ping -a www.google.com"
-alias todo="~/gits/todo.txt_cli-2.10/todo.sh"
+alias todo="todo.sh"
 alias shd="systemctl poweroff"
 alias rbt="systemctl reboot"
 alias sus="lock & systemctl suspend"
 alias hyb="lock & systemctl hibernate"
 alias v="source venv/bin/activate"
 alias d="deactivate"
-alias sshfse='sshfs pi@gargantucervello:Elements Elements'
+alias sshfse='sshfs pi@retropie:Elements /mnt/Elements'
 alias nfs4e='sudo mount.nfs4 gargantucervello:/mnt/Elements $HOME/Elements rsize=16384,wsize=16384'
 alias setclip='xclip -selection c'
 alias getclip='xclip -selection clipboard -o'
@@ -21,6 +21,7 @@ alias pop="xset s off;xset -dpms;xset s noblank;popcorntime"
 alias peermpv="peerflix -l --mpv"
 alias peervlc="peerflix -l --vlc"
 alias mus='nfs4e && mpd && music_player'
+alias mus_local='mpd & bin/bar/dzen2/scripts/mpdzen_loop & music_player && bspc desktop -f "^1"'
 alias subl3='/home/pinusc/builds/sublime_text_3/sublime_text'
 alias chrome='google-chrome-stable'
 alias chrometor='google-chrome-stable --proxy-server="socks://localhost:9050"'
@@ -40,7 +41,7 @@ alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresource
 # fasd 
 #
 # alias v="f -e vim"
-alias v='f -t -e vim -b viminfo'
+alias v='f -t -e nvim -b viminfo'
 alias a='fasd -a'        # any
 alias s='fasd -si'       # show / search / select
 alias d='fasd -d'        # directory
@@ -49,6 +50,8 @@ alias sd='fasd -sid'     # interactive directory selection
 alias sf='fasd -sif'     # interactive file selection
 alias z='fasd_cd -d'     # cd, same functionality as j in autojump
 alias zz='fasd_cd -d -i' # cd with interactive selection
+
+alias ls='ls --color=auto'
 
 addalias() {
     echo "alias $1=\"$2\"" >> ~/.zsh_aliases

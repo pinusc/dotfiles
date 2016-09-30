@@ -7,7 +7,7 @@ if ! zgen saved; then
     echo "Creating a zgen save"
 
     # prezto options
-    zgen prezto editor key-bindings 'vim'
+    zgen prezto editor key-bindings 'vi'
     zgen prezto prompt theme 'sorin'
 
     # prezto and modules
@@ -17,13 +17,14 @@ if ! zgen saved; then
 
     # completions
     zgen load zsh-users/zsh-completions src
+    zgen load Tarrasch/zsh-autoenv
 
     # save all to init script
     zgen save
 fi
 
 
-BASE16_SHELL="$HOME/.config/base16-shell/base16-eighties.dark.sh"
+BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 #
 # # Customize to your needs...
@@ -41,7 +42,6 @@ fi
 source "$fasd_cache"
 unset fasd_cache
 
-source ~/builds/zsh-autoenv/autoenv.zsh
 #
 # virtalenvwrapper
 # export WORKON_HOME=$HOME/.virtualenvs

@@ -3,17 +3,17 @@ source ~/bin/colors.sh
 
 RESPATH=( $0(:A:h) )
 
-FN_ARTIST='-*-*-*-*-*-*-14-*-*-*-*-*-*-*'
+FN_ARTIST='-*-gohufont-*-*-*-*-14-*-*-*-*-*-*-*'
 CL_SONG=$c_red
-FN_SONG='-*-*-*-*-*-*-18-*-*-*-*-*-*-*'
+FN_SONG='-*-gohufont-*-*-*-*-14-*-*-*-*-*-*-*'
 CL_ARTIST=$c_white
-FN_ALBUM='-*-*-*-*-*-*-10-*-*-*-*-*-*-*'
+FN_ALBUM='-*-gohufont-*-*-*-*-11-*-*-*-*-*-*-*'
 CL_ALBUM=$c_magenta
 
-FN_TIME='-*-*-*-*-*-*-8-*-*-*-*-*-*-*'
+FN_TIME='-*-gohufont-*-*-*-*-11-*-*-*-*-*-*-*'
 CL_TIME=$c_yellow
 
-FN_INFO='-*-*-*-*-*-*-8-*-*-*-*-*-*-*'
+FN_INFO='-*-gohufont-*-*-*-*-11-*-*-*-*-*-*-*'
 CL_INFO=''
 CL_BAR=$c_blue
 CL_BAR_UNDONE=$base03
@@ -53,6 +53,9 @@ fixw=90
 # center x under the mouse
 x=`xdotool getmouselocation | egrep -oh "[0-9]+" | head -n 1`
 x=$((x - W / 2))
+if [ $x -le 0 ]; then
+    x=5
+fi
 # y is height of bar + 10
 y=40
 
@@ -82,8 +85,8 @@ dcommand () {
 }
 
 # long interpret or song title? switch layout then.
-if (( $AW > 220 || $SW > 220)); then
-    (( $W < 395 )) && W=395
+if [ $AW -ge 220 ] || [ $SW -ge 220 ]; then
+    [ $W -ge 395 ] && W=395
     # this one moves 
     echo "^ib(1)" \
     "^pa(8;4)$img" \

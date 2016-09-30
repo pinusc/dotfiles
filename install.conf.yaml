@@ -39,3 +39,4 @@
     ~/.zsh_aliases: zsh_aliases
     ~/.tmux.conf: tmux.conf
     ~/bin: bin
+    ~/.: 

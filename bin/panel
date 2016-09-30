@@ -2,7 +2,7 @@
 
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_FIFO_2=/tmp/panel-fifo-2
-PANEL_HEIGHT=27
+PANEL_HEIGHT=32
 PANEL_Y=5
 #PANEL_FONT_FAMILY="Source Code Pro for Powerline:size=12"
 PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
@@ -24,8 +24,8 @@ mkfifo "$PANEL_FIFO"
 mkfifo "$PANEL_FIFO_2"
 
 bspc config top_padding 35
-bspc control --subscribe > "$PANEL_FIFO" &
-bspc control --subscribe > "$PANEL_FIFO_2" &
+bspc subscribe > "$PANEL_FIFO" &
+#bspc control --subscribe > "$PANEL_FIFO_2" &
 
 # window title
 # xtitle -sf 'T%s' > "$PANEL_FIFO" &
@@ -34,7 +34,7 @@ bspc control --subscribe > "$PANEL_FIFO_2" &
 while true;
 do
     # echo 'C\uf017'$(date +"%l:%M %p");
-    echo 'C\uf017 '$(fuzzyclock);
+    echo 'C\uf017 '$(bash-fuzzy-clock);
     sleep 30;
 done > "$PANEL_FIFO" &
 
@@ -105,28 +105,39 @@ done > $PANEL_FIFO_2 &
 
 
 # wifi
-#while true;
-#do
-#WIFI_SSID=$(iw wlp2s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
-#WIFI_SIGNAL=$(iw wlp2s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
-#	echo L'\uf1eb' $WIFI_SSID '|' $WIFI_SIGNAL 'dBm'
-#	sleep 10
-#done > $PANEL_FIFO &
+while true;
+do
+    if [[ $(pingtest.sh 8.8.8.8 ) = "Up" ]]; then
+	WIFI_SSID=$(iw wlp3s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
+	WIFI_SIGNAL=$(iw wlp3s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
+	if [[ $(pingtest.sh 8.8.8.8) = "Up" ]]; then
+	    connIcon="\uf140"
+	else
+	    connIcon="\uf10c"
+	fi
+	echo L'\uf1eb' $WIFI_SSID '|' $WIFI_SIGNAL 'dBm'
+    else 
+	echo L'\uf05e'
+    fi
+    sleep 10
+done > $PANEL_FIFO &
 
 # music controls
 while true;
 do
-    SONG_NAME=$(mpc -f "%title%" | head -n1)
-    if [ "${#SONG_NAME}" -gt 25 ]; then
-        SONG_NAME="${SONG_NAME:0:25}..."
-    fi
-    if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
-        if [[ -n $(mpc status | grep paused) ]]
-        then
-            echo "R%{T3}%{A:mpc prev:}\uf048%{A} %{A:mpc play:}\uf04b%{A}  %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
-        else
-            echo "R%{T3}%{A:mpc prev:}\uf048%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}\uf04c%{A}%{A} %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
+    if [[ $(mpc) ]]; then
+        SONG_NAME=$(mpc -f "%title%" | head -n1)
+        if [ "${#SONG_NAME}" -gt 25 ]; then
+            SONG_NAME="${SONG_NAME:0:25}..."
         fi
+        if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
+            if [[ -n $(mpc status | grep paused) ]]
+            then
+                echo "R%{T3}%{A:mpc prev:}\uf048%{A} %{A:mpc play:}\uf04b%{A}  %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
+            else
+                echo "R%{T3}%{A:mpc prev:}\uf048%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}\uf04c%{A}%{A} %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
+            fi
+	fi
     fi
 
     sleep 1
@@ -135,20 +146,19 @@ done > $PANEL_FIFO &
 # music play only
 while true;
 do
-    SONG_NAME=$(mpc | head -n1)
-    if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
-        if [[ -n $(mpc status | grep paused) ]]
-        then
-            command="play"
-            icon="\uf04b"
-        else
-            command="pause"
-            icon="\uf04c"
+        SONG_NAME=$(mpc | head -n1)
+        if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
+            if [[ -n $(mpc status | grep paused) ]]
+            then
+                command="play"
+                icon="\uf04b"
+            else
+                command="pause"
+                icon="\uf04c"
+            fi
+            echo "m%{A:mpc $command:}%{A3:$dzencommand_music:}$icon%{A}%{A}"
+            # echo "m%{A:mpc $command:}$icon%{A}"
         fi
-        echo "m%{A:mpc $command:}%{A3:$dzencommand_music:}$icon%{A}%{A}"
-        # echo "m%{A:mpc $command:}$icon%{A}"
-    fi
-
     sleep 1
 done > $PANEL_FIFO_2 &
 
@@ -160,9 +170,41 @@ done > $PANEL_FIFO &
 
 . panel_colors
 
+#battery
+while true; do
+    power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
+    bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//")
+    if [[ $power = "on" ]]; then
+	bicon="\uf21e"
+	bcolor="f"
+    elif [[ $bcharge -ge 95 ]]; then
+	bicon="\uf240"
+	bcolor="f"
+    elif [[ $bcharge -ge 65 ]]; then
+	bicon="\uf241"
+	bcolor="f"
+    elif [[ $bcharge -ge 35 ]]; then
+	bicon="\uf242"
+	bcolor="m"
+    elif [[ $bcharge -ge 10 ]]; then
+	bicon="\uf243"
+	bcolor="m"
+    else
+	bicon="\uf244"
+	bcolor="e"
+    fi
+    echo "B$bcolor$bicon $bcharge%"
+    sleep 1
+done > $PANEL_FIFO &
+
+#keyboard
+while true; do
+    echo "K$(setxkbmap -query | tail -c 3)"
+    sleep 1
+done > $PANEL_FIFO &
 
 
-cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -a 20 -g 1350x$PANEL_HEIGHT+5+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -a 20 -o -4 -g 1910x$PANEL_HEIGHT+5+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
 
-cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1430x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+#cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1430x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
 wait

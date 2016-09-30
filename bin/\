@@ -8,7 +8,7 @@ current_monitor=$1
 while read -r line ; do
     case $line in
         K*)
-            keyboard="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}$PADDING"
+            keyboard="$PADDING%{F$COLOR_KEYBOARD}|${line#?}|%{F-}$PADDING"
             ;;
 	B*)
 	    bcolor=$COLOR_CLOCK

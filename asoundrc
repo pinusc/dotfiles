@@ -40,3 +40,7 @@ pcm.dsp0 {
     type plug
     slave.pcm "eq"
 }
+
+defaults.pcm.!card 0
+defaults.ctl.!card 0
+
