@@ -46,6 +46,7 @@ COLOR_BATTERY_FULL="#FF$base0B_nohash"
 COLOR_BATTERY_MEDIUM="#FF$base0A_nohash"
 COLOR_BATTERY_EMPTY="#FF$base08_nohash"
 COLOR_KEYBOARD="#FF$base0D_nohash"
+COLOR_KEYBOARD_DISABLED="#FF$base0_nohash"
 
 SEP_R="\ue0b0"
 #SEP_R=""

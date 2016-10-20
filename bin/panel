@@ -9,6 +9,7 @@ PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
 ICON_FONT="FontAwesome:size=14"
 ICON_FONT_2="untitled\-font\-1:size=18"
 dzencommand_music="~/bin/bar/dzen2/scripts/mpdzen"
+dkeyboard="~/bin/dkeyboard"
 #ICON_FONT2="fontcustom:size=17"
 # export PANEL_FIFO PANEL_HEIGHT PANEL_FONT_FAMILY
 
@@ -94,7 +95,7 @@ do
     else
         echo V'\uf026' $ALSA_VOLUME
     fi
-    sleep 5.0
+    sleep 1.0
 done > $PANEL_FIFO &
 
 #IP
@@ -199,7 +200,13 @@ done > $PANEL_FIFO &
 
 #keyboard
 while true; do
+    color="b"
+    read -r var< "/home/pinusc/.keyboard"
+    if [ $var = "disabled" ]; then
+        color="r"
+    fi
     echo "K$(setxkbmap -query | tail -c 3)"
+    echo "Kc$color%{A:$dkeyboard:}\uf11c%{A}"
     sleep 1
 done > $PANEL_FIFO &
 
