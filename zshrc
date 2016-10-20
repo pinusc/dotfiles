@@ -1,34 +1,12 @@
 source $HOME/.zprofile
 # load zgen
 source "${HOME}/builds/zgen/zgen.zsh"
-
-# check if there's no init script
-if ! zgen saved; then
-    echo "Creating a zgen save"
-
-    # prezto options
-    zgen prezto editor key-bindings 'vi'
-    zgen prezto prompt theme 'sorin'
-
-    # prezto and modules
-    zgen prezto
-    zgen prezto git
-    zgen prezto syntax-highlighting
-
-    # completions
-    zgen load zsh-users/zsh-completions src
-    zgen load Tarrasch/zsh-autoenv
-
-    # save all to init script
-    zgen save
-fi
-
+source ~/.zsh_aliases
 
 BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 #
 # # Customize to your needs...
-source ~/.zsh_aliases
 
 alias lrvm='[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"'
 
@@ -52,4 +30,26 @@ unset fasd_cache
 eval "$(dircolors ~/.config/dircolors)";
 
 export TERM="xterm-256color"
-prompt sorin
+
+# check if there's no init script
+if ! zgen saved; then
+    echo "Creating a zgen save"
+
+    # prezto options
+    zgen prezto editor key-bindings 'vi'
+    zgen prezto prompt theme 'sorin'
+
+    # prezto and modules
+    zgen prezto
+    zgen prezto git
+    zgen prezto syntax-highlighting
+    zgen prezto history-substring-search 
+
+    # completions
+    zgen load zsh-users/zsh-completions src
+    zgen load Tarrasch/zsh-autoenv
+    zgen load zsh-users/zsh-syntax-highlighting
+
+    # save all to init script
+    zgen save
+fi

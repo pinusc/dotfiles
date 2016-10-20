@@ -14,3 +14,6 @@ path=(
   $(ruby -rubygems -e "puts Gem.user_dir")/bin
   $path
 )
+
+export VISUAL=nvim
+export EDITOR="$VISUAL"
