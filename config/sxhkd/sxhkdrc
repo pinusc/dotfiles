@@ -94,8 +94,8 @@ super + ctrl + {1-9}
 #super + {_,shift,alt}+{1-9,0}
 #bspc {desktop -f,node -d} ^{1-9,10}
 
-super + {_,shift} + {1-8}
-	bspc desktop -f "{1-2}:^{1-8}"
+super + {_,shift} + {1-9,0}
+	bspc desktop -f "{1-2}:^{1-9,10}"
 
 super + alt + {_,shift} + {1-8}
 	bspc node -d "{1-2}:^{1-8}"
@@ -188,6 +188,9 @@ super + F11
 
 XF86MonBrightness{Up,Down}
   xbacklight {+,-} 10
+
+XF86Audio{Raise,Lower}Volume
+  amixer -q set Master 5%{+,-}
 
 super + End
   mpc toggle
