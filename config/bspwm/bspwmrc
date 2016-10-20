@@ -32,11 +32,13 @@ bspc monitor "eDP1" -n 1 -d \
     $(echo -e '1\uf0ac')   `# internet` \
     $(echo -e '1\uf121')   `# editor` \
     $(echo -e '1\uf120')   `# terminal ` \
+    $(echo -e '1\uf15c')   `# document` \
     $(echo -e '1\uf109')   `# desktop` \
     $(echo -e '1\uf03e')   `# image` \
     $(echo -e '1\uf16a')   `# player` \
     $(echo -e '1\uf025')   `# music` \
-    $(echo -e '1\uf135')   `# rocket`
+    $(echo -e '1\uf135')   `# rocket` \
+    $(echo -e '1\uf013')   `# gear`
 #bspc monitor "DVI-I-0" -n 2 -d \
 #    $(echo -e '2\uf0ac')  `#internet` \
 #    $(echo -e '2\uf121')  `# editor` \
@@ -75,13 +77,17 @@ bspc config urgent_border_color "EF5847"
 
 # Rules
 bspc rule -a sxiv floating=on follow=on center=on
-bspc rule -a lxappearance desktop="^4" floating=on center=on
-bspc rule -a pavucontrol desktop="^7" floating=on follow=on center=on
+bspc rule -a lxappearance desktop="^8" floating=on center=on
+bspc rule -a pavucontrol desktop="^8" floating=on follow=on center=on
+bspc rule -a libreoffice-writer  follow=on desktop="^4"
+
 bspc rule -a google-chrome follow=on desktop="^1"
+bspc rule -a vivaldi-stable follow=on desktop="^1"
 bspc rule -a firefox follow=on desktop="^1"
-bspc rule -a gimp floating=on desktop="^5"
-bspc rule -a vlc follow=on desktop="^7"
-bspc rule -a mpv follow=on desktop="^7"
+
+bspc rule -a gimp floating=on desktop="^6"
+bspc rule -a vlc follow=on desktop="^8"
+bspc rule -a mpv follow=on desktop="^8"
 
 if [ -e "$BSPWM_TREE" ] ; then
     bspc restore -T "$BSPWM_TREE" -H "$BSPWM_HISTORY" -S "$BSPWM_STACK"
@@ -93,7 +99,7 @@ nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +0+0 {Force
 #conky -c dotfiles/conkyrc2  # clock
 
 xrdb -merge /home/pinusc/.Xresources &
-setxkbmap it
+# setxkbmap it
 xmodmap ~/.Xmodmap
 sxhkd &
 clipmenud &
@@ -111,5 +117,6 @@ xsetroot -cursor_name left_ptr &
 # xset s off & xset -dpms & xset s noblank &
 # # avoid screen tearing
 compton -cbG &
+mpd &
 
-#xautolock -time 10 -locker lock
+xautolock -time 10 -locker lock
