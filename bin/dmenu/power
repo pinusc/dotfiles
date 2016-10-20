@@ -17,4 +17,9 @@ lock\n
 command=$(echo -e $COMMANDS | \
     $dmenu_command -p "                    power:")
 [ "$command" = "" ] && exit 1
-systemctl $command && exit 0
+if [[ "${command#?}" = "lock" ]]; then
+    lock
+else
+    systemctl $command
+fi
+exit 0
