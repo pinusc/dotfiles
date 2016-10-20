@@ -1,13 +1,19 @@
-#!/bin/bash
+#!/bin/zsh
 lock="/home/pinusc/.config/lock.png"
+lockDim="256x256"
 scrot -d 0 /tmp/screen.png
 #convert /tmp/screenshot.png -blur 0x5 /tmp/screenshotblur.png &> /tmp/log1
 convert /tmp/screen.png -scale 10% -scale 1000% /tmp/screen.png
-convert /tmp/screen.png .config/lock.png -geometry +552+252 -composite -matte /tmp/screen.png
+geom=$(xrandr | fgrep '*' | sed -n 's/\s*\([0-9]*x[0-9]*\).*/\1/p' | sed -n 's/x/ /p')
+echo "$geom" | read X Y
+echo $lockDim | sed -n 's/x/ /p' | read x y
+x=$(( X/2 - x/2 ))
+y=$(( Y/2 - y/2 ))
+convert /tmp/screen.png .config/lock.png -geometry "+$x+$y" -composite -matte /tmp/screen.png
 
-pkill panel
+# pkill panel
 i3lock -u -b -i /tmp/screen.png
-panel &
+# panel &
 # trap "killall conky" EXIT
 # conky -c dotfiles/conkyrc2 &> /dev/null &
 
