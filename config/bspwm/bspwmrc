@@ -66,7 +66,7 @@ bspc config auto_alternate true
 bspc config auto_cancel true
 bspc config normal_frame_opacity 0.0
 bspc config focused_frame_opacity 0.1
-bspc config border_width 40
+bspc config border_width 3
 
 # colors
 bspc config focused_border_color "#6699cc"
@@ -102,14 +102,14 @@ xrdb -merge /home/pinusc/.Xresources &
 # setxkbmap it
 xmodmap ~/.Xmodmap
 sxhkd &
-clipmenud &
+# clipmenud &
 
 # feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper
 randomwallpaper.sh
 panel &
 
 # so the pointer appears in the middle of the first monitor
-xdotool mousemove 680 384 &
+# xdotool mousemove 680 384 &
 bspc desktop -f \^1
 xsetroot -cursor_name left_ptr &
 
