@@ -10,6 +10,7 @@ ICON_FONT="FontAwesome:size=14"
 ICON_FONT_2="untitled\-font\-1:size=18"
 dzencommand_music="~/bin/bar/dzen2/scripts/mpdzen"
 dkeyboard="~/bin/dkeyboard"
+MAILDIR="$HOME/Maildir/School/INBOX/cur"
 #ICON_FONT2="fontcustom:size=17"
 # export PANEL_FIFO PANEL_HEIGHT PANEL_FONT_FAMILY
 
@@ -30,6 +31,15 @@ bspc subscribe > "$PANEL_FIFO" &
 
 # window title
 # xtitle -sf 'T%s' > "$PANEL_FIFO" &
+#
+
+# mail
+while true;
+do
+    count=$(ls "$MAILDIR" | grep -v '.*2,.*S' | wc -l)
+    echo "M\uf0e0 $count"
+    sleep 350
+done > "$PANEL_FIFO" &
 
 # clock
 while true;
@@ -106,8 +116,7 @@ done > $PANEL_FIFO_2 &
 
 
 # wifi
-while true;
-do
+wifi() {
     if [[ $(pingtest.sh 8.8.8.8 ) = "Up" ]]; then
 	WIFI_SSID=$(iw wlp3s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
 	WIFI_SIGNAL=$(iw wlp3s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
@@ -120,12 +129,10 @@ do
     else 
 	echo L'\uf05e'
     fi
-    sleep 10
-done > $PANEL_FIFO &
+}
 
 # music controls
-while true;
-do
+music() {
     if [[ $(mpc) ]]; then
         SONG_NAME=$(mpc -f "%title%" | head -n1)
         if [ "${#SONG_NAME}" -gt 25 ]; then
@@ -140,13 +147,10 @@ do
             fi
 	fi
     fi
-
-    sleep 1
-done > $PANEL_FIFO &
+}
 
 # music play only
-while true;
-do
+musicp() {
         SONG_NAME=$(mpc | head -n1)
         if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
             if [[ -n $(mpc status | grep paused) ]]
@@ -161,18 +165,17 @@ do
             # echo "m%{A:mpc $command:}$icon%{A}"
         fi
     sleep 1
-done > $PANEL_FIFO_2 &
+}
 
 #pomodoro
-while true; do
+pomodoro() {
     echo "P$(pomodoro -r -h)"
-    sleep 1
-done > $PANEL_FIFO &
+}
 
 . panel_colors
 
 #battery
-while true; do
+battery() {
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
     bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//")
     if [[ $power = "on" ]]; then
@@ -195,11 +198,10 @@ while true; do
 	bcolor="e"
     fi
     echo "B$bcolor$bicon $bcharge%"
-    sleep 1
-done > $PANEL_FIFO &
+}
 
 #keyboard
-while true; do
+keyboard() {
     color="b"
     read -r var< "/home/pinusc/.keyboard"
     if [ $var = "disabled" ]; then
@@ -207,11 +209,32 @@ while true; do
     fi
     echo "K$(setxkbmap -query | tail -c 3)"
     echo "Kc$color%{A:$dkeyboard:}\uf11c%{A}"
+}
+
+i=0
+while true; do
+    keyboard
+    battery
+    # pomodoro
+    music
+    wifi
     sleep 1
 done > $PANEL_FIFO &
 
-
-cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -a 20 -o -4 -g 1910x$PANEL_HEIGHT+5+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+PANEL_WM_NAME="bar_wmname"
+cat "$PANEL_FIFO" | panel_bar 1 | lemonbar  -n "$PANEL_WM_NAME" -a 20 -o -4 -g 1910x$PANEL_HEIGHT+5+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
 
 #cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1430x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+
+
+d=$(xdo id -a "$PANEL_WM_NAME")
+tries_left=20
+while [ -z "$wid" -a "$tries_left" -gt 0 ] ; do
+	sleep 0.05
+	wid=$(xdo id -a "$PANEL_WM_NAME")
+	tries_left=$((tries_left - 1))
+done
+[ -n "$wid" ] && xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"
+
 wait
+

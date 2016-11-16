@@ -7,6 +7,9 @@ current_monitor=$1
 
 while read -r line ; do
     case $line in
+        M*)
+            mail="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}$PADDING"
+            ;;
         Kc*)
             case $line in
                 Kcb*)
@@ -173,7 +176,7 @@ while read -r line ; do
     #printf "%s\n" "%{l}${wm_infos}%{Sf}%{c}${music}%{r}${volume}${date}${clock}"
     case $current_monitor in
         1)
-            echo -e "%{l}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${keyboard_icon}${keyboard}${date}${clock}"
+            echo -e "%{l}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${keyboard_icon}${keyboard}${mail}${date}${clock}"
             ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"
