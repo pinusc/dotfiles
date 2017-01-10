@@ -109,18 +109,18 @@ sxhkd &
 randomwallpaper.sh
 panel &
 
-# so the pointer appears in the middle of the first monitor
-# xdotool mousemove 680 384 &
-bspc desktop -f \^1
-xsetroot -cursor_name left_ptr &
-
 # disable screensaver
 # xset s off & xset -dpms & xset s noblank &
 # # avoid screen tearing
 compton -cbG &
 mpd &
-music_player &
 
+music_player &
 
 xautolock -time 10 -locker lock
 redshift -t 5500:3700 &
+
+# so the pointer appears in the middle of the first monitor
+# xdotool mousemove 680 384 &
+bspc desktop -f \^1
+xsetroot -cursor_name left_ptr &
