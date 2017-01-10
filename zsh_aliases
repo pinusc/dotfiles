@@ -41,7 +41,7 @@ alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresource
 # fasd 
 #
 # alias v="f -e vim"
-alias v='f -t -e nvim -b viminfo'
+# alias v='f -t -e nvim -b viminfo'
 alias a='fasd -a'        # any
 alias s='fasd -si'       # show / search / select
 alias d='fasd -d'        # directory
@@ -51,7 +51,13 @@ alias sf='fasd -sif'     # interactive file selection
 alias z='fasd_cd -d'     # cd, same functionality as j in autojump
 alias zz='fasd_cd -d -i' # cd with interactive selection
 
+# fzf
+alias v='vim $(fzf)'
+
 alias ls='ls --color=auto'
+
+J=_JAVA_AWT_WM_NONREPARENTING=1
+alias t="$J java -jar ~/bin/jdotxt-0.4.8.jar"
 
 addalias() {
     echo "alias $1=\"$2\"" >> ~/.zsh_aliases

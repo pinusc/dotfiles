@@ -172,7 +172,7 @@ pomodoro() {
     echo "P$(pomodoro -r -h)"
 }
 
-. panel_colors
+. panel_colors light
 
 #battery
 battery() {
@@ -234,7 +234,7 @@ while [ -z "$wid" -a "$tries_left" -gt 0 ] ; do
 	wid=$(xdo id -a "$PANEL_WM_NAME")
 	tries_left=$((tries_left - 1))
 done
-[ -n "$wid" ] && xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"
+# [ -n "$wid" ] && xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"
 
 wait
 

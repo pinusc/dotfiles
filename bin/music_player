@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DESKTOP="^7"
-GEOMETRY="120x30" 
+DESKTOP="^8"
+GEOMETRY="118x30" 
 
 VISUALIZER_NAME="cava_window"
 VISUALIZER_COMMAND="cava"
@@ -18,6 +18,8 @@ bspc rule -a URxvt:cava_window -o follow=on desktop=$DESKTOP state=pseudo_tiled 
 
 urxvt -geometry "$GEOMETRY" -name "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
 
-bspc rule -a URxvt:ncmpcpp_window -o desktop=$DESKTOP state=pseudo_tiled;
+sleep 0.1;
+
+bspc rule -a URxvt:ncmpcpp_window -o desktop=$DESKTOP state=pseudo_tiled split_dir=north;
 
 urxvt -geometry "$GEOMETRY" -name "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &

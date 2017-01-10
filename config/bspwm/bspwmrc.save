@@ -39,15 +39,15 @@ bspc monitor "eDP1" -n 1 -d \
     $(echo -e '1\uf025')   `# music` \
     $(echo -e '1\uf135')   `# rocket` \
     $(echo -e '1\uf013')   `# gear`
-bspc monitor "HDMI1" -n 2 -d \
-   $(echo -e '2\uf0ac')  `#internet` \
-   $(echo -e '2\uf121')  `# editor` \
-   $(echo -e '2\uf120')  `# terminal` \
-   $(echo -e '2\uf02d')  `# man` \
-   $(echo -e '2\uf025')  `# music` \
-   $(echo -e '2\uf21e')  `# heartbeat` \
-   $(echo -e '2\uf094')  `# lemon` \
-   $(echo -e '2\uf130')  `# phone`
+#bspc monitor "DVI-I-0" -n 2 -d \
+#    $(echo -e '2\uf0ac')  `#internet` \
+#    $(echo -e '2\uf121')  `# editor` \
+#    $(echo -e '2\uf120')  `# terminal` \
+#    $(echo -e '2\uf02d')  `# man` \
+#    $(echo -e '2\uf025')  `# music` \
+#    $(echo -e '2\uf21e')  `# heartbeat` \
+#    $(echo -e '2\uf094')  `# lemon` \
+#    $(echo -e '2\uf130')  `# phone`
 NMON=1
 
 # bspc monitor ^1 -s ^2

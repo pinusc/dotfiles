@@ -117,6 +117,9 @@ super + shift + {o,p}
 
 super + ctrl + alt + p
 	bspc node -t \~pseudo_tiled
+super + shift + t
+	bspc node -t \~pseudo_tiled
+
 
 super + ctrl + {Left,Down,Up,Right}
 	bspc node -p {\~west,\~south,\~north,\~east}
@@ -170,6 +173,9 @@ super + m
     clerk
 super + p
     ~/bin/dmenu/power
+
+super + g
+    _JAVA_AWT_WM_NONREPARENTING=1 java -jar /home/pinusc/bin/jdotxt-0.4.8.jar
 
 super + z
     info-notify

@@ -1,5 +1,5 @@
 #! /bin/sh
-. panel_colors
+. panel_colors light
 
 num_mon=$(bspc query -M | wc -l)
 PADDING=" "

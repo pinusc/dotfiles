@@ -5,6 +5,10 @@ source ~/.zsh_aliases
 
 BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+
+if [ -n "$PS1" ]; then # if statement guards adding these helpers for non-interative shells
+  eval "$(~/.config/base16-shell/profile_helper.sh)"
+fi
 #
 # # Customize to your needs...
 
@@ -19,6 +23,10 @@ if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
 fi
 source "$fasd_cache"
 unset fasd_cache
+
+source /usr/share/fzf/*.zsh
+
+export FZF_DEFAULT_COMMAND='ag -f -g ""' 
 
 #
 # virtalenvwrapper
