@@ -3,14 +3,19 @@
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_FIFO_2=/tmp/panel-fifo-2
 PANEL_HEIGHT=32
+PANEL_WIDTH=1920
+XSHIFT=0
+YSHIFT=0
 PANEL_Y=5
 #PANEL_FONT_FAMILY="Source Code Pro for Powerline:size=12"
-PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
-ICON_FONT="FontAwesome:size=14"
+# PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
+PANEL_FONT_FAMILY="Nunito:size=13"
+ICON_FONT="FontAwesome:size=17"
 ICON_FONT_2="untitled\-font\-1:size=18"
 dzencommand_music="~/bin/bar/dzen2/scripts/mpdzen"
 dkeyboard="~/bin/dkeyboard"
 MAILDIR="$HOME/Maildir/School/INBOX/cur"
+PADDING="  "
 #ICON_FONT2="fontcustom:size=17"
 # export PANEL_FIFO PANEL_HEIGHT PANEL_FONT_FAMILY
 
@@ -37,7 +42,7 @@ bspc subscribe > "$PANEL_FIFO" &
 while true;
 do
     count=$(ls "$MAILDIR" | grep -v '.*2,.*S' | wc -l)
-    echo "M\uf0e0 $count"
+    echo "M\uf0e0$PADDING$count"
     sleep 350
 done > "$PANEL_FIFO" &
 
@@ -45,14 +50,14 @@ done > "$PANEL_FIFO" &
 while true;
 do
     # echo 'C\uf017'$(date +"%l:%M %p");
-    echo 'C\uf017 '$(bash-fuzzy-clock);
+    echo 'C\uf017'$PADDING$(bash-fuzzy-clock);
     sleep 30;
 done > "$PANEL_FIFO" &
 
 # date
 while true; do 
     dzen_cal="zsh ~/bin/bar/dzen2/calendar"
-    echo "D%{A:$dzen_cal:}\uf073 $(date +'%b %d')%{A}"
+    echo "D%{A:$dzen_cal:}\uf073$PADDING$(date +'%b %d')%{A}"
     sleep 60
 done > $PANEL_FIFO &
 
@@ -177,7 +182,7 @@ pomodoro() {
 #battery
 battery() {
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
-    bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//")
+    bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+\\?//")
     if [[ $power = "on" ]]; then
 	bicon="\uf21e"
 	bcolor="f"
@@ -222,7 +227,7 @@ while true; do
 done > $PANEL_FIFO &
 
 PANEL_WM_NAME="bar_wmname"
-cat "$PANEL_FIFO" | panel_bar 1 | lemonbar  -n "$PANEL_WM_NAME" -a 20 -o -4 -g 1910x$PANEL_HEIGHT+5+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
+cat "$PANEL_FIFO" | panel_bar 1 | lemonbar  -n "$PANEL_WM_NAME" -a 20 -o -3 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$XSHIFT+$YSHIFT -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
 
 #cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1430x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
 

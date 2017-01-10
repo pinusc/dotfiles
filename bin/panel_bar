@@ -2,7 +2,7 @@
 . panel_colors light
 
 num_mon=$(bspc query -M | wc -l)
-PADDING=" "
+PADDING="  "
 current_monitor=$1
 
 while read -r line ; do
