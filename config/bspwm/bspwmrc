@@ -52,7 +52,7 @@ NMON=1
 
 # bspc monitor ^1 -s ^2
 
-bspc config -m 1 top_padding 32
+# bspc config -m 1 top_padding 37
 bspc config window_gap 5
 
 # Visual options
@@ -78,7 +78,7 @@ bspc config urgent_border_color "EF5847"
 # Rules
 bspc rule -a sxiv floating=on follow=on center=on
 bspc rule -a lxappearance desktop="^8" floating=on center=on
-bspc rule -a pavucontrol desktop="^8" floating=on follow=on center=on
+bspc rule -a Pavucontrol floating=on center=on
 bspc rule -a libreoffice-writer  follow=on desktop="^4"
 
 bspc rule -a google-chrome follow=on desktop="^1"
@@ -107,20 +107,19 @@ sxhkd &
 
 # feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper
 randomwallpaper.sh
-panel &
 
 # so the pointer appears in the middle of the first monitor
 # xdotool mousemove 680 384 &
-bspc desktop -f \^1
 xsetroot -cursor_name left_ptr &
 
 # disable screensaver
 # xset s off & xset -dpms & xset s noblank &
 # # avoid screen tearing
-compton -cbG &
+# compton -cbG &
+# xautolock -time 10 -locker lock
+redshift -t 5500:3700 &
+
+panel &
 mpd &
 music_player &
-
-
-xautolock -time 10 -locker lock
-redshift -t 5500:3700 &
+bspc desktop -f \^1

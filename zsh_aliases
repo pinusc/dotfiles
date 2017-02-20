@@ -38,6 +38,8 @@ alias bspwmrc=":e ~/.config/bspwm/bspwmrc"
 alias sxhkdrc=":e ~/.config/sxhkd/sxhkdrc"
 alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresources"
 
+alias gst="git status"
+
 # fasd 
 #
 # alias v="f -e vim"

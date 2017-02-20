@@ -28,6 +28,8 @@ source /usr/share/fzf/*.zsh
 
 export FZF_DEFAULT_COMMAND='ag -f -g ""' 
 
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 #
 # virtalenvwrapper
 # export WORKON_HOME=$HOME/.virtualenvs
