@@ -198,7 +198,7 @@ pomodoro() {
 #battery
 battery() {
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
-    bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//")
+    bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//" | sed "s/%//")
     if [[ $power = "on" ]]; then
 	bicon="\uf21e"
 	bcolor="f"
