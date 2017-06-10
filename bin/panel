@@ -2,7 +2,7 @@
 
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_FIFO_2=/tmp/panel-fifo-2
-PANEL_HEIGHT=32
+PANEL_HEIGHT=36
 PANEL_WIDTH=1910
 PANEL_GAP=5
 PANEL_Y=5
@@ -14,7 +14,7 @@ ICON_FONT_2="untitled\-font\-1:size=18"
 dzencommand_music="~/bin/bar/dzen2/scripts/mpdzen"
 dkeyboard="~/bin/dkeyboard"
 MAILDIR="$HOME/Maildir/School/INBOX/new"
-MAILCOMMAND="urxvt -e mutt"
+MAILCOMMAND="thunderbird"
 #ICON_FONT2="fontcustom:size=17"
 # export PANEL_FIFO PANEL_HEIGHT PANEL_FONT_FAMILY
 
@@ -245,9 +245,7 @@ done > $PANEL_FIFO &
 
 
 PANEL_WM_NAME="bar_wmname"
-cat "$PANEL_FIFO" | panel_bar 1 | lemonbar  -n "$PANEL_WM_NAME" -a 20 -o -4 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
-
-sleep 0.05; bspc config -m 1 top_padding 37
+cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -d -n "$PANEL_WM_NAME" -a 20 -o -4 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
 
 #cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1430x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
 
