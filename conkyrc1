@@ -38,11 +38,11 @@ conky.config = {
     draw_outline = false,
     draw_shades = false,
     use_xft = true,
-    font = 'gohufont:size=14',
+    font = 'Gohu gohufont:size=14',
     gap_x = 10,
-    gap_y = 46,
-    minimum_height = 971,
-    maximum_height = 971,
+    gap_y = 52,
+    minimum_height = 966,
+    maximum_height = 941,
 	minimum_width = 5,
     maximum_width = 128,
     net_avg_samples = 2,
@@ -115,6 +115,7 @@ $alignc${color ff9e00} ${if_match ${execi 5 expr length "`mpc --format %title% |
 $alignc${color 8b9dc3} ${if_match ${execi 5 expr length "`mpc --format %artist% | head -n 1`"} >= 20}${scroll 16 3 ${mpd_artist}}${else}${mpd_artist}${endif} $color
 #Album
 $alignc${if_match ${execi 5 expr length "`mpc --format %album% | head -n 1`"} >= 20}${scroll 16 2 ${mpd_album}}${else}${mpd_album}${endif}
+
 
 
 
