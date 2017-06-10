@@ -39,6 +39,7 @@ alias sxhkdrc=":e ~/.config/sxhkd/sxhkdrc"
 alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresources"
 
 alias gst="git status"
+alias dd="echo 'Fuck you Shen'"
 
 # fasd 
 #
@@ -50,8 +51,10 @@ alias d='fasd -d'        # directory
 alias f='fasd -f'        # file
 alias sd='fasd -sid'     # interactive directory selection
 alias sf='fasd -sif'     # interactive file selection
-alias z='fasd_cd -d'     # cd, same functionality as j in autojump
-alias zz='fasd_cd -d -i' # cd with interactive selection
+# alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+# alias zz='fasd_cd -d -i' # cd with interactive selection
+
+alias russian-roulette='echo "Pop!"'
 
 # fzf
 alias v='vim $(fzf)'

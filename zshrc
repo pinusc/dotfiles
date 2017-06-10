@@ -60,6 +60,13 @@ if ! zgen saved; then
     zgen load Tarrasch/zsh-autoenv
     zgen load zsh-users/zsh-syntax-highlighting
 
+    zgen load changyuheng/fz
+    zhen load rupa/z
+
     # save all to init script
     zgen save
 fi
+
+fortune | cowsay
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
