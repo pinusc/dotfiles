@@ -13,7 +13,7 @@ y=$(( Y/2 - y/2 ))
 convert /tmp/screen.png /etc/lock.png -geometry "+$x+$y" -composite -matte /tmp/screen.png
 
 # pkill panel
-i3lock -u -b -i /tmp/screen.png
+i3lock -u -e -i /tmp/screen.png
 # panel &
 # trap "killall conky" EXIT
 # conky -c dotfiles/conkyrc2 &> /dev/null &
