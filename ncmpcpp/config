@@ -365,7 +365,8 @@ progressbar_boldness = yes
 #
 #follow_now_playing_lyrics = no
 #
-#fetch_lyrics_for_current_song_in_background = no
+fetch_lyrics_for_current_song_in_background = no
+follow_now_playing_lyrics = yes
 #
 #store_lyrics_in_song_dir = no
 #
