@@ -119,7 +119,7 @@ xsetroot -cursor_name left_ptr &
 # xset s off & xset -dpms & xset s noblank &
 # # avoid screen tearing
 compton -cbG &
-xautolock -time 5 -locker lock &
+xautolock -time 15 -locker lock &
 redshift -t 5500:3700 &
 
 panel &

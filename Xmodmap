@@ -5,8 +5,8 @@ clear      mod2
 clear      mod3
 clear      mod4
 clear      mod5
-keycode      37 = Super_L
-keycode      66 = Control_L Caps_Lock NoSymbol NoSymbol
+keycode      37 = Super_L 
+keycode      66 = Control_L NoSymbol NoSymbol
 add        mod1 = Alt_L Alt_R Meta_L
 add        mod2 = Num_Lock
 add        mod3 = Hyper_L

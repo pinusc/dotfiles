@@ -2,7 +2,7 @@
 source ~/bin/colors.sh
 
 COLOR_FOREGROUND="#FF$base04_nohash"
-COLOR_BACKGROUND="#FF$base00_nohash"
+COLOR_BACKGROUND="#FF$base07_nohash"
 
 # FOREGROUND
 COLOR_OCCUPIED_FG="$COLOR_FOREGROUND"
@@ -22,16 +22,16 @@ COLOR_FOCUSED_FREE_FG="$COLOR_FOCUSED_FG"
 COLOR_STATUS_FG="$COLOR_FOREGROUND"
 
 # BACKGROUND
-COLOR_FOCUSED_OCCUPIED_BG="#FF$base02_nohash"
-COLOR_FOCUSED_FREE_BG="#FF$base02_nohash"
-COLOR_FOCUSED_URGENT_BG="#FF$base08_nohash"
+COLOR_FOCUSED_OCCUPIED_BG="#FF$base07_nohash"
+COLOR_FOCUSED_FREE_BG="#FF$base07_nohash"
+COLOR_FOCUSED_URGENT_BG="#FF$base07_nohash"
 # default
 # (these colors are explicitly set but really the default)
-COLOR_OCCUPIED_BG="#FF$base00_nohash"
-COLOR_FREE_BG="#FF$base00_nohash"
-COLOR_URGENT_BG="#FF$base00_nohash"
-COLOR_LAYOUT_BG="#FF$base00_nohash"
-COLOR_STATUS_BG="#FF$base00_nohash"
+COLOR_OCCUPIED_BG="#FF$base07_nohash"
+COLOR_FREE_BG="#FF$base07_nohash"
+COLOR_URGENT_BG="#FF$base07_nohash"
+COLOR_LAYOUT_BG="#FF$base07_nohash"
+COLOR_STATUS_BG="#FF$base07_nohash"
 # unused
 COLOR_ACTIVE_MONITOR_BG="#FF$base0B_nohash"
 COLOR_INACTIVE_MONITOR_BG="#FF$base00_nohash"
