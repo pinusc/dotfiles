@@ -1,0 +1,7 @@
+Description='Automatically generated profile by wifi-menu'
+Interface=wlp3s0
+Connection=wireless
+Security=wpa
+ESSID=Austrialian\ 15/f
+IP=dhcp
+Key=newtokyo

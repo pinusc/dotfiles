@@ -1,0 +1,15 @@
+Connection='wireless'
+Interface="wlp3s0"
+Security='wpa-configsection'
+Description="eduroam network"
+IP='dhcp'
+TimeoutWPA=30
+WPAConfigSection=(
+    'ssid="UWCChina-Students"'
+    'key_mgmt=WPA-EAP'
+    'eap=PEAP'
+    'proto=WPA2'
+    'phase2="auth=MSCHAPV2"'
+    'identity="gstelluto"'
+    'password="pianeta_pazzo_cina"'
+)

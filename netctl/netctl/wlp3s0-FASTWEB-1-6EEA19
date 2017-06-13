@@ -1,0 +1,7 @@
+Description='Automatically generated profile by wifi-menu'
+Interface=wlp3s0
+Connection=wireless
+Security=wpa
+ESSID=FASTWEB-1-6EEA19
+IP=dhcp
+Key=BAA5611D6E
