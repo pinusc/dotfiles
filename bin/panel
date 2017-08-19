@@ -125,11 +125,11 @@ wifi() {
 	WIFI_SSID=$(iw wlp3s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
 	WIFI_SIGNAL=$(iw wlp3s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
 	if [[ $(pingtest.sh 8.8.8.8) = "Up" ]]; then
-	    connIcon="\uf140"
+	    connIcon="\uf1eb"
 	else
-	    connIcon="\uf10c"
+	    connIcon="\uf05e"
 	fi
-	echo L'\uf1eb' $WIFI_SSID '|' $WIFI_SIGNAL 'dBm'
+	echo L$connIcon $WIFI_SSID '|' $WIFI_SIGNAL 'dBm'
     else 
 	echo L'\uf05e'
     fi
