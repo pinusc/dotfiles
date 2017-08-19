@@ -1,0 +1,414 @@
+{
+  "prefs": {
+    "downloadPath": "/home/pinusc",
+    "isFileHandler": false,
+    "openExternalPlayer": false,
+    "externalPlayerPath": null,
+    "startup": false
+  },
+  "torrents": [
+    {
+      "status": "seeding",
+      "infoHash": "705f4bdec2f311a708ff2dce418f44856c838880",
+      "name": "Rick.and.Morty.S03E04.720p.HDTV.x264-BATV[rarbg]",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:705f4bdec2f311a708ff2dce418f44856c838880&dn=Rick.and.Morty.S03E04.720p.HDTV.x264-BATV%5Brarbg%5D&tr=udp%3A%2F%2Fexodus.desync.com%3A6969&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 30,
+          "name": "RARBG.txt",
+          "path": "Rick.and.Morty.S03E04.720p.HDTV.x264-BATV[rarbg]/RARBG.txt"
+        },
+        {
+          "length": 520921879,
+          "name": "Rick.and.Morty.S03E04.720p.HDTV.x264-BATV.mkv",
+          "path": "Rick.and.Morty.S03E04.720p.HDTV.x264-BATV[rarbg]/Rick.and.Morty.S03E04.720p.HDTV.x264-BATV.mkv",
+          "currentTime": 0.010653,
+          "duration": 1381.547
+        },
+        {
+          "length": 3865,
+          "name": "rick.and.morty.s03e04.720p.hdtv.x264-batv.nfo",
+          "path": "Rick.and.Morty.S03E04.720p.HDTV.x264-BATV[rarbg]/rick.and.morty.s03e04.720p.hdtv.x264-batv.nfo"
+        }
+      ],
+      "selections": [
+        true,
+        true,
+        true
+      ],
+      "torrentFileName": "705f4bdec2f311a708ff2dce418f44856c838880.torrent",
+      "posterFileName": "705f4bdec2f311a708ff2dce418f44856c838880.jpg",
+      "mostRecentFileIndex": 1,
+      "fileModtimes": [
+        1503069222473,
+        1503069392623,
+        1503069224116
+      ]
+    },
+    {
+      "status": "seeding",
+      "infoHash": "ef16312209e569c413348e96e7c62a9e44e371df",
+      "name": "Rick and Morty S03E02 Rickmancing the Stone  (1080p x265 10bit S98 Joy).mkv",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:ef16312209e569c413348e96e7c62a9e44e371df&dn=Rick+and+Morty+S03E02+Rickmancing+the+Stone++(1080p+x265+10bit+S98+Joy).mkv&tr=http%3A%2F%2Fretracker.krs-ix.ru%2Fannounce&tr=udp%3A%2F%2Feddie4.nl%3A6969%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.ch%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.piratepublic.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 182568529,
+          "name": "Rick and Morty S03E02 Rickmancing the Stone  (1080p x265 10bit S98 Joy).mkv",
+          "path": "Rick and Morty S03E02 Rickmancing the Stone  (1080p x265 10bit S98 Joy).mkv",
+          "currentTime": 0.060624,
+          "duration": 1357.398
+        }
+      ],
+      "selections": [
+        true
+      ],
+      "torrentFileName": "ef16312209e569c413348e96e7c62a9e44e371df.torrent",
+      "mostRecentFileIndex": 0,
+      "fileModtimes": [
+        1501684663956
+      ]
+    },
+    {
+      "status": "paused",
+      "infoHash": "88594aaacbde40ef3e2510c47374ec0aa396c08e",
+      "name": "Big Buck Bunny",
+      "displayName": "Big Buck Bunny",
+      "posterFileName": "88594aaacbde40ef3e2510c47374ec0aa396c08e.jpg",
+      "torrentFileName": "88594aaacbde40ef3e2510c47374ec0aa396c08e.torrent",
+      "magnetURI": "magnet:?xt=urn:btih:88594aaacbde40ef3e2510c47374ec0aa396c08e&dn=bbb_sunflower_1080p_30fps_normal.mp4&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80%2Fannounce&ws=http%3A%2F%2Fdistribution.bbb3d.renderfarming.net%2Fvideo%2Fmp4%2Fbbb_sunflower_1080p_30fps_normal.mp4",
+      "files": [
+        {
+          "path": "bbb_sunflower_1080p_30fps_normal.mp4",
+          "name": "bbb_sunflower_1080p_30fps_normal.mp4",
+          "length": 276134947,
+          "offset": 0
+        }
+      ],
+      "selections": [
+        true
+      ],
+      "testID": "bbb"
+    },
+    {
+      "status": "paused",
+      "infoHash": "6a02592d2bbc069628cd5ed8a54f88ee06ac0ba5",
+      "name": "Cosmos Laundromat (Preview)",
+      "displayName": "Cosmos Laundromat (Preview)",
+      "posterFileName": "6a02592d2bbc069628cd5ed8a54f88ee06ac0ba5.jpg",
+      "torrentFileName": "6a02592d2bbc069628cd5ed8a54f88ee06ac0ba5.torrent",
+      "magnetURI": "magnet:?xt=urn:btih:6a02592d2bbc069628cd5ed8a54f88ee06ac0ba5&dn=CosmosLaundromatFirstCycle&tr=http%3A%2F%2Fbt1.archive.org%3A6969%2Fannounce&tr=http%3A%2F%2Fbt2.archive.org%3A6969%2Fannounce&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=wss%3A%2F%2Ftracker.webtorrent.io&ws=http%3A%2F%2Fia601508.us.archive.org%2F14%2Fitems%2F&ws=http%3A%2F%2Fia801508.us.archive.org%2F14%2Fitems%2F&ws=https%3A%2F%2Farchive.org%2Fdownload%2F",
+      "files": [
+        {
+          "path": "CosmosLaundromatFirstCycle/Cosmos Laundromat - First Cycle (1080p).gif",
+          "name": "Cosmos Laundromat - First Cycle (1080p).gif",
+          "length": 223580,
+          "offset": 0
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/Cosmos Laundromat - First Cycle (1080p).mp4",
+          "name": "Cosmos Laundromat - First Cycle (1080p).mp4",
+          "length": 220087570,
+          "offset": 223580
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/Cosmos Laundromat - First Cycle (1080p).ogv",
+          "name": "Cosmos Laundromat - First Cycle (1080p).ogv",
+          "length": 56832560,
+          "offset": 220311150
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/CosmosLaundromat-FirstCycle1080p.en.srt",
+          "name": "CosmosLaundromat-FirstCycle1080p.en.srt",
+          "length": 3949,
+          "offset": 277143710
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/CosmosLaundromat-FirstCycle1080p.es.srt",
+          "name": "CosmosLaundromat-FirstCycle1080p.es.srt",
+          "length": 3907,
+          "offset": 277147659
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/CosmosLaundromat-FirstCycle1080p.fr.srt",
+          "name": "CosmosLaundromat-FirstCycle1080p.fr.srt",
+          "length": 4119,
+          "offset": 277151566
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/CosmosLaundromat-FirstCycle1080p.it.srt",
+          "name": "CosmosLaundromat-FirstCycle1080p.it.srt",
+          "length": 3941,
+          "offset": 277155685
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/CosmosLaundromatFirstCycle_meta.sqlite",
+          "name": "CosmosLaundromatFirstCycle_meta.sqlite",
+          "length": 11264,
+          "offset": 277159626
+        },
+        {
+          "path": "CosmosLaundromatFirstCycle/CosmosLaundromatFirstCycle_meta.xml",
+          "name": "CosmosLaundromatFirstCycle_meta.xml",
+          "length": 1204,
+          "offset": 277170890
+        }
+      ],
+      "selections": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "testID": "cosmos"
+    },
+    {
+      "status": "paused",
+      "infoHash": "6a9759bffd5c0af65319979fb7832189f4f3c35d",
+      "name": "Sintel",
+      "displayName": "Sintel",
+      "posterFileName": "6a9759bffd5c0af65319979fb7832189f4f3c35d.jpg",
+      "torrentFileName": "6a9759bffd5c0af65319979fb7832189f4f3c35d.torrent",
+      "magnetURI": "magnet:?xt=urn:btih:6a9759bffd5c0af65319979fb7832189f4f3c35d&dn=sintel.mp4&tr=udp%3A%2F%2Fexodus.desync.com%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.webtorrent.io&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel-1024-surround.mp4",
+      "files": [
+        {
+          "path": "sintel.mp4",
+          "name": "sintel.mp4",
+          "length": 129241752,
+          "offset": 0
+        }
+      ],
+      "selections": [
+        true
+      ],
+      "testID": "sintel"
+    },
+    {
+      "status": "paused",
+      "infoHash": "02767050e0be2fd4db9a2ad6c12416ac806ed6ed",
+      "name": "Tears of Steel",
+      "displayName": "Tears of Steel",
+      "posterFileName": "02767050e0be2fd4db9a2ad6c12416ac806ed6ed.jpg",
+      "torrentFileName": "02767050e0be2fd4db9a2ad6c12416ac806ed6ed.torrent",
+      "magnetURI": "magnet:?xt=urn:btih:02767050e0be2fd4db9a2ad6c12416ac806ed6ed&dn=tears_of_steel_1080p.webm&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=wss%3A%2F%2Ftracker.webtorrent.io",
+      "files": [
+        {
+          "path": "tears_of_steel_1080p.webm",
+          "name": "tears_of_steel_1080p.webm",
+          "length": 571346576,
+          "offset": 0
+        }
+      ],
+      "selections": [
+        true
+      ],
+      "testID": "tears"
+    },
+    {
+      "status": "paused",
+      "infoHash": "a88fda5954e89178c372716a6a78b8180ed4dad3",
+      "name": "The WIRED CD - Rip. Sample. Mash. Share",
+      "displayName": "The WIRED CD - Rip. Sample. Mash. Share",
+      "posterFileName": "a88fda5954e89178c372716a6a78b8180ed4dad3.jpg",
+      "torrentFileName": "a88fda5954e89178c372716a6a78b8180ed4dad3.torrent",
+      "magnetURI": "magnet:?xt=urn:btih:a88fda5954e89178c372716a6a78b8180ed4dad3&dn=The+WIRED+CD+-+Rip.+Sample.+Mash.+Share&tr=udp%3A%2F%2Fexodus.desync.com%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=wss%3A%2F%2Ftracker.webtorrent.io&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F",
+      "files": [
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/01 - Beastie Boys - Now Get Busy.mp3",
+          "name": "01 - Beastie Boys - Now Get Busy.mp3",
+          "length": 1964275,
+          "offset": 0
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/02 - David Byrne - My Fair Lady.mp3",
+          "name": "02 - David Byrne - My Fair Lady.mp3",
+          "length": 3610523,
+          "offset": 1964275
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/03 - Zap Mama - Wadidyusay.mp3",
+          "name": "03 - Zap Mama - Wadidyusay.mp3",
+          "length": 2759377,
+          "offset": 5574798
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/04 - My Morning Jacket - One Big Holiday.mp3",
+          "name": "04 - My Morning Jacket - One Big Holiday.mp3",
+          "length": 5816537,
+          "offset": 8334175
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/05 - Spoon - Revenge!.mp3",
+          "name": "05 - Spoon - Revenge!.mp3",
+          "length": 2106421,
+          "offset": 14150712
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/06 - Gilberto Gil - Oslodum.mp3",
+          "name": "06 - Gilberto Gil - Oslodum.mp3",
+          "length": 3347550,
+          "offset": 16257133
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/07 - Dan The Automator - Relaxation Spa Treatment.mp3",
+          "name": "07 - Dan The Automator - Relaxation Spa Treatment.mp3",
+          "length": 2107577,
+          "offset": 19604683
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/08 - Thievery Corporation - Dc 3000.mp3",
+          "name": "08 - Thievery Corporation - Dc 3000.mp3",
+          "length": 3108130,
+          "offset": 21712260
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/09 - Le Tigre - Fake French.mp3",
+          "name": "09 - Le Tigre - Fake French.mp3",
+          "length": 3051528,
+          "offset": 24820390
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/10 - Paul Westerberg - Looking Up In Heaven.mp3",
+          "name": "10 - Paul Westerberg - Looking Up In Heaven.mp3",
+          "length": 3270259,
+          "offset": 27871918
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/11 - Chuck D - No Meaning No (feat. Fine Arts Militia).mp3",
+          "name": "11 - Chuck D - No Meaning No (feat. Fine Arts Militia).mp3",
+          "length": 3263528,
+          "offset": 31142177
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/12 - The Rapture - Sister Saviour (Blackstrobe Remix).mp3",
+          "name": "12 - The Rapture - Sister Saviour (Blackstrobe Remix).mp3",
+          "length": 6380952,
+          "offset": 34405705
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/13 - Cornelius - Wataridori 2.mp3",
+          "name": "13 - Cornelius - Wataridori 2.mp3",
+          "length": 6550396,
+          "offset": 40786657
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/14 - DJ Danger Mouse - What U Sittin' On (feat. Jemini, Cee Lo And Tha Alkaholiks).mp3",
+          "name": "14 - DJ Danger Mouse - What U Sittin' On (feat. Jemini, Cee Lo And Tha Alkaholiks).mp3",
+          "length": 3034692,
+          "offset": 47337053
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/15 - DJ Dolores - Oslodum 2004.mp3",
+          "name": "15 - DJ Dolores - Oslodum 2004.mp3",
+          "length": 3854611,
+          "offset": 50371745
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/16 - Matmos - Action At A Distance.mp3",
+          "name": "16 - Matmos - Action At A Distance.mp3",
+          "length": 1762120,
+          "offset": 54226356
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/README.md",
+          "name": "README.md",
+          "length": 4071,
+          "offset": 55988476
+        },
+        {
+          "path": "The WIRED CD - Rip. Sample. Mash. Share/poster.jpg",
+          "name": "poster.jpg",
+          "length": 78163,
+          "offset": 55992547
+        }
+      ],
+      "selections": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "testID": "wired"
+    }
+  ],
+  "version": "0.18.0",
+  "telemetry": {
+    "userID": "685e767d7b0a8d1c1b93de157a5660da46de1bf612f43c921285e579f8ac5a4c",
+    "uncaughtErrors": [],
+    "playAttempts": {
+      "minVersion": "0.18.0",
+      "total": 2,
+      "success": 0,
+      "error": 1,
+      "external": 1,
+      "abandoned": 0
+    },
+    "version": "0.18.0",
+    "timestamp": "2017-08-18T15:13:39.339Z",
+    "localTime": "17:13:39 GMT+0200 (CEST)",
+    "screens": [
+      {
+        "width": 1920,
+        "height": 1080,
+        "scaleFactor": 1
+      }
+    ],
+    "system": {
+      "osPlatform": "linux",
+      "osRelease": "Linux 4.12.3-1-ARCH",
+      "architecture": "x64",
+      "systemArchitecture": "x64",
+      "totalMemoryMB": 8192,
+      "numCores": 4
+    },
+    "torrentStats": {
+      "approxCount": 8,
+      "approxSizeMB": 1024,
+      "byStatus": {
+        "new": {
+          "approxCount": 0,
+          "approxSizeMB": 0
+        },
+        "downloading": {
+          "approxCount": 1,
+          "approxSizeMB": 128
+        },
+        "seeding": {
+          "approxCount": 0,
+          "approxSizeMB": 0
+        },
+        "paused": {
+          "approxCount": 4,
+          "approxSizeMB": 1024
+        }
+      }
+    },
+    "approxNumTorrents": 8
+  },
+  "bounds": {
+    "height": 1025,
+    "width": 946,
+    "x": 8,
+    "y": 47
+  }
+}

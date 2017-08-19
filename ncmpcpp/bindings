@@ -493,8 +493,8 @@ def_key "L"
 #def_key "F"
 #  toggle_fetching_lyrics_in_background
 #
-def_key "ctrl_l"
-  toggle_lyrics_fetcher
+# def_key "ctrl"
+#  toggle_lyrics_fetcher
 #  toggle_screen_lock
 #
 #def_key "`"

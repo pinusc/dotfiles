@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<gconf>
+	<entry name="enabled" mtime="1498292447" type="bool" value="true"/>
+	<entry name="name1" mtime="1498292447" type="string">
+		<stringvalue>module-rtp-send</stringvalue>
+	</entry>
+	<entry name="name0" mtime="1498292447" type="string">
+		<stringvalue>module-null-sink</stringvalue>
+	</entry>
+	<entry name="mode" mtime="1498292447" type="string">
+		<stringvalue>null-sink</stringvalue>
+	</entry>
+	<entry name="loopback_enabled" mtime="1498292447" type="bool" value="false"/>
+	<entry name="args1" mtime="1498292447" type="string">
+		<stringvalue>source=rtp.monitor loop=0</stringvalue>
+	</entry>
+	<entry name="args0" mtime="1498292447" type="string">
+		<stringvalue>sink_name=rtp format=s16be channels=2 rate=44100 sink_properties=&quot;device.description=&apos;RTP Multicast&apos; device.bus=&apos;network&apos; device.icon_name=&apos;network-server&apos;&quot;</stringvalue>
+	</entry>
+	<entry name="locked" mtime="1498292447" type="bool" value="false"/>
+</gconf>

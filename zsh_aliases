@@ -59,7 +59,7 @@ alias russian-roulette='echo "Pop!"'
 # fzf
 alias v='vim $(fzf)'
 
-alias ls='ls --color=auto'
+alias ls='exa'
 
 J=_JAVA_AWT_WM_NONREPARENTING=1
 alias t="$J java -jar ~/bin/jdotxt-0.4.8.jar"

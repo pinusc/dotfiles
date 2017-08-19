@@ -1,0 +1,61 @@
+T 1502624912 19*	Now talking on 22#archlinux-unregistered
+T 1502624912 22*	Topic for 22#archlinux-unregistered is: === You need a freenode account to join #archlinux. Register by following the instructions at <http://freenode.net/kb/answer/registration>. You can get a list of people who can help you by typing `/msg chanserv access #archlinux list`, or join #freenode and ask there. The bot can give you a one-time ticket. ===
+T 1502624912 22*	Topic for 22#archlinux-unregistered set by 26tigrmesh!~tigrmesh@archlinux/op/tigrmesh (24Tue Aug  9 06:33:51 2016)
+T 1502625008 24*	Guest97034 has quit (Ping timeout: 248 seconds)
+T 1502625185 20*	Disconnected (20)
+T 1502625194 Not connected. Try /server <host> [<port>]
+T 1502625217 23*	28pinusc is already in use. Retrying with 18pinusc_...
+T 1502625217 22*	26pinusc_ sets mode 24+Z on 22pinusc_
+T 1502625217 22*	26pinusc_ sets mode 24+i on 22pinusc_
+T 1502625223 19*	Now talking on 22#archlinux-unregistered
+T 1502625223 22*	Topic for 22#archlinux-unregistered is: === You need a freenode account to join #archlinux. Register by following the instructions at <http://freenode.net/kb/answer/registration>. You can get a list of people who can help you by typing `/msg chanserv access #archlinux list`, or join #freenode and ask there. The bot can give you a one-time ticket. ===
+T 1502625223 22*	Topic for 22#archlinux-unregistered set by 26tigrmesh!~tigrmesh@archlinux/op/tigrmesh (24Tue Aug  9 06:33:51 2016)
+T 1502625223 24*	Received a CTCP 24VERSION from 18EMIYA
+T 1502625230 20*	Disconnected (20)
+T 1502625239 20*	Disconnected (20)
+T 1502625246 >18nickserv<	identify ****
+T 1502625251 22*	26pinusc_ sets mode 24+i on 22pinusc_
+T 1502625260 >18nickserv<	identify ****
+T 1502625261 -18NickServ-	Invalid password for pinusc.
+T 1502625266 >18nickserv<	identify ****
+T 1502625267 -18NickServ-	You are now identified for pinusc.
+T 1502625267 -18NickServ-	1 failed login since last login.
+T 1502625267 -18NickServ-	Last failed attempt from: pinusc_!~pinusc@91.252.103.157 on Aug 13 11:54:06 2017.
+T 1502625279 19*	Now talking on 22#archlinux
+T 1502625280 22*	Topic for 22#archlinux is: Welcome to Arch Linux, Good Luck: https://archlinux.org | Rules: https://goo.gl/XWFreH | Pastebins: https://ptpb.pw https://gist.github.com https://bpaste.net | Become an official Arch Tester: https://goo.gl/48qpvG | https://defectivebydesign.org/dayagainstdrm
+T 1502625280 22*	Topic for 22#archlinux set by 26phrik!phrik@archlinux/bot/phrik (24Sat Aug  5 02:40:27 2017)
+T 1502625281 18<Tom^18>	beest: =D
+T 1502625365 20*	Disconnected (20)
+T 1502625475 22*	26pinusc_ sets mode 24+i on 22pinusc_
+T 1502625482 19*	Now talking on 22#archlinux-unregistered
+T 1502625482 22*	Topic for 22#archlinux-unregistered is: === You need a freenode account to join #archlinux. Register by following the instructions at <http://freenode.net/kb/answer/registration>. You can get a list of people who can help you by typing `/msg chanserv access #archlinux list`, or join #freenode and ask there. The bot can give you a one-time ticket. ===
+T 1502625482 22*	Topic for 22#archlinux-unregistered set by 26tigrmesh!~tigrmesh@archlinux/op/tigrmesh (24Tue Aug  9 06:33:51 2016)
+T 1502626186 23*	pklaus (~pklaus@p2003008E8D1A4F004DFBA74643978ED7.dip0.t-ipconnect.de23) has joined
+T 1502626359 23*	srir4m (~srir4m@122.164.102.7423) has joined
+T 1502626359 23*	{shiver} (~shiver@128.199.143.21023) has joined
+T 1502626603 24*	pklaus has quit (Ping timeout: 246 seconds)
+T 1502626648 24*	srir4m has quit (Client Quit)
+T 1502626659 23*	awl (~awl@2001:4ca0:0:f226:1d7e:17d9:5325:44ab23) has joined
+T 1502626802 23*	P_C (~Thunderbi@agmc14.neoplus.adsl.tpnet.pl23) has joined
+T 1502627003 23*	anton__ (~patrick@26-183-196-88.dyn.estpak.ee23) has joined
+T 1502627031 23*	pklaus (~pklaus@p2003008E8D1A63004DFBA74643978ED7.dip0.t-ipconnect.de23) has joined
+T 1502627101 23*	AIMOMO (~AIMOMOZ@61.135.194.5323) has joined
+T 1502627124 23*	giaur (~quassel@bcp147.neoplus.adsl.tpnet.pl23) has joined
+T 1502627183 23*	n4cht (~fsckoff@pool-71-179-247-58.bltmmd.fios.verizon.net23) has joined
+T 1502627306 23*	JACKSONMEISTER (~jacksonme@p200300E613DE7F00277330751163451E.dip0.t-ipconnect.de23) has joined
+T 1502627321 24*	JACKSONMEISTER (~jacksonme@p200300E613DE7F00277330751163451E.dip0.t-ipconnect.de24) has left (requested by EMIYA (Go back to #archlinux now.))
+T 1502627752 23*	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net23) has joined
+T 1502627755 24*	CubeDev has quit (Quit: WeeChat 1.9)
+T 1502627760 24*	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net24) has left
+T 1502627851 23*	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net23) has joined
+T 1502627871 24*	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net24) has left
+T 1502627946 24*	pklaus has quit (Ping timeout: 246 seconds)
+T 1502628033 23*	helasraizam (~helasraiz@c-76-127-10-252.hsd1.nm.comcast.net23) has joined
+T 1502628080 23*	chrisaw (~textual@fpc124782-sgyl38-2-0-cust5.18-2.static.cable.virginm.net23) has joined
+T 1502628093 24*	giaur has quit (Ping timeout: 246 seconds)
+T 1502628218 23*	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net23) has joined
+T 1502628221 24*	k3asd` has quit (Ping timeout: 240 seconds)
+T 1502628236 23*	CubeDev (~CubeDev@ip4d153705.dynamic.kabel-deutschland.de23) has joined
+T 1502628239 24*	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net24) has left (requested by EMIYA (Go back to #archlinux now.))
+T 1502628275 23*	pklaus (~pklaus@p2003008E8D1A73004DFBA74643978ED7.dip0.t-ipconnect.de23) has joined
+T 1502628338 23*	easzero (~easzero@2a02:908:4c4:f300:90c8:be90:6047:615323) has joined

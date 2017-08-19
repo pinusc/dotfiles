@@ -1,0 +1,54 @@
+**** BEGIN LOGGING AT Sun Aug 13 13:48:32 2017
+
+Aug 13 13:48:32 *	Now talking on #archlinux-unregistered
+Aug 13 13:48:32 *	Topic for #archlinux-unregistered is: === You need a freenode account to join #archlinux. Register by following the instructions at <http://freenode.net/kb/answer/registration>. You can get a list of people who can help you by typing `/msg chanserv access #archlinux list`, or join #freenode and ask there. The bot can give you a one-time ticket. ===
+Aug 13 13:48:32 *	Topic for #archlinux-unregistered set by tigrmesh!~tigrmesh@archlinux/op/tigrmesh (Tue Aug  9 06:33:51 2016)
+Aug 13 13:50:08 *	Guest97034 has quit (Ping timeout: 248 seconds)
+Aug 13 13:53:05 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:53:05 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:53:43 2017
+
+Aug 13 13:53:43 *	Now talking on #archlinux-unregistered
+Aug 13 13:53:43 *	Topic for #archlinux-unregistered is: === You need a freenode account to join #archlinux. Register by following the instructions at <http://freenode.net/kb/answer/registration>. You can get a list of people who can help you by typing `/msg chanserv access #archlinux list`, or join #freenode and ask there. The bot can give you a one-time ticket. ===
+Aug 13 13:53:43 *	Topic for #archlinux-unregistered set by tigrmesh!~tigrmesh@archlinux/op/tigrmesh (Tue Aug  9 06:33:51 2016)
+Aug 13 13:53:43 *	Received a CTCP VERSION from EMIYA
+Aug 13 13:53:50 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:53:50 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:58:02 2017
+
+Aug 13 13:58:02 *	Now talking on #archlinux-unregistered
+Aug 13 13:58:02 *	Topic for #archlinux-unregistered is: === You need a freenode account to join #archlinux. Register by following the instructions at <http://freenode.net/kb/answer/registration>. You can get a list of people who can help you by typing `/msg chanserv access #archlinux list`, or join #freenode and ask there. The bot can give you a one-time ticket. ===
+Aug 13 13:58:02 *	Topic for #archlinux-unregistered set by tigrmesh!~tigrmesh@archlinux/op/tigrmesh (Tue Aug  9 06:33:51 2016)
+Aug 13 14:09:46 *	pklaus (~pklaus@p2003008E8D1A4F004DFBA74643978ED7.dip0.t-ipconnect.de) has joined
+Aug 13 14:12:39 *	srir4m (~srir4m@122.164.102.74) has joined
+Aug 13 14:12:39 *	{shiver} (~shiver@128.199.143.210) has joined
+Aug 13 14:16:43 *	pklaus has quit (Ping timeout: 246 seconds)
+Aug 13 14:17:28 *	srir4m has quit (Client Quit)
+Aug 13 14:17:39 *	awl (~awl@2001:4ca0:0:f226:1d7e:17d9:5325:44ab) has joined
+Aug 13 14:20:02 *	P_C (~Thunderbi@agmc14.neoplus.adsl.tpnet.pl) has joined
+Aug 13 14:23:23 *	anton__ (~patrick@26-183-196-88.dyn.estpak.ee) has joined
+Aug 13 14:23:51 *	pklaus (~pklaus@p2003008E8D1A63004DFBA74643978ED7.dip0.t-ipconnect.de) has joined
+Aug 13 14:25:01 *	AIMOMO (~AIMOMOZ@61.135.194.53) has joined
+Aug 13 14:25:24 *	giaur (~quassel@bcp147.neoplus.adsl.tpnet.pl) has joined
+Aug 13 14:26:23 *	n4cht (~fsckoff@pool-71-179-247-58.bltmmd.fios.verizon.net) has joined
+Aug 13 14:28:26 *	JACKSONMEISTER (~jacksonme@p200300E613DE7F00277330751163451E.dip0.t-ipconnect.de) has joined
+Aug 13 14:28:41 *	JACKSONMEISTER (~jacksonme@p200300E613DE7F00277330751163451E.dip0.t-ipconnect.de) has left (requested by EMIYA (Go back to #archlinux now.))
+Aug 13 14:35:52 *	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net) has joined
+Aug 13 14:35:55 *	CubeDev has quit (Quit: WeeChat 1.9)
+Aug 13 14:36:00 *	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net) has left
+Aug 13 14:37:31 *	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net) has joined
+Aug 13 14:37:51 *	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net) has left
+Aug 13 14:39:06 *	pklaus has quit (Ping timeout: 246 seconds)
+Aug 13 14:40:33 *	helasraizam (~helasraiz@c-76-127-10-252.hsd1.nm.comcast.net) has joined
+Aug 13 14:41:20 *	chrisaw (~textual@fpc124782-sgyl38-2-0-cust5.18-2.static.cable.virginm.net) has joined
+Aug 13 14:41:33 *	giaur has quit (Ping timeout: 246 seconds)
+Aug 13 14:43:38 *	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net) has joined
+Aug 13 14:43:41 *	k3asd` has quit (Ping timeout: 240 seconds)
+Aug 13 14:43:56 *	CubeDev (~CubeDev@ip4d153705.dynamic.kabel-deutschland.de) has joined
+Aug 13 14:43:59 *	italys (~777@h184-61-9-96.mdsnwi.tisp.static.tds.net) has left (requested by EMIYA (Go back to #archlinux now.))
+Aug 13 14:44:35 *	pklaus (~pklaus@p2003008E8D1A73004DFBA74643978ED7.dip0.t-ipconnect.de) has joined
+Aug 13 14:45:38 *	easzero (~easzero@2a02:908:4c4:f300:90c8:be90:6047:6153) has joined
+**** ENDING LOGGING AT Sun Aug 13 14:46:02 2017
+

@@ -1,0 +1,70 @@
+**** BEGIN LOGGING AT Sun Aug 13 13:47:07 2017
+
+Aug 13 13:47:07 *	Connecting to chat.freenode.net (185.30.166.38:6697)
+Aug 13 13:47:11 *	* Certification info:
+Aug 13 13:47:11 *	  Subject:
+Aug 13 13:47:11 *	    CN=orwell.freenode.net
+Aug 13 13:47:11 *	  Issuer:
+Aug 13 13:47:11 *	    C=US
+Aug 13 13:47:11 *	    O=Let's Encrypt
+Aug 13 13:47:11 *	    CN=Let's Encrypt Authority X3
+Aug 13 13:47:11 *	  Public key algorithm: rsaEncryption (4096 bits)
+Aug 13 13:47:11 *	  Sign algorithm sha256WithRSAEncryption
+Aug 13 13:47:11 *	  Valid since Jul 24 05:06:00 2017 GM to Oct 22 05:06:00 2017 GM
+Aug 13 13:47:11 *	* Cipher info:
+Aug 13 13:47:11 *	  Version: TLSv1.2, cipher DHE-RSA-AES256-GCM-SHA384 (256 bits)
+Aug 13 13:47:11 *	Connected. Now logging in.
+**** BEGIN LOGGING AT Sun Aug 13 13:49:15 2017
+
+Aug 13 13:49:15 No such command.
+Aug 13 13:50:12 *	Received a CTCP VERSION from EMIYA
+Aug 13 13:53:05 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:53:05 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:53:50 2017
+
+Aug 13 13:53:50 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:53:50 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:53:59 2017
+
+Aug 13 13:53:59 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:53:59 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:53:59 2017
+
+Aug 13 13:53:59 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:53:59 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:53:59 2017
+
+Aug 13 13:53:59 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:53:59 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:54:06 2017
+
+Aug 13 13:54:06 >nickserv<	identify ****
+Aug 13 13:54:11 *	pinusc_ sets mode +i on pinusc_
+Aug 13 13:54:20 >nickserv<	identify ****
+Aug 13 13:54:21 -NickServ-	Invalid password for pinusc.
+Aug 13 13:54:26 >nickserv<	identify ****
+Aug 13 13:54:27 -NickServ-	You are now identified for pinusc.
+Aug 13 13:54:27 -NickServ-	1 failed login since last login.
+Aug 13 13:54:27 -NickServ-	Last failed attempt from: pinusc_!~pinusc@91.252.103.157 on Aug 13 11:54:06 2017.
+**** ENDING LOGGING AT Sun Aug 13 13:54:39 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:56:05 2017
+
+Aug 13 13:56:05 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:56:05 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:56:05 2017
+
+Aug 13 13:56:05 *	Disconnected ()
+**** ENDING LOGGING AT Sun Aug 13 13:56:05 2017
+
+**** BEGIN LOGGING AT Sun Aug 13 13:57:55 2017
+
+Aug 13 13:57:55 *	pinusc_ sets mode +i on pinusc_
+**** ENDING LOGGING AT Sun Aug 13 14:46:03 2017
+
