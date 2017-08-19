@@ -1,4 +1,4 @@
-#! /bin/zsh
+#! /bin/bash
 
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_FIFO_2=/tmp/panel-fifo-2
@@ -121,7 +121,7 @@ done > $PANEL_FIFO_2 &
 
 # wifi
 wifi() {
-    if [[ $(pingtest.sh 8.8.8.8 ) = "Up" ]]; then
+    if [[ $(iw wlp3s0 link) != "Not Connected" ]]; then
 	WIFI_SSID=$(iw wlp3s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
 	WIFI_SIGNAL=$(iw wlp3s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
 	if [[ $(pingtest.sh 8.8.8.8) = "Up" ]]; then
@@ -238,7 +238,7 @@ while true; do
     keyboard
     battery
     # pomodoro
-    # music
+    music
     wifi
     sleep 1
 done > $PANEL_FIFO &
@@ -247,7 +247,7 @@ done > $PANEL_FIFO &
 PANEL_WM_NAME="bar_wmname"
 cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -d -n "$PANEL_WM_NAME" -a 20 -o -4 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
 
-#cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1430x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+# cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1910x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
 
 
 d=$(xdo id -a "$PANEL_WM_NAME")

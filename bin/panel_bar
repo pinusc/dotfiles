@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 . panel_colors light
 
 num_mon=$(bspc query -M | wc -l)

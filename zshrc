@@ -3,14 +3,16 @@ source $HOME/.zprofile
 source "${HOME}/builds/zgen/zgen.zsh"
 source ~/.zsh_aliases
 
-BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"
-[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+#BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"
+#[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
-if [ -n "$PS1" ]; then # if statement guards adding these helpers for non-interative shells
-  eval "$(~/.config/base16-shell/profile_helper.sh)"
-fi
+#if [ -n "$PS1" ]; then # if statement guards adding these helpers for non-interative shells
+#  eval "$(~/.config/base16-shell/profile_helper.sh)"
+#fi
 #
 # # Customize to your needs...
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 alias lrvm='[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"'
 
@@ -37,7 +39,7 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # source /usr/bin/virtualenvwrapper.sh
 
 # ls colors: eliminate that ugly green background
-eval "$(dircolors ~/.config/dircolors)";
+#eval "$(dircolors ~/.config/dircolors)";
 
 export TERM="xterm-256color"
 
@@ -70,3 +72,5 @@ fi
 fortune | cowsay
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source /usr/share/undistract-me/long-running.bash
+notify_when_long_running_commands_finish_install

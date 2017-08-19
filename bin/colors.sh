@@ -16,41 +16,28 @@
 # base0D="#7CAFC2"
 # base0E="#BA8BAF"
 # base0F="#A16946"
+FILE=$(cat "$HOME/.base16_theme" | head -n 35 | tail -n +10)
+#source <( sed -n '/11/,/35/p' "$HOME/.base16_theme" )
+source <( cat "$HOME/.base16_theme" | head -n 35 | tail -n +10 )
+SEDEXPR="sed s/\\///g"
+base00=$(echo "#$color00" | sed s/\\///g)
+base01=$(echo "#$color18" | sed s/\\///g)
+base02=$(echo "#$color19" | sed s/\\///g)
+base03=$(echo "#$color08" | sed s/\\///g)
+base04=$(echo "#$color20" | sed s/\\///g)
+base05=$(echo "#$color07" | sed s/\\///g)
+base06=$(echo "#$color21" | sed s/\\///g)
+base07=$(echo "#$color15" | sed s/\\///g)
+base08=$(echo "#$color09" | sed s/\\///g)
+base09=$(echo "#$color16" | sed s/\\///g)
+base0A=$(echo "#$color03" | sed s/\\///g)
+base0B=$(echo "#$color02" | sed s/\\///g)
+base0C=$(echo "#$color06" | sed s/\\///g)
+base0D=$(echo "#$color04" | sed s/\\///g)
+base0E=$(echo "#$color05" | sed s/\\///g)
+base0F=$(echo "#$color17" | sed s/\\///g)
 
-base00="#ffffff"
-base01="#e0e0e0"
-base02="#c5c8c6"
-base03="#b4b7b4"
-base04="#969896"
-base05="#373b41"
-base06="#282a2e"
-base07="#1d1f21"
-base08="#CC342B"
-base09="#F96A38"
-base0A="#FBA922"
-base0B="#198844"
-base0C="#3971ED"
-base0D="#3971ED"
-base0E="#A36AC7"
-base0F="#3971ED"
-
-
-#define base00 
-#define base01 
-#define base02 
-#define base03 
-#define base04 
-#define base05 
-#define base06 
-#define base07 
-#define base08 
-#define base09 
-#define base0A 
-#define base0B 
-#define base0C 
-#define base0D 
-#define base0E 
-#define base0F 
+echo $base04
 
 c_red="$base08"
 c_green="$base0B"
