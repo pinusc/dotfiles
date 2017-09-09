@@ -1,0 +1,22 @@
+# Sample minimal config file.  Copy this to ~/.offlineimaprc and edit to
+# get started fast.
+
+[general]
+accounts = School
+
+[Account School]
+localrepository = Local
+remoterepository = Remote
+
+[Repository Local]
+type = Maildir
+localfolders = ~/mail
+
+[Repository Remote]
+ssl=yes
+type = IMAP
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+remotehost = outlook.office365.com
+remoteport = 993
+remoteuser = gstelluto@uwcchina.org
+remotepass = pianeta_pazzo_cina

@@ -25,6 +25,7 @@ alias mus_local='mpd & bin/bar/dzen2/scripts/mpdzen_loop & music_player && bspc 
 alias subl3='/home/pinusc/builds/sublime_text_3/sublime_text'
 alias chrome='google-chrome-stable'
 alias chrometor='google-chrome-stable --proxy-server="socks://localhost:9050"'
+la="ls -a"
 
 #fast edit shiortcuts
 alias vim="/usr/bin/nvim"

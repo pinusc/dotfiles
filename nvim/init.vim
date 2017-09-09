@@ -24,7 +24,16 @@ Plug 'tpope/vim-leiningen'
 """ Prose
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
-Plug 'reedes/vim-pencil'
+Plug 'kana/vim-textobj-user'
+Plug 'vim-scripts/LanguageTool'
+Plug 'reedes/vim-textobj-quote', {'for': ['text', 'markdown']}
+Plug 'reedes/vim-textobj-sentence', {'for': ['text', 'markdown']}
+Plug 'reedes/vim-litecorrect', {'for': ['text', 'markdown']}
+Plug 'reedes/vim-wordy', {'for': ['text', 'markdown']}
+Plug 'reedes/vim-pencil', {'for': ['text', 'markdown']}
+Plug 'reedes/vim-lexical', {'for': ['text', 'markdown']}
+Plug 'dbmrq/vim-ditto', {'for': ['text', 'markdown']}
+Plug 'reedes/vim-wheel', {'for': ['text', 'markdown']}
 
 """ Latex 
 Plug 'xuhdev/vim-latex-live-preview'
@@ -111,15 +120,38 @@ autocmd Filetype java set makeprg=javac\ %
 autocmd Filetype c set makeprg=make
 autocmd Filetype c set foldmethod=syntax
 
+" Prose {{{
+function! Prose()
+  call pencil#init()
+  call lexical#init()
+  call litecorrect#init()
+  call textobj#quote#init()
+  call textobj#sentence#init()
 
-" Prose stuff
-augroup pencil
-    autocmd!
-    autocmd FileType markdown,mkd,text,tex call pencil#init({'wrap': 'soft'})
-    "autocmd FileType markdown,mkd,tex Goyo
-    "autocmd FileType markdown,mkd,tex Limelight
-    "autocmd FileType tex :LLPStartPreview
-augroup END
+  " manual reformatting shortcuts
+  nnoremap <buffer> <silent> Q gqap
+  xnoremap <buffer> <silent> Q gq
+  nnoremap <buffer> <silent> <leader>Q vapJgqap
+
+  " force top correction on most recent misspelling
+  nnoremap <buffer> <c-s> [s1z=<c-o>
+  inoremap <buffer> <c-s> <c-g>u<Esc>[s1z=`]A<c-g>u
+
+  " replace common punctuation
+  iabbrev <buffer> -- –
+  iabbrev <buffer> --- —
+  iabbrev <buffer> << «
+  iabbrev <buffer> >> »
+
+  let g:languagetool_jar = '/usr/share/java/languagetool/languagetool-commandline.jar'
+endfunction
+
+" automatically initialize buffer by file type
+autocmd FileType markdown,mkd,text,rst call Prose()
+
+" invoke manually by command for other file types
+command! -nargs=0 Prose call Prose()
+" }}}
 
 " {{{ Clojure 
 "  Automagic Clojure folding on defn's and defmacro's

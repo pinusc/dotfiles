@@ -1,4 +1,4 @@
-2017/08/19-15:43:28.268 29072 Reusing MANIFEST /home/pinusc/.config/chromium/Default/Session Storage/MANIFEST-000001
-2017/08/19-15:43:28.285 29072 Recovering log #23
-2017/08/19-15:43:28.348 29072 (ignoring error) /home/pinusc/.config/chromium/Default/Session Storage/000023.log: dropping 3470 bytes; Corruption: missing start of fragmented record(2)
-2017/08/19-15:43:28.348 29072 Reusing old log /home/pinusc/.config/chromium/Default/Session Storage/000023.log 
+2017/08/22-10:40:46.397 8646 Reusing MANIFEST /home/pinusc/.config/chromium/Default/Session Storage/MANIFEST-000001
+2017/08/22-10:40:46.397 8646 Recovering log #23
+2017/08/22-10:40:46.478 8646 (ignoring error) /home/pinusc/.config/chromium/Default/Session Storage/000023.log: dropping 3470 bytes; Corruption: missing start of fragmented record(2)
+2017/08/22-10:40:46.479 8646 Reusing old log /home/pinusc/.config/chromium/Default/Session Storage/000023.log 

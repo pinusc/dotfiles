@@ -76,6 +76,8 @@ bspc config normal_border_color "#232826"
 bspc config presel_border_color "#5080C9"
 bspc config urgent_border_color "EF5847"
 
+bspc config pointer-modifier mod4
+
 # Rules
 bspc rule -a sxiv state=floating center=on
 bspc rule -a lxappearance desktop="^8" state=floating center=on
@@ -118,7 +120,7 @@ xsetroot -cursor_name left_ptr &
 # disable screensaver
 # xset s off & xset -dpms & xset s noblank &
 # # avoid screen tearing
-compton -cbG &
+compton -cbGf &
 xautolock -time 15 -locker lock &
 redshift -t 5500:3700 &
 

@@ -9,6 +9,221 @@
   "torrents": [
     {
       "status": "seeding",
+      "infoHash": "a5c6ea1e13b7ec889f83dad680f10bb0150896c3",
+      "name": "Game.of.Thrones.S07E03.The.Queens.Justice.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:a5c6ea1e13b7ec889f83dad680f10bb0150896c3&dn=Game.of.Thrones.S07E03.The.Queens.Justice.1080p.WEB-DL.DD5.1.H264-BTN%5Brarbg%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 2584289241,
+          "name": "Game.of.Thrones.S07E03.The.Queens.Justice.1080p.iT.WEB-DL.DD5.1.mkv",
+          "path": "Game.of.Thrones.S07E03.The.Queens.Justice.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]/Game.of.Thrones.S07E03.The.Queens.Justice.1080p.iT.WEB-DL.DD5.1.mkv",
+          "currentTime": 0.008923,
+          "duration": 3742.336
+        },
+        {
+          "length": 79444,
+          "name": "Game.of.Thrones.S07E03.The.Queens.Justice.1080p.iT.WEB-DL.DD5.1.srt",
+          "path": "Game.of.Thrones.S07E03.The.Queens.Justice.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]/Game.of.Thrones.S07E03.The.Queens.Justice.1080p.iT.WEB-DL.DD5.1.srt"
+        },
+        {
+          "length": 30,
+          "name": "RARBG.txt",
+          "path": "Game.of.Thrones.S07E03.The.Queens.Justice.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]/RARBG.txt"
+        }
+      ],
+      "selections": [
+        true,
+        true,
+        true
+      ],
+      "torrentFileName": "a5c6ea1e13b7ec889f83dad680f10bb0150896c3.torrent",
+      "mostRecentFileIndex": 0,
+      "posterFileName": "a5c6ea1e13b7ec889f83dad680f10bb0150896c3.jpg",
+      "fileModtimes": [
+        1503526872313,
+        1503525181680,
+        1503525181680
+      ]
+    },
+    {
+      "status": "paused",
+      "infoHash": "d786c8cbd5c2f17f71ffc9d65bf3e4cf65a85c8c",
+      "name": "Game.of.Thrones.S07E02.Stormborn.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:d786c8cbd5c2f17f71ffc9d65bf3e4cf65a85c8c&dn=Game.of.Thrones.S07E02.Stormborn.1080p.WEB-DL.DD5.1.H264-BTN%5Brarbg%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 2330367637,
+          "name": "Game.of.Thrones.S07E02.Stormborn.1080p.iT.WEB-DL.DD5.1.mkv",
+          "path": "Game.of.Thrones.S07E02.Stormborn.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]/Game.of.Thrones.S07E02.Stormborn.1080p.iT.WEB-DL.DD5.1.mkv",
+          "currentTime": 0.008192,
+          "duration": 3483.936
+        },
+        {
+          "length": 64279,
+          "name": "Game.of.Thrones.S07E02.Stormborn.1080p.iT.WEB-DL.DD5.1.srt",
+          "path": "Game.of.Thrones.S07E02.Stormborn.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]/Game.of.Thrones.S07E02.Stormborn.1080p.iT.WEB-DL.DD5.1.srt"
+        },
+        {
+          "length": 30,
+          "name": "RARBG.txt",
+          "path": "Game.of.Thrones.S07E02.Stormborn.1080p.WEB-DL.DD5.1.H264-BTN[rarbg]/RARBG.txt"
+        }
+      ],
+      "selections": [
+        true,
+        true,
+        true
+      ],
+      "torrentFileName": "d786c8cbd5c2f17f71ffc9d65bf3e4cf65a85c8c.torrent",
+      "posterFileName": "d786c8cbd5c2f17f71ffc9d65bf3e4cf65a85c8c.jpg",
+      "mostRecentFileIndex": 0,
+      "fileModtimes": [
+        1503522444400,
+        1503521015380,
+        1503521015380
+      ]
+    },
+    {
+      "status": "paused",
+      "infoHash": "65beef38eaabfb3373c1964d7bfc699a1f0b8ba4",
+      "name": "Game.of.Thrones.S07E06.INTERNAL.1080p.WEB.H264-DEFLATE[rarbg]",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:65beef38eaabfb3373c1964d7bfc699a1f0b8ba4&dn=Game.of.Thrones.S07E06.INTERNAL.1080p.WEB.H264-DEFLATE%5Brarbg%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 5040259109,
+          "name": "Game.of.Thrones.S07E06.INTERNAL.1080p.WEB.H264-DEFLATE.mkv",
+          "path": "Game.of.Thrones.S07E06.INTERNAL.1080p.WEB.H264-DEFLATE[rarbg]/Game.of.Thrones.S07E06.INTERNAL.1080p.WEB.H264-DEFLATE.mkv",
+          "currentTime": 0.002103,
+          "duration": 4298.836
+        },
+        {
+          "length": 30,
+          "name": "RARBG.txt",
+          "path": "Game.of.Thrones.S07E06.INTERNAL.1080p.WEB.H264-DEFLATE[rarbg]/RARBG.txt"
+        },
+        {
+          "length": 484,
+          "name": "game.of.thrones.s07e06.internal.1080p.web.h264-deflate.nfo",
+          "path": "Game.of.Thrones.S07E06.INTERNAL.1080p.WEB.H264-DEFLATE[rarbg]/game.of.thrones.s07e06.internal.1080p.web.h264-deflate.nfo"
+        }
+      ],
+      "selections": [
+        true,
+        true,
+        true
+      ],
+      "torrentFileName": "65beef38eaabfb3373c1964d7bfc699a1f0b8ba4.torrent",
+      "posterFileName": "65beef38eaabfb3373c1964d7bfc699a1f0b8ba4.jpg",
+      "mostRecentFileIndex": 0
+    },
+    {
+      "status": "paused",
+      "infoHash": "6e3d56245405a42668e8418984aed510d75f621f",
+      "name": "Game.Of.Thrones.S07E01.iNTERNAL.720p.HDTV.x264-TURBO[rarbg]",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:6e3d56245405a42668e8418984aed510d75f621f&dn=Game.Of.Thrones.S07E01.iNTERNAL.720p.HDTV.x264-TURBO%5Brarbg%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 1224803317,
+          "name": "Game.Of.Thrones.S07E01.iNTERNAL.720p.HDTV.x264-TURBO.mkv",
+          "path": "Game.Of.Thrones.S07E01.iNTERNAL.720p.HDTV.x264-TURBO[rarbg]/Game.Of.Thrones.S07E01.iNTERNAL.720p.HDTV.x264-TURBO.mkv",
+          "currentTime": 0.002096,
+          "duration": 3507.744
+        },
+        {
+          "length": 30,
+          "name": "RARBG.txt",
+          "path": "Game.Of.Thrones.S07E01.iNTERNAL.720p.HDTV.x264-TURBO[rarbg]/RARBG.txt"
+        },
+        {
+          "length": 329,
+          "name": "game.of.thrones.s07e01.720p.hdtv.x264-turbo.nfo",
+          "path": "Game.Of.Thrones.S07E01.iNTERNAL.720p.HDTV.x264-TURBO[rarbg]/game.of.thrones.s07e01.720p.hdtv.x264-turbo.nfo"
+        }
+      ],
+      "selections": [
+        true,
+        true,
+        true
+      ],
+      "torrentFileName": "6e3d56245405a42668e8418984aed510d75f621f.torrent",
+      "posterFileName": "6e3d56245405a42668e8418984aed510d75f621f.jpg",
+      "mostRecentFileIndex": 0,
+      "fileModtimes": [
+        1503517977960,
+        1503517243823,
+        1503517243823
+      ]
+    },
+    {
+      "status": "paused",
+      "infoHash": "28f7de18a784d469c359c2c8f0390e61208b883f",
+      "name": "Rick.and.Morty.S03E05.HDTV.x264-BATV[ettv]",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:28f7de18a784d469c359c2c8f0390e61208b883f&dn=Rick.and.Morty.S03E05.HDTV.x264-BATV%5Bettv%5D&tr=udp%3A%2F%2Fexodus.desync.com%3A6969&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 182161524,
+          "name": "Rick.and.Morty.S03E05.HDTV.x264-BATV[ettv].mkv",
+          "path": "Rick.and.Morty.S03E05.HDTV.x264-BATV[ettv]/Rick.and.Morty.S03E05.HDTV.x264-BATV[ettv].mkv",
+          "currentTime": 0.659324,
+          "duration": 1342.164
+        },
+        {
+          "length": 161,
+          "name": "To keep us going please read.txt",
+          "path": "Rick.and.Morty.S03E05.HDTV.x264-BATV[ettv]/To keep us going please read.txt"
+        }
+      ],
+      "selections": [
+        true,
+        true
+      ],
+      "torrentFileName": "28f7de18a784d469c359c2c8f0390e61208b883f.torrent",
+      "posterFileName": "28f7de18a784d469c359c2c8f0390e61208b883f.jpg",
+      "fileModtimes": [
+        1503390198856,
+        1503389723986
+      ],
+      "mostRecentFileIndex": 0
+    },
+    {
+      "status": "paused",
+      "infoHash": "5fad148dded1e3ee2839559f83999121d284b45b",
+      "name": "Rick.and.Morty.S03E05.720p.HDTV.x264-BATV[ettv]",
+      "path": "/home/pinusc",
+      "magnetURI": "magnet:?xt=urn:btih:5fad148dded1e3ee2839559f83999121d284b45b&dn=Rick.and.Morty.S03E05.720p.HDTV.x264-BATV%5Bettv%5D&tr=udp%3A%2F%2Fexodus.desync.com%3A6969&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com",
+      "files": [
+        {
+          "length": 605752588,
+          "name": "Rick.and.Morty.S03E05.720p.HDTV.x264-BATV[ettv].mkv",
+          "path": "Rick.and.Morty.S03E05.720p.HDTV.x264-BATV[ettv]/Rick.and.Morty.S03E05.720p.HDTV.x264-BATV[ettv].mkv",
+          "currentTime": 0.007092,
+          "duration": 1342.144
+        },
+        {
+          "length": 147,
+          "name": "To keep us going please read.txt",
+          "path": "Rick.and.Morty.S03E05.720p.HDTV.x264-BATV[ettv]/To keep us going please read.txt"
+        }
+      ],
+      "selections": [
+        true,
+        true
+      ],
+      "torrentFileName": "5fad148dded1e3ee2839559f83999121d284b45b.torrent",
+      "posterFileName": "5fad148dded1e3ee2839559f83999121d284b45b.jpg",
+      "mostRecentFileIndex": 0,
+      "fileModtimes": [
+        1503390614570,
+        1503389763573
+      ]
+    },
+    {
+      "status": "paused",
       "infoHash": "705f4bdec2f311a708ff2dce418f44856c838880",
       "name": "Rick.and.Morty.S03E04.720p.HDTV.x264-BATV[rarbg]",
       "path": "/home/pinusc",
@@ -47,7 +262,7 @@
       ]
     },
     {
-      "status": "seeding",
+      "status": "paused",
       "infoHash": "ef16312209e569c413348e96e7c62a9e44e371df",
       "name": "Rick and Morty S03E02 Rickmancing the Stone  (1080p x265 10bit S98 Joy).mkv",
       "path": "/home/pinusc",
@@ -357,15 +572,15 @@
     "uncaughtErrors": [],
     "playAttempts": {
       "minVersion": "0.18.0",
-      "total": 2,
+      "total": 4,
       "success": 0,
-      "error": 1,
-      "external": 1,
+      "error": 2,
+      "external": 2,
       "abandoned": 0
     },
     "version": "0.18.0",
-    "timestamp": "2017-08-18T15:13:39.339Z",
-    "localTime": "17:13:39 GMT+0200 (CEST)",
+    "timestamp": "2017-08-23T21:52:54.833Z",
+    "localTime": "23:52:54 GMT+0200 (CEST)",
     "screens": [
       {
         "width": 1920,
@@ -375,40 +590,40 @@
     ],
     "system": {
       "osPlatform": "linux",
-      "osRelease": "Linux 4.12.3-1-ARCH",
+      "osRelease": "Linux 4.12.8-2-ARCH",
       "architecture": "x64",
       "systemArchitecture": "x64",
       "totalMemoryMB": 8192,
       "numCores": 4
     },
     "torrentStats": {
-      "approxCount": 8,
-      "approxSizeMB": 1024,
+      "approxCount": 16,
+      "approxSizeMB": 16384,
       "byStatus": {
         "new": {
           "approxCount": 0,
           "approxSizeMB": 0
         },
         "downloading": {
-          "approxCount": 1,
-          "approxSizeMB": 128
+          "approxCount": 2,
+          "approxSizeMB": 4096
         },
         "seeding": {
           "approxCount": 0,
           "approxSizeMB": 0
         },
         "paused": {
-          "approxCount": 4,
-          "approxSizeMB": 1024
+          "approxCount": 8,
+          "approxSizeMB": 8192
         }
       }
     },
-    "approxNumTorrents": 8
+    "approxNumTorrents": 16
   },
   "bounds": {
     "height": 1025,
     "width": 946,
-    "x": 8,
-    "y": 47
+    "x": 5,
+    "y": 44
   }
 }
