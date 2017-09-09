@@ -1,7 +1,0 @@
-.TH man 8 "2015-10-15" "1.0" "utility man page"
-.SH NAME
-utility - varie cose da ricordare
-.SH MASTERIZZA ISO DVD:
-growisofs -dvd-compat -Z /dev/sr0=myiso.iso
-.SH AUTHOR
-Pinusc

@@ -1,8 +1,0 @@
-search awareness
-open_with sxiv
-search 20170727
-select_file 
-mkdir foo
-bulkrename 
-open_with firefox
-delete

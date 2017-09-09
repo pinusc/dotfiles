@@ -1,7 +1,0 @@
-Description='Automatically generated profile by wifi-menu'
-Interface=wlp3s0
-Connection=wireless
-Security=wpa
-ESSID=88888
-IP=dhcp
-Key=1234567890

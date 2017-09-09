@@ -1,4 +1,1 @@
-mpd
-speedtest-cli
-bin/lein
-.gitignore
+nvim/.config/nvim/plugged/
