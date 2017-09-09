@@ -1,0 +1,210 @@
+#
+# bspwm hotkeys
+#
+
+# Exit bspwm
+super + alt + Escape
+	bspc quit
+
+# close current node
+super + w
+	bspc node -c
+
+#toggle monocle
+super + t
+	bspc desktop -l next
+
+#equalize area
+super + b
+	bspc node @/ -B 
+
+super + {s,f}
+	bspc node -t \~{floating,fullscreen}
+
+#super + {grave,Tab}
+#	bspc {node,desktop} -f last
+
+#+ (hide|unhide) managed nodes
+super + a
+    bspc control --toggle-visibility
+
+super + apostrophe
+	bspc node -s last
+
+#last node
+super + {o,i}
+	bspc control --record-history off; \
+	bspc node {older,newer} -f; \
+	bspc control --record-history on
+
+super + y
+	bspc node -w last.manual
+
+super + m
+	bspc node -s biggest
+
+#flip desktop
+super + shift + {_, ctrl} + space
+	bspc node @/ -F {vertical, horizontal}
+
+super + r
+	bspc node @/ -R 90
+
+#balance desktop
+
+
+# super + shift + hjkl = move node to
+# super + hjkl = move to node
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+#circulate the nodes of the desktop
+super + {comma,period}
+	bspc desktop -C {backward,forward}
+
+#Move through desktops
+super + {Left,Right}
+	bspc desktop -f {prev,next}
+
+
+# @Move troughmonitors
+super + shift + {Left,Right}
+	bspc monitor -f {prev,next}
+
+#split node in
+super + ctrl + {h,j,k,l}
+	bspc node -p \~{west,south,north,east}
+
+super + ctrl + {_,shift + }space
+	bspc {node -p cancel,desktop -c}
+	
+#resize node 1
+super + alt + {Left,Down,Up,Right}
+	bspc node -e {right -10,down +10,down -10,right +10}
+
+#resize node 2
+super + alt + {h,j,k,l}
+	bspc node -e {right -10,down +10,down -10,right +10}
+
+#set split ratio
+super + ctrl + {1-9}
+	bspc node -o 0.{1-9}
+
+#move node to desktop
+#super + {_,shift,alt}+{1-9,0}
+#bspc {desktop -f,node -d} ^{1-9,10}
+
+super + {_,shift} + {1-9,0}
+	bspc desktop -f "{1-2}:^{1-9,10}"
+
+# focus the last node/desktop
+super + {grave,Tab}
+bspc {node,desktop} -f last
+
+super + alt + {_,shift} + {1-9,0}
+	bspc node -d "{1-2}:^{1-9,10}"
+
+super + shift + {o,p}
+	bspc desktop -R {270,90}
+
+super + ctrl + alt + p
+	bspc node -t \~pseudo_tiled
+super + shift + t
+	bspc node -t \~pseudo_tiled
+
+
+super + ctrl + {Left,Down,Up,Right}
+	bspc node -p {\~west,\~south,\~north,\~east}
+
+#Kill node
+super + ctrl + e
+	bspc node --kill
+
+# Change node gap
+super + {minus,plus}
+    bspc config -d focused node_gap $((`bspc config -d focused node_gap` {+,-} 2 )) 
+
+lock + minus
+    bspc config -d focused node_gap $((`bspc config -d focused node_gap` + 2 )) 
+
+
+# un/hide currently active node
+super + {_,shift} + u
+    ~/.config/bspwm/misc/toggle {hide,show}
+    
+# wm independent hotkeys
+
+
+#lock 
+super + shift + Delete
+  bin/lock
+
+#un/hide conky
+super + q
+	bin/show_conky.sh
+
+# toggle italian|dvorak keyboard layout
+super + Insert
+  ~/bin/toggle_dvorak.sh
+
+super + Return
+	urxvt
+
+super + space
+    ~/bin/launcher
+    # /usr/bin/lighthouse | sh
+super  + v
+    ~/bin/dmenu/volume
+super + c
+    ~/bin/dmenu/clipboard
+super + k
+    ~/bin/dmenu/calculator
+super + f
+    ~/bin/dmenu/file
+super + m
+    clerk
+super + p
+    ~/bin/dmenu/power
+
+super + g
+    _JAVA_AWT_WM_NONREPARENTING=1 java -jar /home/pinusc/bin/jdotxt-0.4.8.jar
+
+super + z
+    info-notify
+
+super + e
+	empty &
+
+super + shift + e
+	killall empty
+
+super + F12
+	amixer -q set Master 2+
+
+super + F11
+	amixer -q set Master 2-
+
+XF86MonBrightness{Up,Down}
+  xbacklight {+,-} 10
+
+XF86Audio{Raise,Lower}Volume
+  amixer -q set Master 5%{+,-}
+
+XF86AudioPlay
+  mpc toggle
+
+XF86AudioPrev
+  mpc previous
+
+XF86AudioNext
+  mpc next
+
+XF86AudioStop
+  mpc stop
+
+# make sxhkd and panel reload its configuration files:
+super + Escape
+       pkill -USR1 -x sxhkd;pkill panel;panel &
+
+ctrl + F1
+	google-chrome-stable

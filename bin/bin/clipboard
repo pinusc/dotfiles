@@ -1,0 +1,20 @@
+#/bin/sh
+PROMPT="search:"
+font="Source Code Pro for Powerline-12"
+
+background_normal="#2d2d2d"
+foreground_normal="#dedede"
+background_selected="$background_normal"
+foreground_selected="#8b9dc3"
+
+x=$(xdotool getmouselocation | egrep -oh "[0-9]+" | head -n 1)
+w=$(( $x < 1366 ? 1360 : 1440 ))
+#h=$(( $x < 1366 ? 768 : 900 ))
+#
+options="-b -dim 0.5 -i -f"
+# -b is for rendering at bottom
+# -dim is for the shadow on the rest of the screen
+# -i is for insensitive case
+# -f faster load at the expense of potentially locking X for a little while
+
+clipmenu -w $w -p "$PROMPT" -fn "$font" -nb "$background_normal" -nf "$foreground_normal" -sb "$background_selected" -sf "$foreground_selected" $options

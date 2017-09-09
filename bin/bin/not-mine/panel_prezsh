@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Used to change to desktop $1 in current monitor
+# written beacause lemonbar commands can't take colons (:)
+# used in bin/panel_bar script to click on monitor
+CHDESKTOP_FUNC="function chdesktop (){bspc desktop -f focused:\"\$1\"}"
+echo $CHDESKTOP_FUNC
+
+while read -r line; do
+  printf "%s\n" $line
+  echo $line >> /home/pinusc/panel.log2
+done
