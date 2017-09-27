@@ -49,6 +49,14 @@ COLOR_BATTERY_EMPTY="#FF$base08_nohash"
 COLOR_KEYBOARD="#FF$base0D_nohash"
 COLOR_KEYBOARD_DISABLED="#FF$base0_nohash"
 
+COLOR_BLUE="#FF$base0D_nohash"
+COLOR_RED="#FF$base08_nohash"
+COLOR_YELLOW="#FF$base0A_nohash"
+COLOR_ORANGE="#FF$base09_nohash"
+COLOR_PURPLE="#FF$base0E_nohash"
+COLOR_GREEN="#FF$base0B_nohash"
+
+
 SEP_R="\ue0b0"
 #SEP_R=""
 SEP_L="\ue0b2"

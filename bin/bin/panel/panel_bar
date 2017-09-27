@@ -7,6 +7,47 @@ current_monitor=$1
 
 while read -r line ; do
     case $line in
+        A*)
+            color=""
+            case $line in
+                Ag*)
+                    color=$COLOR_GREEN
+                    ;;
+                Ao*)
+                    color=$COLOR_ORANGE
+                    ;;
+                Ap*)
+                    color=$COLOR_PURPLE
+                    ;;
+                Ab*)
+                    color=$COLOR_BLUE
+                    ;;
+                Ar*)
+                    color=$COLOR_RED
+                    ;;
+                Ay*)
+                    color=$COLOR_YELLOW
+                    ;;
+            esac
+	    line=${line:2}
+            aqi="$PADDING%{F$color}$line%{F-}$PADDING"
+            ;;
+        F*)
+            color=""
+            case $line in
+                Fb*)
+                    color=$COLOR_BLUE
+                    ;;
+                Fr*)
+                    color=$COLOR_RED
+                    ;;
+                Fy*)
+                    color=$COLOR_YELLOW
+                    ;;
+            esac
+	    line=${line:2}
+            forecast="$PADDING%{F$color}$line%{F-}$PADDING"
+            ;;
         M*)
             mail="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}$PADDING"
             ;;
@@ -176,7 +217,7 @@ while read -r line ; do
     #printf "%s\n" "%{l}${wm_infos}%{Sf}%{c}${music}%{r}${volume}${date}${clock}"
     case $current_monitor in
         1)
-            echo -e "%{l}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${keyboard_icon}${keyboard}${mail}${date}${clock}"
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${keyboard_icon}${keyboard}${clock}"
             ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"

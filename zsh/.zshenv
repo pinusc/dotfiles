@@ -8,6 +8,7 @@ typeset -gU cdpath fpath mailpath path
 # Set the list of directories that Zsh searches for programs.
 path=(
   $HOME/bin
+  $HOME/bin/panel
   /usr/local/heroku/bin
   /usr/local/{bin,sbin}
   $HOME/.dotfiles/bin
