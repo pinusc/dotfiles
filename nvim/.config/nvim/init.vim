@@ -32,6 +32,7 @@ Plug 'reedes/vim-litecorrect', {'for': ['text', 'markdown']}
 Plug 'reedes/vim-wordy', {'for': ['text', 'markdown']}
 Plug 'reedes/vim-pencil', {'for': ['text', 'markdown']}
 Plug 'reedes/vim-lexical', {'for': ['text', 'markdown']}
+Plug 'beloglazov/vim-online-thesaurus'
 Plug 'dbmrq/vim-ditto', {'for': ['text', 'markdown']}
 Plug 'reedes/vim-wheel', {'for': ['text', 'markdown']}
 
@@ -41,6 +42,7 @@ Plug 'lervag/vimtex'
 
 """ Pandoc
 Plug 'pyarmak/vim-pandoc-live-preview'
+Plug 'tpope/vim-markdown'
 
 "Editing parentesi
 Plug 'guns/vim-sexp'
@@ -61,15 +63,17 @@ Plug 'mattn/emmet-vim'
 
 "Base16
 Plug 'chriskempson/base16-vim'
+Plug 'reedes/vim-colors-pencil'
 
 "File browser
 Plug 'scrooloose/nerdtree'
 " fuzzy file finder
 Plug 'kien/ctrlp.vim'
-" quick in-file movement
-Plug 'Lokaltog/vim-easymotion'
 "Cool start screen
 Plug 'mhinz/vim-startify'
+Plug 'mbbill/undotree'
+Plug 'easymotion/vim-easymotion'
+Plug 'Yggdroot/indentLine'
 
 call plug#end()    
 " }}}
@@ -95,6 +99,10 @@ set expandtab
 set title
 set titleold=urxvt
 autocmd BufEnter * let &titlestring = expand("%:t")
+
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+highlight Comment cterm=italic
 " }}}
 
 " {{{ Filetype specific
@@ -120,8 +128,16 @@ autocmd Filetype java set makeprg=javac\ %
 autocmd Filetype c set makeprg=make
 autocmd Filetype c set foldmethod=syntax
 
+let g:pencil#conceallevel = 0
 " Prose {{{
 function! Prose()
+  let g:textobj#quote#educate = 0
+  let g:pencil#wrapModeDefault = 'soft'
+  let g:pencil#conceallevel = 0
+  let g:lexical#thesaurus = ['~/.config/nvim/thesaurus/mthesaur.txt',]
+  let g:lexical#dictionary_key = '<leader>d'
+  let g:lexical#dictionary = ['/usr/share/dict/words',]
+  nnoremap <leader>t :OnlineThesaurusCurrentWord<CR>
   call pencil#init()
   call lexical#init()
   call litecorrect#init()
@@ -311,4 +327,8 @@ map <F5> :!java %:r
 :nnoremap <A-l> <C-w>l
 imap jj <Esc>
 map <f2> :NERDTreeToggle<cr>
+let mapleader = "\<Space>"
+map <leader>w :w
+map <leader>q :q
+map <leader>x :x
 " }}}
