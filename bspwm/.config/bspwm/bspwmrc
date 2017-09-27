@@ -53,8 +53,8 @@ NMON=1
 
 # bspc monitor ^1 -s ^2
 
-# bspc config -m 1 top_padding 37
-bspc config window_gap 5
+bspc config top_padding 40
+bspc config window_gap 6
 
 # Visual options
 #bspc config split_ratio 0.52
