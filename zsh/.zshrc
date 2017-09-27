@@ -61,13 +61,20 @@ if ! zgen saved; then
     zgen load zsh-users/zsh-completions src
     zgen load Tarrasch/zsh-autoenv
     zgen load zsh-users/zsh-syntax-highlighting
+    zgen load Vifon/deer
 
     zgen load changyuheng/fz
-    zhen load rupa/z
+    zgen load rupa/z
+    zgen load zuxfoucault/colored-man-pages_mod
+
 
     # save all to init script
     zgen save
 fi
+
+autoload -U deer
+zle -N deer
+bindkey '\ek' deer
 
 fortune | cowsay
 
