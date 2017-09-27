@@ -39,6 +39,11 @@ alias bspwmrc=":e ~/.config/bspwm/bspwmrc"
 alias sxhkdrc=":e ~/.config/sxhkd/sxhkdrc"
 alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresources"
 
+mdmake() {
+    cp "$HOME/.config/templates/pandoc/Makefile" "."
+    cp "$HOME/.config/templates/pandoc/doc.md" "$1"
+}
+
 alias gst="git status"
 alias dd="echo 'Fuck you Shen'"
 
