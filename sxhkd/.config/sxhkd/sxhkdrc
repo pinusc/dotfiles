@@ -188,7 +188,8 @@ XF86MonBrightness{Up,Down}
   xbacklight {+,-} 10
 
 XF86Audio{Raise,Lower}Volume
-  amixer -q set Master 5%{+,-}
+  #amixer -q set Master 5%{+,-}
+  ponymix {increase,decrease} 5
 
 XF86AudioPlay
   mpc toggle
