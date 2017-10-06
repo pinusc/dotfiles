@@ -29,16 +29,17 @@ bspc config border_width 2
 # unset i
 
 bspc monitor -n 1 -d \
+    $(echo -e '\uf0c3')   `# flask` \
+    $(echo -e '\uf109')   `# desktop` \
+    $(echo -e '\uf025')   `# music` \
+    $(echo -e '\uf0e0')   `# mail` \
+    $(echo -e '\uf15c')   `# document` \
     $(echo -e '\uf0ac')   `# internet` \
     $(echo -e '\uf121')   `# editor` \
     $(echo -e '\uf120')   `# terminal ` \
-    $(echo -e '\uf15c')   `# document` \
-    $(echo -e '\uf109')   `# desktop` \
-    $(echo -e '\uf03e')   `# image` \
-    $(echo -e '\uf16a')   `# player` \
-    $(echo -e '\uf025')   `# music` \
     $(echo -e '\uf135')   `# rocket` \
-    $(echo -e '\uf013')   `# gear`
+    $(echo -e '\uf2db')   `# microchip` \
+    $(echo -e '\uf21e')   `# hearthbeat`
 # bspc monitor "eDP1" -n 2 -d \
 #     $(echo -e '\uf0ac')  `#internet` \
 #     $(echo -e '\uf121')  `# editor` \
@@ -80,17 +81,16 @@ bspc config pointer-modifier mod4
 
 # Rules
 bspc rule -a sxiv state=floating center=on
-bspc rule -a lxappearance desktop="^8" state=floating center=on
 bspc rule -a Pavucontrol state=floating center=on
-bspc rule -a libreoffice-writer  follow=on desktop="^4"
+bspc rule -a libreoffice-writer  follow=on desktop="^5"
 
-bspc rule -a google-chrome follow=on desktop="^1"
-bspc rule -a vivaldi-stable follow=on desktop="^1"
-bspc rule -a firefox follow=on desktop="^1"
+bspc rule -a google-chrome follow=on desktop="^6"
+bspc rule -a vivaldi-stable follow=on desktop="^6"
+bspc rule -a Firefox follow=on desktop="^6"
 
-bspc rule -a gimp state=floating desktop="^6"
-bspc rule -a vlc follow=on desktop="^8"
-bspc rule -a mpv follow=on desktop="^8"
+bspc rule -a gimp state=floating desktop="^1"
+bspc rule -a vlc follow=on desktop="^2"
+bspc rule -a mpv follow=on desktop="^2"
 bspc rule -a Anki state=floating center=on
 bspc rule -a "com-chschmid-jdotxt-Jdotxt" state=floating sticky=on
 
