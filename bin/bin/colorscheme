@@ -1,0 +1,10 @@
+#!/bin/bash
+BASE16_SHELL=$HOME/.config/base16-shell/
+colorpath=$HOME/.config/base16-shell/scripts/
+path=$colorpath\base16-$1.sh
+[ -e "$HOME/.base16_theme" ] && rm "$HOME/.base16_theme"
+ln -s $path $HOME/.base16_theme
+eval "$path"
+generate_xresources.sh
+pkill panel; panel &
+# base16-builder -s $1 -b light -t gtk-3.0

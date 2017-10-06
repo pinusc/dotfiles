@@ -3,6 +3,10 @@ source $HOME/.zprofile
 source "${HOME}/builds/zgen/zgen.zsh"
 source ~/.zsh_aliases
 
+fpath=(~/.completions $fpath)
+autoload -U compinit
+compinit
+
 #BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"
 #[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 

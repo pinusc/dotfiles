@@ -37,8 +37,6 @@ base0D=$(echo "#$color04" | sed s/\\///g)
 base0E=$(echo "#$color05" | sed s/\\///g)
 base0F=$(echo "#$color17" | sed s/\\///g)
 
-echo $base04
-
 c_red="$base08"
 c_green="$base0B"
 c_yellow="$base0A"
