@@ -11,3 +11,4 @@ nf='#dedede'
 sf='#8b9dc3'
 
 dmenu_command="dmenu -h $h -w $w -fn $FONT -nb $nb -nf $nf -sb $sb -sf $sf" 
+dmenu_command="rofi -dmenu" 
