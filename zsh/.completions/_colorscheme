@@ -1,0 +1,7 @@
+#compdef colorscheme
+local -a options
+options=()
+for file in $HOME/.config/base16-shell/scripts/*; do
+  options+=(${${file##*/base16-}%.sh})
+done
+_describe 'values' options
