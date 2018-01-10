@@ -2,32 +2,6 @@
 
 bspc config border_width 2
 
-#i=1
-#echo $(bspc query -M) > /tmp/bspwm1.log
-#for monitor in $(bspc query -M | tac); do
-    # bspc monitor $monitor -n $i -d \
-    #     $(echo -e '\uf0ac') \
-    #     $(echo -e '\uf121') \
-    #     $(echo -e '\uf120') \
-    #     $(echo -e '\uf109') \
-    #     $(echo -e '\uf03e') \
-    #     $(echo -e '\uf0c3') \
-    #     $(echo -e '\uf001') \
-    #     $(echo -e '\uf135')
-    # order:
-    # internet
-    # editor
-    # terminal
-    # desktop
-    # image
-    # player 
-    # music
-    # rocket
-    # let i++
-# done
-# NMON=$i
-# unset i
-
 bspc monitor -n 1 -d \
     $(echo -e '\uf0c3')   `# flask` \
     $(echo -e '\uf109')   `# desktop` \
@@ -99,7 +73,7 @@ if [ -e "$BSPWM_TREE" ] ; then
     rm "$BSPWM_TREE" "$BSPWM_HISTORY" "$BSPWM_STACK"
 fi
 
-nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +1360+0 {ForceFullCompositionPipeline = On}"
+#nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +1360+0 {ForceFullCompositionPipeline = On}"
 #compton -bcG & # backhround, draw shadows, not on panel
 #conky -c dotfiles/conkyrc2  # clock
 
@@ -127,7 +101,6 @@ redshift -t 5500:3700 &
 panel &
 # (sleep 1; bspc config -m 1 top_padding 36) &
 bspc config -m 1 top_padding 39 &
-# polybar example &
 mpd &
 music_player &
-bspc desktop -f \^1
+bspc desktop -f \^6
