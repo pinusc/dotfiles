@@ -6,8 +6,12 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " for global config
 Plug 'editorconfig/editorconfig-vim'
 
+Plug 'mileszs/ack.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
 " Commenter
-Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-commentary'
 
 " Code snippets
 Plug 'SirVer/ultisnips'
@@ -26,22 +30,21 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'vim-scripts/LanguageTool'
-Plug 'reedes/vim-textobj-quote', {'for': ['text', 'markdown']}
-Plug 'reedes/vim-textobj-sentence', {'for': ['text', 'markdown']}
-Plug 'reedes/vim-litecorrect', {'for': ['text', 'markdown']}
-Plug 'reedes/vim-wordy', {'for': ['text', 'markdown']}
-Plug 'reedes/vim-pencil', {'for': ['text', 'markdown']}
-Plug 'reedes/vim-lexical', {'for': ['text', 'markdown']}
+Plug 'reedes/vim-textobj-quote', {'for': ['text', 'markdown', 'tex']}
+Plug 'reedes/vim-textobj-sentence', {'for': ['text', 'markdown', 'tex']}
+Plug 'reedes/vim-litecorrect', {'for': ['text', 'markdown', 'tex']}
+Plug 'reedes/vim-wordy', {'for': ['text', 'markdown', 'tex']}
+Plug 'reedes/vim-pencil', {'for': ['text', 'markdown', 'tex']}
+Plug 'reedes/vim-lexical', {'for': ['text', 'markdown', 'tex']}
 Plug 'beloglazov/vim-online-thesaurus'
-Plug 'dbmrq/vim-ditto', {'for': ['text', 'markdown']}
-Plug 'reedes/vim-wheel', {'for': ['text', 'markdown']}
+Plug 'dbmrq/vim-ditto', {'for': ['text', 'markdown', 'tex']}
+Plug 'reedes/vim-wheel', {'for': ['text', 'markdown', 'tex']}
 
 """ Latex 
 Plug 'xuhdev/vim-latex-live-preview'
 Plug 'lervag/vimtex'
 
 """ Pandoc
-Plug 'pyarmak/vim-pandoc-live-preview'
 Plug 'tpope/vim-markdown'
 
 "Editing parentesi
@@ -56,10 +59,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 
 Plug 'klen/python-mode'
-Plug 'kchmck/vim-coffee-script'
 
 Plug 'mattn/emmet-vim'
-
 
 "Base16
 Plug 'chriskempson/base16-vim'
@@ -82,6 +83,8 @@ call plug#end()
 set number
 filetype off
 filetype plugin indent on
+set ignorecase
+set smartcase
 
 set t_Co=256
 set background=dark
@@ -171,41 +174,43 @@ command! -nargs=0 Prose call Prose()
 
 " {{{ Clojure 
 "  Automagic Clojure folding on defn's and defmacro's
-function GetClojureFold()
-    if getline(v:lnum) =~ '^\s*(defn.*\s'
-        return ">1"
-    elseif getline(v:lnum) =~ '^\s*(defmacro.*\s'
-        return ">1"
-    elseif getline(v:lnum) =~ '^\s*(defmethod.*\s'
-        return ">1"
-    elseif getline(v:lnum) =~ '^\s*$'
-        let my_cljnum = v:lnum
-        let my_cljmax = line("$")
+if !exists ('*GetClojureFold')
+    function GetClojureFold()
+        if getline(v:lnum) =~ '^\s*(defn.*\s'
+            return ">1"
+        elseif getline(v:lnum) =~ '^\s*(defmacro.*\s'
+            return ">1"
+        elseif getline(v:lnum) =~ '^\s*(defmethod.*\s'
+            return ">1"
+        elseif getline(v:lnum) =~ '^\s*$'
+            let my_cljnum = v:lnum
+            let my_cljmax = line("$")
 
-        while (1)
-            let my_cljnum = my_cljnum + 1
-            if my_cljnum > my_cljmax
-                return "<1"
-            endif
+            while (1)
+                let my_cljnum = my_cljnum + 1
+                if my_cljnum > my_cljmax
+                    return "<1"
+                endif
 
-            let my_cljdata = getline(my_cljnum)
+                let my_cljdata = getline(my_cljnum)
 
-            " If we match an empty line, stop folding
-            if my_cljdata =~ '^$'
-                return "<1"
-            else
-                return "="
-            endif
-        endwhile
-    else
-        return "="
-    endif
-endfunction
+                " If we match an empty line, stop folding
+                if my_cljdata =~ '^$'
+                    return "<1"
+                else
+                    return "="
+                endif
+            endwhile
+        else
+            return "="
+        endif
+    endfunction
 
-function TurnOnClojureFolding()
-    setlocal foldexpr=GetClojureFold()
-    setlocal foldmethod=expr
-endfunction
+    function TurnOnClojureFolding()
+        setlocal foldexpr=GetClojureFold()
+        setlocal foldmethod=expr
+    endfunction
+endif
 
 autocmd FileType clojure call TurnOnClojureFolding()
 " }}} Clojure
@@ -219,7 +224,13 @@ set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
-let g:gitgutter_enabled = 0
+let g:gitgutter_enabled = 1
+let g:gitgutter_sign_added = '·'
+let g:gitgutter_sign_modified = '·'
+let g:gitgutter_sign_removed = '·'
+let g:gitgutter_sign_removed_first_line = '·'
+let g:gitgutter_sign_modified_removed = '·'
+
 
 " {{{ Pymode
 let g:pymode_rope = 0
@@ -281,6 +292,11 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:NERDCustonDelimiters = {
             \ 'python': {'right': '# '}}
 
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
 " }}}
 
 " {{{ Mappings 
@@ -328,7 +344,21 @@ map <F5> :!java %:r
 imap jj <Esc>
 map <f2> :NERDTreeToggle<cr>
 let mapleader = "\<Space>"
-map <leader>w :w
-map <leader>q :q
-map <leader>x :x
+map <leader>w :w<CR>
+map <leader>q :q<CR>
+map <leader>x :x<CR>
+
+function! StartMakeView()
+    NeomakeSh! make view
+    autocmd BufWritePost <buffer> :NeomakeSh! make
+    redraw!
+endfunction
+
+command! StartMakeView call StartMakeView()
+
+" fzf mappings
+nmap ; :Buffers<CR>
+nmap <Leader>t :Files<CR>
+nmap <Leader>r :Tags<CR>
+
 " }}}
