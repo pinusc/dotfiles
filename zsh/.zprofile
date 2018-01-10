@@ -68,3 +68,6 @@ fi
 TMPPREFIX="${TMPDIR%/}/zsh"
 #export PATH="$HOME/bin:/home/pinusc/.gem/ruby/2.2.0/bin:$PATH"
 # export PATH="/usr/local/heroku/bin:$HOME/.dotfiles:$PATH"
+if [[ ! $DISPLAY && XDG_VTNR -eq 1 ]]; then
+    exec startx
+fi
