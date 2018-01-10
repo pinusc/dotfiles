@@ -12,5 +12,5 @@ do
     text="$text\n#define $bname $bhex"
 done
 
-echo -e $text | cat - .Xresources.def | cpp -P - -o .Xresources
-xrdb -merge .Xresources
+echo -e $text | cat - $HOME/.Xresources.def | cpp -P - -o $HOME/.Xresources
+xrdb -merge $HOME/.Xresources
