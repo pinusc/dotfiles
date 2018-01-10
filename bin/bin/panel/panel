@@ -2,16 +2,19 @@
 
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_FIFO_2=/tmp/panel-fifo-2
+CLOCK_FIFO=/tmp/panel-clock-fifo
 PANEL_HEIGHT=36
 PANEL_WIDTH=1910
 PANEL_GAP=5
 PANEL_Y=5
 #PANEL_FONT_FAMILY="Source Code Pro for Powerline:size=12"
 PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
+PANEL_FONT_FAMILY="Inconsolata for Powerline:size=14"
 # PANEL_FONT_FAMILY="Monofur for Powerline:size=15"
 ICON_FONT="FontAwesome:size=14"
 ICON_FONT_2="Weather Icons:size=14"
 dzencommand_music="~/bin/bar/dzen2/scripts/mpdzen"
+dzencommand_calendar="zsh ~/bin/bar/dzen2/calendar"
 dkeyboard="~/bin/dkeyboard"
 MAILDIR="$HOME/Maildir/School/INBOX/new"
 MAILCOMMAND="thunderbird"
@@ -30,6 +33,10 @@ fi
 mkfifo "$PANEL_FIFO"
 [ -e "$PANEL_FIFO_2" ] && rm "$PANEL_FIFO_2"
 mkfifo "$PANEL_FIFO_2"
+[ -e "$CLOCK_FIFO" ] && rm "$CLOCK_FIFO"
+mkfifo "$CLOCK_FIFO"
+
+
 
 bspc subscribe > "$PANEL_FIFO" &
 #bspc control --subscribe > "$PANEL_FIFO_2" &
@@ -38,28 +45,16 @@ bspc subscribe > "$PANEL_FIFO" &
 # xtitle -sf 'T%s' > "$PANEL_FIFO" &
 #
 
-# mail
-while true;
-do
-    count=$(ls "$MAILDIR" | grep -v '.*2,.*S' | wc -l)
-    echo "M%{A:$MAILCOMMAND:}\uf0e0 $count%{A}"
-    sleep 350
-done > "$PANEL_FIFO" &
 
-# clock
-while true;
-do
-    # echo 'C\uf017'$(date +"%l:%M %p");
-    echo 'C\uf017 '$(bash-fuzzy-clock);
-    sleep 30;
-done > "$PANEL_FIFO" &
+cflag=0
+clock() {
+    cloutput=$(bash-fuzzy-clock)
+    echo 'C%{A:echo SWITCH > /tmp/panel-clock-fifo:}\uf017 '$cloutput'%{A}';
+}
 
-# date
-while true; do 
-    dzen_cal="zsh ~/bin/bar/dzen2/calendar"
-    echo "D%{A:$dzen_cal:}\uf073 $(date +'%b %d')%{A}"
-    sleep 60
-done > $PANEL_FIFO &
+calendar() {
+    echo "D%{A:$dzencommand_calendar:}\uf073 $(date +'%a %b %d')%{A}"
+}
 
 
 # battery
@@ -85,8 +80,7 @@ done > $PANEL_FIFO &
 #	sleep 30;
 #done > "$PANEL_FIFO" &
 
-# alsa volume
-while true; do
+alsa_volume() {
     #ALSA_VOLUME=$(amixer get Master | grep 'Front Left: Playback' | grep -o '...%' | sed 's/\[//' | sed 's/%//' | sed 's/ //')
     #ALSA_STATE=$(amixer get Master | grep 'Front Left: Playback' | grep -o '\[on]')
     ALSA_STATE=1
@@ -110,17 +104,21 @@ while true; do
         fi
     fi
     echo "V%{A:pavucontrol:}$ICON $VOLUME%{A}"
-    sleep 1.0
-done > $PANEL_FIFO &
+}
 
 #IP
 while true; do
     echo -e I'\uf041' $(curl -s icanhazip.com)
     sleep 10
-done > $PANEL_FIFO_2 &
+done > $PANEL_FIFO_2 2>/dev/null &
+
+mail() {
+    count=$(ls "$MAILDIR" | grep -v '.*2,.*S' | wc -l)
+    echo "M%{A:$MAILCOMMAND:}\uf0e0 $count%{A}"
+}
 
 #iAir pollution
-while true; do
+pollution() {
     aqi=$(curl "http://api.waqi.info/feed/changshu/?token=$API_WAQI" | jq -r .data.aqi)
     icon="\uf36d"
     color=""
@@ -138,12 +136,10 @@ while true; do
         color="p"
     fi
     echo -e A"$color$icon $aqi"
-    sleep 300 
     #curl "https://api.darksky.net/forecast/cdd9e613e163fa9768e2a4d3b3219ca6/31.6035,120.7391?exclude=minutely,hourly,daily,alerts,flags" > /tmp/weather
-done > $PANEL_FIFO &
+}
 
-#weather
-while true; do
+weather() {
     weather_response=$(curl "https://api.darksky.net/forecast/$API_DARKSKY/31.6035,120.7391?units=si")
     apiicon=$(echo $weather_response | jq -r .currently.icon)
     temperature=$(echo $weather_response | jq -r .currently.temperature | bc -l)
@@ -187,16 +183,14 @@ while true; do
         color="r"
     fi
     echo -e F"$color$icon $temperature"
-    sleep 300
     #curl "https://api.darksky.net/forecast/cdd9e613e163fa9768e2a4d3b3219ca6/31.6035,120.7391?exclude=minutely,hourly,daily,alerts,flags" > /tmp/weather
-done > $PANEL_FIFO &
-
+}
 
 # wifi
 wifi() {
-    if [[ $(iw wlp2s0 link) != "Not Connected" ]]; then
-	WIFI_SSID=$(iw wlp2s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
-	WIFI_SIGNAL=$(iw wlp2s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
+    if [[ $(iw wlp3s0 link) != "Not Connected" ]]; then
+	WIFI_SSID=$(iw wlp3s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
+	WIFI_SIGNAL=$(iw wlp3s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
 	if [[ $(pingtest.sh 8.8.8.8) = "Up" ]]; then
 	    connIcon="\uf1eb"
 	else
@@ -223,7 +217,7 @@ music() {
             then
                 echo "R%{T3}%{A:mpc prev:}\uf048%{A} %{A:mpc play:}\uf04b%{A}  %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
             else
-                echo "R%{T3}%{A:mpc prev:}\uf048%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}\uf04c%{A}%{A} %{A:mpc next:}\uf051%{A}%{T1} $SONG_NAME"
+                echo "R%{T3}%{A:mpc prev:}\uf048%{A} %{A:mpc pause:}\uf04c%{A} %{A:mpc next:}\uf051%{A}%{T1} %{A:$dzencommand_music:}$SONG_NAME%{A} "
             fi
 	fi
     fi
@@ -240,8 +234,6 @@ music() {
 songScroll() {
     zscroll -l 25 -n -u -b "R%{T3}%{A:mpc prev:}\uf048%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}\uf04c%{A}%{A} %{A:mpc next:}\uf051%{A}%{T1} " -d 0.3 "getSongName" > "$PANEL_FIFO" &
 }
-
-songScroll
 
 # music play only
 musicp() {
@@ -305,17 +297,34 @@ keyboard() {
     echo "Kc$color%{A:$dkeyboard:}\uf11c%{A}"
 }
 
+#wallpaper
+wallpaper() {
+    echo "Q%{A:fortunewallpaper.sh:}\uf03e%{A}"
+}
 
 i=0
 while true; do
-    keyboard
-    battery
-    # pomodoro
-    music
-    wifi
+    keyboard &
+    battery &
+    music &
+    wifi & 
+    wallpaper &
+    alsa_volume &
+    if (( i % 60 == 0 )); then 
+        clock & 
+        calendar &
+    fi
+    if (( i % 400 == 0 )); then
+        mail &
+        pollution & 
+        weather &
+    fi
+    i=$((i+1))
+    # Just in case $i gets enormously large and causes problems. 
+    # The value in brackets should be a multiple of the other cycles' values
+    (( i >= 1600 )) && i=0 
     sleep 1
-done > $PANEL_FIFO &
-
+done > $PANEL_FIFO 2>/dev/null &
 
 PANEL_WM_NAME="bar_wmname"
 cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -d -n "$PANEL_WM_NAME" -a 20 -o -4 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
