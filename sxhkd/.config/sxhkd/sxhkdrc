@@ -101,7 +101,7 @@ super + {_,shift} + {grave,1-9,0}
 super + {grave,Tab}
 bspc {node,desktop} -f last
 
-super + alt + {_,shift} + {1-9,0}
+super + alt + {_,shift} + {grave,1-9,0}
 	bspc node -d "{1-2}:^{1-9,10}"
 
 super + shift + {o,p}
@@ -178,11 +178,8 @@ super + e
 super + shift + e
 	killall empty
 
-super + F12
-	amixer -q set Master 2+
-
-super + F11
-	amixer -q set Master 2-
+super + {F12,F11}
+  ponymix {increase,decrease} 5
 
 XF86MonBrightness{Up,Down}
   xbacklight {+,-} 10
