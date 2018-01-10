@@ -12,12 +12,16 @@ URxvt*font: \
    xft: Source Han Sans:size=14, \
    xft: wuncon Siji:size=10
 
-URxvt*perl-ext-common:default
+:x
+
+
 URxvt*iso14755:true
 URxvt.imLocale:en_US.UTF-8
 Xcursor.theme:Breeze
 xterm*dynamicColors: true
 urxvt*dynamicColors: on
+URxvt.inputMethod: ibus
+URxvt.preeditType: OverTheSpot
 
 !URxvt*keysym.Home: \033[1~
 !URxvt*keysym.End: \033[4~
