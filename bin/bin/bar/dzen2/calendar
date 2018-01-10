@@ -13,4 +13,4 @@ l=$(($(echo "$text" | wc -l) - 1))
 text="^fg($c_blue)$text[0,21]^fg()$text[22,-1]"
 echo $text
 
-echo "$text" | dzen2 -p -x $x -y $y -w $w -l $l -sa 'l' -ta 'c' -title-name 'popup_sysinfo' -e 'onstart=uncollapse;button1=exit;leaveslave=exit' -fn "gohufont"
+echo "$text" | dzen2 -p -x $x -y $y -w $w -l $l -sa 'l' -ta 'c' -title-name 'popup_sysinfo' -e 'onstart=uncollapse;button1=exit;leaveslave=exit' -fn "-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
