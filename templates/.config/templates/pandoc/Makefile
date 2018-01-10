@@ -2,16 +2,23 @@ BIBFILE=biblio.bib
 BIBDIR=biblio
 VIEWER=evince
 
+ifneq ("$(wildcard $(BIBDIR)/*)","")
+HAS_BIBLIO = true
+else
+HAS_BIBLIO =
+endif
+
 all: $(patsubst %.md,%.pdf,$(wildcard *.md))
 
-%.pdf: %.md $(BIBFILE)
-	pandoc --bibliography $(BIBFILE) --filter pandoc-citeproc --latex-engine=xelatex $< -o $@
+%.pdf: %.md $(if $(HAS_BIBLIO),$(BIBFILE))
+ifdef $(HAS_BIBLIO)
+	pandoc --bibliography $(BIBFILE) --filter pandoc-citeproc $< -o $@
+else
+	pandoc $< -o $@
+endif
 
-$(BIBDIR):
-	mkdir $@
-
-$(BIBFILE): $(BIBDIR)
-	-cat $(wildcard $(BIBDIR)/*) > $@
+$(BIBFILE): 
+	-$(if $(wildcard $(BIBDIR)/*), cat $(wildcard $(BIBDIR)/*) > $@,touch $(BIBFILE))
 
 clean: 
 	-rm *.pdf
