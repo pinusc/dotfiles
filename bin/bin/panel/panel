@@ -39,12 +39,6 @@ mkfifo "$CLOCK_FIFO"
 
 
 bspc subscribe > "$PANEL_FIFO" &
-#bspc control --subscribe > "$PANEL_FIFO_2" &
-
-# window title
-# xtitle -sf 'T%s' > "$PANEL_FIFO" &
-#
-
 
 cflag=0
 clock() {
@@ -56,37 +50,8 @@ calendar() {
     echo "D%{A:$dzencommand_calendar:}\uf073 $(date +'%a %b %d')%{A}"
 }
 
-
-# battery
-#while true;
-#do
-#BATT_LEVEL=$(acpi -b | grep -o '[[:digit:]]\+%' | sed 's/%//')
-#	if [ $BATT_LEVEL -ge 80 ]
-#		then
-#			echo 'B\uf116' $BATT_LEVEL%
-#	fi
-#
-#	if [ $BATT_LEVEL -ge 30 -a $BATT_LEVEL -lt 80 ]
-#		then
-#			echo 'B\uf117' $BATT_LEVEL%
-#	fi
-#
-#	if [ $BATT_LEVEL -lt 30 ]
-#		then
-#			echo 'B%{T3}\uf115%{T1}' $BATT_LEVEL%
-#	fi
-
-
-#	sleep 30;
-#done > "$PANEL_FIFO" &
-
 alsa_volume() {
-    #ALSA_VOLUME=$(amixer get Master | grep 'Front Left: Playback' | grep -o '...%' | sed 's/\[//' | sed 's/%//' | sed 's/ //')
-    #ALSA_STATE=$(amixer get Master | grep 'Front Left: Playback' | grep -o '\[on]')
     ALSA_STATE=1
-    # ALSA_VOLUME=$(check_volume 1)
-    # ALSA_VOLUME=${ALSA_VOLUME%?}
-    # ALSA_VOLUME=$(amixer get Master | tail -n 1 | cut -d '[' -f 2 | sed 's/%.*//g')
     VOLUME=$(ponymix get-volume)
     ICON='\uf028'
     if [ $ALSA_STATE ]; then
@@ -136,7 +101,6 @@ pollution() {
         color="p"
     fi
     echo -e A"$color$icon $aqi"
-    #curl "https://api.darksky.net/forecast/cdd9e613e163fa9768e2a4d3b3219ca6/31.6035,120.7391?exclude=minutely,hourly,daily,alerts,flags" > /tmp/weather
 }
 
 weather() {
@@ -223,14 +187,6 @@ music() {
     fi
 }
 
-# getSongName() {
-#     SONG_NAME=$(mpc -f "%title%" | head -n1)
-#     if [ "${#SONG_NAME}" -eq 0 ]; then
-#         SONG_NAME=$(grep -B 1 -m 1 `mpc | head -n 1` .youtube-mpd | head -n 1)
-#     fi
-#     echo $SONG_NAME
-# }
-
 songScroll() {
     zscroll -l 25 -n -u -b "R%{T3}%{A:mpc prev:}\uf048%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}\uf04c%{A}%{A} %{A:mpc next:}\uf051%{A}%{T1} " -d 0.3 "getSongName" > "$PANEL_FIFO" &
 }
@@ -299,7 +255,7 @@ keyboard() {
 
 #wallpaper
 wallpaper() {
-    echo "Q%{A:fortunewallpaper.sh:}\uf03e%{A}"
+    echo "Q%{A:randomwallpaper.sh:}%{A3:fortunewallpaper.sh:}\uf03e%{A}%{A}"
 }
 
 i=0
