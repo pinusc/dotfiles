@@ -3,6 +3,11 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'neomake/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'ervandew/supertab'
+Plug 'zchee/deoplete-jedi'
+Plug 'carlitux/deoplete-ternjs'
+Plug 'clojure-vim/async-clj-omni'
+Plug 'Shougo/neco-syntax'
 " for global config
 Plug 'editorconfig/editorconfig-vim'
 
@@ -20,16 +25,16 @@ Plug 'honza/vim-snippets'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 """ Clojure
-Plug 'guns/vim-clojure-static'
-Plug 'tpope/vim-fireplace'
+Plug 'guns/vim-clojure-static', {'for': 'clojure'}
+Plug 'tpope/vim-fireplace', {'for': 'clojure'}
 " Bundle 'kien/rainbow_parentheses.vim'
-Plug 'tpope/vim-leiningen'
+Plug 'tpope/vim-leiningen', {'for': 'clojure'}
 
 """ Prose
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
-Plug 'kana/vim-textobj-user'
 Plug 'vim-scripts/LanguageTool'
+Plug 'kana/vim-textobj-user'
 Plug 'reedes/vim-textobj-quote', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-textobj-sentence', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-litecorrect', {'for': ['text', 'markdown', 'tex']}
@@ -45,20 +50,21 @@ Plug 'xuhdev/vim-latex-live-preview'
 Plug 'lervag/vimtex'
 
 """ Pandoc
-Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 
 "Editing parentesi
-Plug 'guns/vim-sexp'
-Plug 'tpope/vim-sexp-mappings-for-regular-people' 
+Plug 'guns/vim-sexp', { 'for': 'clojure' }
+Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 "Parentesi arcobaleno
-" Plugin 'oblitum/rainbow'
+" UnPlugin 'oblitum/rainbow'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sensible'
 
-Plug 'klen/python-mode'
+Plug 'klen/python-mode', { 'for': 'python' }
 
 Plug 'mattn/emmet-vim'
 
@@ -67,7 +73,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'reedes/vim-colors-pencil'
 
 "File browser
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 " fuzzy file finder
 Plug 'kien/ctrlp.vim'
 "Cool start screen
@@ -223,6 +229,7 @@ set statusline+=%*
 set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='base16color'
 
 let g:gitgutter_enabled = 1
 let g:gitgutter_sign_added = '·'
@@ -280,12 +287,10 @@ let g:startify_custom_header =
 
 " }}}
 
-" better key bindings for UltiSnipsExpandTrigger
-" let g:UltiSnipsExpandTrigger = "<tab>"
-" let g:UltiSnipsJumpForwardTrigger = "<tab>"
-" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-autocmd FileType html,css imap <tab> <plug>(emmet-expand-abbr)
+"autocmd FileType html,css imap <tab> <plug>(emmet-expand-abbr)
+let g:user_emmet_install_global = 0
+autocmd FileType html,css  EmmetInstall
+autocmd FileType html,css imap <TAB> <plug>(emmet-expand-abbr)
 
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlPBuffer'
@@ -293,9 +298,24 @@ let g:NERDCustonDelimiters = {
             \ 'python': {'right': '# '}}
 
 
+call deoplete#custom#set('ultisnips', 'matchers', ['matcher_fuzzy'])
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
+
+aug omnicomplete 
+    au!
+    au FileType css,sass,scss,stylus,less setl omnifunc=csscomplete#CompleteCSS
+    au FileType html,htmldjango,jinja,markdown setl omnifunc=emmet#completeTag
+    au FileType javascript,jsx setl omnifunc=tern#Complete
+    au FileType python setl omnifunc=pythoncomplete#Complete
+    au FileType xml setl omnifunc=xmlcomplete#CompleteTags
+aug END
+
+let g:neomake_open_list = 2
+call neomake#configure#automake('w')
 
 " }}}
 
@@ -347,14 +367,16 @@ let mapleader = "\<Space>"
 map <leader>w :w<CR>
 map <leader>q :q<CR>
 map <leader>x :x<CR>
+map <leader>/ :nohlsearch<CR>
 
 function! StartMakeView()
     NeomakeSh! make view
-    autocmd BufWritePost <buffer> :NeomakeSh! make
+    autocmd CursorHold,CursorHoldI,BufWritePost <buffer> :NeomakeSh! make
     redraw!
 endfunction
 
 command! StartMakeView call StartMakeView()
+
 
 " fzf mappings
 nmap ; :Buffers<CR>
