@@ -8,5 +8,7 @@ w=120
 x=$(( $(getcurpos | head -n 1) + 10 - w / 2))
 y=$(( $(getcurpos | tail -n 1) + 10 ))
 y=40
+[[ $x -le 0 ]] && x=0
+[[ $y -le 0 ]] && y=0
 mpc -f "^fg(#$c_blue)Title:^fg() %title%\nArtist: %artist%"| head -n 2 | dzen2 -p -x $x -y $y -w $w -l "5" -sa 'l' -ta 'c' -title-name 'popup_sysinfo' -e 'onstart=uncollapse;button1=exit;leaveslave=exit' -fn "Source Code Pro for Powerline"
 

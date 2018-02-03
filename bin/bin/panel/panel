@@ -1,26 +1,5 @@
 #! /bin/bash
 
-PANEL_FIFO=/tmp/panel-fifo
-PANEL_FIFO_2=/tmp/panel-fifo-2
-CLOCK_FIFO=/tmp/panel-clock-fifo
-PANEL_HEIGHT=36
-PANEL_WIDTH=1910
-PANEL_GAP=5
-PANEL_Y=5
-#PANEL_FONT_FAMILY="Source Code Pro for Powerline:size=12"
-PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
-PANEL_FONT_FAMILY="Inconsolata for Powerline:size=14"
-# PANEL_FONT_FAMILY="Monofur for Powerline:size=15"
-ICON_FONT="FontAwesome:size=14"
-ICON_FONT_2="Weather Icons:size=14"
-dzencommand_music="~/bin/bar/dzen2/scripts/mpdzen"
-dzencommand_calendar="zsh ~/bin/bar/dzen2/calendar"
-dkeyboard="~/bin/dkeyboard"
-MAILDIR="$HOME/Maildir/School/INBOX/new"
-MAILCOMMAND="thunderbird"
-#ICON_FONT2="fontcustom:size=17"
-# export PANEL_FIFO PANEL_HEIGHT PANEL_FONT_FAMILY
-
 if [ $(pgrep -cx panel) -gt 1 ] ; then
     printf "%s\n" "The panel is already running." >&2 exit 1
 fi
@@ -31,6 +10,7 @@ fi
 init() {
     source api_keys.sh
     source modules.sh
+    source settings.sh
     . panel_colors light
     mkfifo "$PANEL_FIFO_2"
     mkfifo "$CLOCK_FIFO"

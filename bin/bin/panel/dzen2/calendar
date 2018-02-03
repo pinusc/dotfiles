@@ -7,6 +7,8 @@ getcurpos() {
 w=170
 x=$(( $(getcurpos | head -n 1) + 10 - w / 2))
 y=$(( $(getcurpos | tail -n 1) + 10 ))
+[[ $x -le 0 ]] && x=0
+[[ $y -le 0 ]] && y=0
 y=40
 text=$(cal -m | tail -n +2)
 l=$(($(echo "$text" | wc -l) - 1))
