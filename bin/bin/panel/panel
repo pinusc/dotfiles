@@ -1,7 +1,8 @@
 #! /bin/bash
 
-if [ $(pgrep -cx panel) -gt 1 ] ; then
-    printf "%s\n" "The panel is already running." >&2 exit 1
+if [ "$(pgrep -cx panel)" -gt 1 ] ; then
+    echo "The panel is already running." 
+    exit 1
 fi
 
 # trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
@@ -12,29 +13,19 @@ init() {
     source modules.sh
     source settings.sh
     . panel_colors light
-    mkfifo "$PANEL_FIFO_2"
-    mkfifo "$CLOCK_FIFO"
-    mkfifo "$PANEL_FIFO"
+    mkfifo "$PANEL_FIFO_2" "$CLOCK_FIFO" "$PANEL_FIFO"
     bspc subscribe > "$PANEL_FIFO" &
 }
 
-clean() {
-    rm "$PANEL_FIFO"
-    rm "$PANEL_FIFO_2"
-    rm "$CLOCK_FIFO"
-}
-
 shutdown() {
-    clean
     # Get our process group id
-    PGID=$(ps -o pgid= $$ | grep -o [0-9]*)
-
+    PGID=$(ps -o pgid=$$ | head -n 1)
+    echo "PGID: $PGID"
     # Kill it in a new new process group
-    setsid kill -- -$PGID
-    exit 0
+    setsid kill -- "-$PGID"
 }
 
-trap shutdown EXIT SIGINT SIGTERM
+trap shutdown EXIT SIGTERM SIGUSR1
 
 loop() {
     i=0
@@ -59,21 +50,20 @@ loop() {
         # The value in brackets should be a multiple of the other cycles' values
         (( i >= 1600 )) && i=0 
         sleep 1
-    done > $PANEL_FIFO 2>/dev/null &
+    done > "$PANEL_FIFO" 2>/dev/null &
 }
 
 main() {
     init
     loop
     PANEL_WM_NAME="bar_wmname"
-    cat "$PANEL_FIFO" | panel_bar 1 | lemonbar -d -n "$PANEL_WM_NAME" -a 20 -o -4 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
+    panel_bar 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 20 -o -4 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
 
     # cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1910x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
 
 
-    d=$(xdo id -a "$PANEL_WM_NAME")
     tries_left=20
-    while [ -z "$wid" -a "$tries_left" -gt 0 ] ; do
+    while [ -z "$wid" ] && [ "$tries_left" -gt 0 ] ; do
             sleep 0.05
             wid=$(xdo id -a "$PANEL_WM_NAME")
             tries_left=$((tries_left - 1))

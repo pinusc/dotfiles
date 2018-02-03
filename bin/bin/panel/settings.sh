@@ -1,7 +1,8 @@
 #! /bin/bash
-export PANEL_FIFO=/tmp/panel-fifo
-export PANEL_FIFO_2=/tmp/panel-fifo-2
-export CLOCK_FIFO=/tmp/panel-clock-fifo
+export TMPDIR=$(mktemp -d)
+export PANEL_FIFO="$TMPDIR/panel-fifo"
+export PANEL_FIFO_2="$TMPDIR/panel-fifo-2"
+export CLOCK_FIFO="$TMPDIR/panel-clock-fifo"
 export PANEL_HEIGHT=36
 export PANEL_WIDTH=1910
 export PANEL_GAP=5
