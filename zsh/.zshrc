@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 source $HOME/.zprofile
 # load zgen
 source "${HOME}/builds/zgen/zgen.zsh"
@@ -54,7 +56,6 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # ls colors: eliminate that ugly green background
 #eval "$(dircolors ~/.config/dircolors)";
 
-export TERM="xterm-256color"
 
 # check if there's no init script
 if ! zgen saved; then
