@@ -7,8 +7,8 @@ super + alt + Escape
 	bspc quit
 
 # close current node
-super + w
-	bspc node -c
+super + {_,shift} + w
+	bspc node {-c,-k}
 
 #toggle monocle
 super + t
@@ -24,24 +24,14 @@ super + {s,f}
 #super + {grave,Tab}
 #	bspc {node,desktop} -f last
 
-#+ (hide|unhide) managed nodes
-super + a
-    bspc control --toggle-visibility
-
-super + apostrophe
-	bspc node -s last
-
 #last node
 super + {o,i}
 	bspc control --record-history off; \
-	bspc node {older,newer} -f; \
+	bspc desktop {older,newer} -f; \
 	bspc control --record-history on
 
-super + y
-	bspc node -w last.manual
-
 super + m
-	bspc node -s biggest
+	bspc node -s biggest.local
 
 #flip desktop
 super + shift + {_, ctrl} + space
@@ -60,7 +50,7 @@ super + {_,shift + }{h,j,k,l}
 
 #circulate the nodes of the desktop
 super + {comma,period}
-	bspc desktop -C {backward,forward}
+	bspc node -f {prev,next}.local
 
 #Move through desktops
 super + {Left,Right}
@@ -80,11 +70,13 @@ super + ctrl + {_,shift + }space
 	
 #resize node 1
 super + alt + {Left,Down,Up,Right}
-	bspc node -e {right -10,down +10,down -10,right +10}
+	bspc node -v {-15 0, 0 15, 0 -15, 15 0}
 
 #resize node 2
 super + alt + {h,j,k,l}
-	bspc node -e {right -10,down +10,down -10,right +10}
+	bspc node -z {left -10 0,bottom 0 10,bottom 0 -10,left +10 0}
+super + shift + alt + {h,j,k,l}
+	bspc node -z {right -10 0,top 0 10,top 0 -10,right +10 0}
 
 #set split ratio
 super + ctrl + {1-9}
@@ -115,10 +107,6 @@ super + shift + t
 
 super + ctrl + {Left,Down,Up,Right}
 	bspc node -p {\~west,\~south,\~north,\~east}
-
-#Kill node
-super + ctrl + e
-	bspc node --kill
 
 # Change node gap
 super + {minus,plus}
@@ -153,6 +141,8 @@ super + Return
 super + space
     ~/bin/launcher
     # /usr/bin/lighthouse | sh
+super + {_,shift} + a
+    ~/bin/dmenu/passmenu {_,--type}
 super  + v
     ~/bin/dmenu/volume
 super + c
@@ -179,14 +169,14 @@ super + shift + e
 	killall empty
 
 super + {F12,F11}
-  ponymix {increase,decrease} 5
+  ~/bin/panel/dzen2/popup "Volume: $(ponymix {increase,decrease} 5)%" 1
 
 XF86MonBrightness{Up,Down}
-  xbacklight {+,-} 10
+  xbacklight {+,-} 10 && PERCENT=$(xbacklight | grep -o "[0-9]*" | head -n 1) && ~/bin/panel/dzen2/popup "Brightness: $PERCENT%" 1
 
 XF86Audio{Raise,Lower}Volume
   #amixer -q set Master 5%{+,-}
-  ponymix {increase,decrease} 5
+  change_volume.sh {increase, decrease} 5
 
 XF86AudioPlay
   mpc toggle
@@ -202,7 +192,7 @@ XF86AudioStop
 
 # make sxhkd and panel reload its configuration files:
 super + Escape
-       pkill -USR1 -x sxhkd;pkill panel;panel &
+       pkill -USR1 -x sxhkd; pkill panel; panel &
 
 ctrl + F1
 	google-chrome-stable
