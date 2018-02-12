@@ -72,10 +72,6 @@ Plug 'mattn/emmet-vim'
 Plug 'chriskempson/base16-vim'
 Plug 'reedes/vim-colors-pencil'
 
-"File browser
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-" fuzzy file finder
-Plug 'kien/ctrlp.vim'
 "Cool start screen
 Plug 'mhinz/vim-startify'
 Plug 'mbbill/undotree'
@@ -99,6 +95,29 @@ if filereadable(expand("~/.vimrc_background"))
   let base16colorspace=256
   source ~/.vimrc_background
 endif
+
+colorscheme base16-gruvbox-dark-medium
+
+augroup on_change_colorschema
+  autocmd!
+  autocmd ColorScheme * call s:base16_customize()
+augroup END
+
+function! s:base16_customize() abort
+    call Base16hi("LineNr", g:base16_gui02, g:base16_gui00, g:base16_cterm02, g:base16_cterm00, "", "")
+    call Base16hi("Folded", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "italic", "")
+    call Base16hi("FoldColumn", g:base16_gui0C, g:base16_gui00, g:base16_cterm0C, g:base16_cterm00, "", "")
+    call Base16hi("GitGutterAdd", g:base16_gui0B, g:base16_gui00, g:base16_cterm0B, g:base16_cterm00, "", "")
+    call Base16hi("GitGutterChange", g:base16_gui0D, g:base16_gui00, g:base16_cterm0D, g:base16_cterm00, "", "")
+    call Base16hi("GitGutterDelete", g:base16_gui08, g:base16_gui00, g:base16_cterm08, g:base16_cterm00, "", "")
+    call Base16hi("GitGutterChangeDelete", g:base16_gui0E, g:base16_gui01, g:base16_cterm0E, g:base16_cterm01, "", "")
+    hi StartifySection ctermfg=1
+    hi StartifyHeader ctermfg=4
+    hi StartifyPath ctermfg=243
+endfunction
+
+
+let g:indentLine_char = '│'
 
 syntax enable
 set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
@@ -136,6 +155,7 @@ augroup END
 autocmd Filetype java set makeprg=javac\ %
 autocmd Filetype c set makeprg=make
 autocmd Filetype c set foldmethod=syntax
+autocmd Filetype help,startify :IndentLinesToggle
 
 let g:pencil#conceallevel = 0
 " Prose {{{
@@ -229,7 +249,7 @@ set statusline+=%*
 set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='base16color'
+let g:airline_theme='base16_shell'
 
 let g:gitgutter_enabled = 1
 let g:gitgutter_sign_added = '·'
@@ -270,9 +290,9 @@ let g:pymode_folding = 1
 " }}} 
 
 " {{{ Startify
-let g:startify_bookmarks = ['~/Dropbox/programming/exercises/projecteuler', '~/.config/nvim/init.vim']
+let g:startify_bookmarks = [{'s': '~/docs/school/'}, {'b': '~/bin'}, {'p': '~/projects/'}, {'v': '~/.config/nvim/init.vim'}]
 let g:startify_list_order = [
-            \ ['   These are my bookmarks:'],
+            \ ['   Bookmarks:'],
             \ 'bookmarks',
             \ ['   My most recently', '   used files'],
             \ 'files',
@@ -282,9 +302,17 @@ let g:startify_list_order = [
             \ 'sessions',
             \ ]
 
+function! s:filter_header(lines) abort
+    let longest_line   = max(map(copy(a:lines), 'strwidth(v:val)'))
+    let centered_lines = map(copy(a:lines),
+                \ 'repeat(" ", (&columns / 2) - (longest_line / 2)) . v:val')
+    return centered_lines
+endfunction
+let g:startify_fortune_use_unicode = 1
 let g:startify_custom_header =
             \ map(split(system('fortune -c | cowthink -f $(find /usr/share/cows -type f | shuf -n 1)'), '\n'), '"   ". v:val') + ['','']
 
+let g:startify_custom_header = s:filter_header(startify#fortune#cowsay())
 " }}}
 
 "autocmd FileType html,css imap <tab> <plug>(emmet-expand-abbr)
@@ -292,8 +320,6 @@ let g:user_emmet_install_global = 0
 autocmd FileType html,css  EmmetInstall
 autocmd FileType html,css imap <TAB> <plug>(emmet-expand-abbr)
 
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:NERDCustonDelimiters = {
             \ 'python': {'right': '# '}}
 
@@ -316,6 +342,8 @@ aug END
 
 let g:neomake_open_list = 2
 call neomake#configure#automake('w')
+
+let g:netrw_liststyle = 3
 
 " }}}
 
@@ -366,7 +394,13 @@ map <f2> :NERDTreeToggle<cr>
 let mapleader = "\<Space>"
 map <leader>w :w<CR>
 map <leader>q :q<CR>
+map <leader>Q :q!<CR>
 map <leader>x :x<CR>
+map <leader>e :Explore<CR>
+map <leader>s :Sexplore<CR>
+map <leader>v :Vexplore<CR>
+map <leader>u :UndotreeToggle<CR>
+nmap <Leader>' :Files<CR>
 map <leader>/ :nohlsearch<CR>
 
 function! StartMakeView()
