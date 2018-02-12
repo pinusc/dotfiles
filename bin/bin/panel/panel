@@ -13,16 +13,14 @@ init() {
     source modules.sh
     source settings.sh
     . panel_colors light
+    echo $(( PANEL_HEIGHT + PANEL_GAP ))
+    bspc config top_padding $(( PANEL_HEIGHT + PANEL_GAP + 1))
     mkfifo "$PANEL_FIFO_2" "$CLOCK_FIFO" "$PANEL_FIFO"
     bspc subscribe > "$PANEL_FIFO" &
 }
 
 shutdown() {
-    # Get our process group id
-    PGID=$(ps -o pgid=$$ | head -n 1)
-    echo "PGID: $PGID"
-    # Kill it in a new new process group
-    setsid kill -- "-$PGID"
+    jobs -p | xargs kill
 }
 
 trap shutdown EXIT SIGTERM SIGUSR1
@@ -57,6 +55,7 @@ main() {
     init
     loop
     PANEL_WM_NAME="bar_wmname"
+    echo $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP
     panel_bar 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 20 -o -4 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2|  zsh &
 
     # cat "$PANEL_FIFO_2" | panel_bar 2 | lemonbar -g 1910x$PANEL_HEIGHT+1365+5 -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
