@@ -3,15 +3,17 @@ export TMPDIR=$(mktemp -d)
 export PANEL_FIFO="$TMPDIR/panel-fifo"
 export PANEL_FIFO_2="$TMPDIR/panel-fifo-2"
 export CLOCK_FIFO="$TMPDIR/panel-clock-fifo"
-export PANEL_HEIGHT=36
-export PANEL_WIDTH=1910
-export PANEL_GAP=5
-export PANEL_Y=5
+export PANEL_HEIGHT=50
+dim=$(xdpyinfo | awk '/dimensions:/ { print $2; exit }')
+dimx=${dim%x*}
+export PANEL_GAP=$(bspc config window_gap)
+export PANEL_WIDTH=$(( dimx - 2 * PANEL_GAP))
+# export PANEL_WIDTH=1910
 # export PANEL_FONT_FAMILY="Source Code Pro for Powerline:size=12"
 export PANEL_FONT_FAMILY="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
 export PANEL_FONT_FAMILY="Inconsolata for Powerline:size=14"
 export # PANEL_FONT_FAMILY="Monofur for Powerline:size=15"
-export ICON_FONT="FontAwesome:size=14"
+export ICON_FONT="FontAwesome:size=15"
 export ICON_FONT_2="Weather Icons:size=14"
 export dzencommand_music="$HOME/bin/panel/dzen2/scripts/mpdzen"
 export dzencommand_calendar="zsh $HOME/bin/panel/dzen2/calendar"
