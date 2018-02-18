@@ -49,9 +49,6 @@ Plug 'reedes/vim-wheel', {'for': ['text', 'markdown', 'tex']}
 Plug 'xuhdev/vim-latex-live-preview'
 Plug 'lervag/vimtex'
 
-""" Pandoc
-Plug 'tpope/vim-markdown', { 'for': 'markdown' }
-
 "Editing parentesi
 Plug 'guns/vim-sexp', { 'for': 'clojure' }
 Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
@@ -76,6 +73,7 @@ Plug 'reedes/vim-colors-pencil'
 Plug 'mhinz/vim-startify'
 Plug 'mbbill/undotree'
 Plug 'easymotion/vim-easymotion'
+Plug 'terryma/vim-multiple-cursors'
 Plug 'Yggdroot/indentLine'
 
 call plug#end()    
@@ -111,6 +109,8 @@ function! s:base16_customize() abort
     call Base16hi("GitGutterChange", g:base16_gui0D, g:base16_gui00, g:base16_cterm0D, g:base16_cterm00, "", "")
     call Base16hi("GitGutterDelete", g:base16_gui08, g:base16_gui00, g:base16_cterm08, g:base16_cterm00, "", "")
     call Base16hi("GitGutterChangeDelete", g:base16_gui0E, g:base16_gui01, g:base16_cterm0E, g:base16_cterm01, "", "")
+    call Base16hi("htmlItalic", g:base16_gui05, g:base16_gui00, g:base16_cterm05, g:base16_cterm00, "italic", "italic")
+    call Base16hi("htmlBold", g:base16_gui05, g:base16_gui00, g:base16_cterm05, g:base16_cterm00, "bold", "bold")
     hi StartifySection ctermfg=1
     hi StartifyHeader ctermfg=4
     hi StartifyPath ctermfg=243
