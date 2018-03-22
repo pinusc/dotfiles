@@ -41,7 +41,11 @@ mail() {
 
 #iAir pollution
 pollution() {
-    aqi=$(curl "http://api.waqi.info/feed/changshu/?token=$API_WAQI" | jq -r .data.aqi)
+    city_code="@7874"
+    aqi=$(curl "http://api.waqi.info/feed/$city_code/?token=$API_WAQI" | jq -r .data.aqi)
+    # 7874 is the Changshu code. When in a place where IP Localization is available, should use "here"
+    # Or, to find station id, query as follows: "https://api.waqi.info/search/?token=$API_WAQI&keyword=changshu"
+    # One should be able to use "http://api.waqi.info/feed/changshu/?token=$API_WAQI", but for some reason API queries by sity always return aqi for Ontario, Canada using my token. Problem does not arise using "demo" as a toke, but that is against terms of service.
     icon="\uf36d"
     color=""
     if (( $(echo $aqi '<=' 50 | bc -l) )); then
@@ -173,6 +177,7 @@ pomodoro() {
 
 #battery
 battery() {
+    BATTERY_CRITICAL=0
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
     bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//" | sed "s/%//")
     if [[ $power = "on" ]]; then
@@ -188,6 +193,7 @@ battery() {
         bicon="\uf242"
         bcolor="m"
     elif [[ $bcharge -ge 10 ]]; then
+        BATTERY_CRITICAL=1
         bicon="\uf243"
         bcolor="m"
     else
