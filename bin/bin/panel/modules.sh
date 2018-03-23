@@ -5,7 +5,8 @@ clock() {
 }
 
 calendar() {
-    echo "D%{A:$dzencommand_calendar:}\uf073 $(date +'%a %b %d')%{A}"
+    url_comm="firefox calendar.google.com"
+    echo "D%{A:$dzencommand_calendar:}%{A3:$url_comm:}\uf073 $(date +'%a %b %d')%{A}%{A}"
 }
 
 alsa_volume() {
@@ -42,10 +43,13 @@ mail() {
 #iAir pollution
 pollution() {
     city_code="@7874"
-    aqi=$(curl "http://api.waqi.info/feed/$city_code/?token=$API_WAQI" | jq -r .data.aqi)
+    res=$(curl "http://api.waqi.info/feed/$city_code/?token=$API_WAQI")
     # 7874 is the Changshu code. When in a place where IP Localization is available, should use "here"
     # Or, to find station id, query as follows: "https://api.waqi.info/search/?token=$API_WAQI&keyword=changshu"
     # One should be able to use "http://api.waqi.info/feed/changshu/?token=$API_WAQI", but for some reason API queries by sity always return aqi for Ontario, Canada using my token. Problem does not arise using "demo" as a toke, but that is against terms of service.
+    aqi=$(echo $res  | jq -r .data.aqi)
+    url=$(echo $res  | jq -r .data.city.url)
+    url_comm="firefox \"${url#*://}\"" # the colon in the URL will interfere with lemonbar's syntax and this is easier than figuring out how to escape ti
     icon="\uf36d"
     color=""
     if (( $(echo $aqi '<=' 50 | bc -l) )); then
@@ -61,11 +65,12 @@ pollution() {
     elif (( $(echo $aqi '>' 300 | bc -l) )); then
         color="p"
     fi
-    echo -e A"$color$icon $aqi"
+    echo A"$color%{A:$url_comm:}$icon $aqi%{A}"
 }
 
 weather() {
     weather_response=$(curl "https://api.darksky.net/forecast/$API_DARKSKY/31.6035,120.7391?units=si")
+    url_comm="firefox darksky.net/forecast/changshu/si12/en"
     apiicon=$(echo $weather_response | jq -r .currently.icon)
     temperature=$(echo $weather_response | jq -r .currently.temperature | bc -l)
     temperature=$(printf "%.1f" "$temperature")
@@ -107,7 +112,7 @@ weather() {
     elif (( $(echo $temperature '>' 30 | bc -l) )); then
         color="r"
     fi
-    echo -e F"$color$icon $temperature"
+    echo -e F"$color%{A:$url_comm:}$icon $temperature%{A}"
     #curl "https://api.darksky.net/forecast/cdd9e613e163fa9768e2a4d3b3219ca6/31.6035,120.7391?exclude=minutely,hourly,daily,alerts,flags" > /tmp/weather
 }
 
