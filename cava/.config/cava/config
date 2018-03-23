@@ -22,7 +22,7 @@ method = ncurses # may be ncurses, noncurses or circle.
 [color]
 # supported colors are: red, green, yellow, magenta, cyan, white, blue, black.
 ; background = black
-foreground = blue 
+foreground = green 
 
 [smoothing]
 ; integral = 0.7 # multiplier for the integral smoothing calculations. Takes values from 0 - 0.99. Higher values means smoother, but less precise. 0 to disable.
