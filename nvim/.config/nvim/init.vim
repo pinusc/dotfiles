@@ -2,8 +2,10 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'neomake/neomake'
+" Plug 'ervandew/supertab'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'ervandew/supertab'
+Plug '~/projects/webcomplete/src/vim-plugin'
+
 Plug 'zchee/deoplete-jedi'
 Plug 'carlitux/deoplete-ternjs'
 Plug 'clojure-vim/async-clj-omni'
@@ -183,8 +185,6 @@ function! Prose()
   inoremap <buffer> <c-s> <c-g>u<Esc>[s1z=`]A<c-g>u
 
   " replace common punctuation
-  iabbrev <buffer> -- –
-  iabbrev <buffer> --- —
   iabbrev <buffer> << «
   iabbrev <buffer> >> »
 
@@ -317,15 +317,21 @@ let g:startify_custom_header = s:filter_header(startify#fortune#cowsay())
 
 "autocmd FileType html,css imap <tab> <plug>(emmet-expand-abbr)
 let g:user_emmet_install_global = 0
-autocmd FileType html,css  EmmetInstall
-autocmd FileType html,css imap <TAB> <plug>(emmet-expand-abbr)
+autocmd FileType html,css,scss EmmetInstall
+autocmd FileType html,css,scss imap <buffer> <TAB> <plug>(emmet-expand-abbr)
 
 let g:NERDCustonDelimiters = {
             \ 'python': {'right': '# '}}
 
-
 call deoplete#custom#set('ultisnips', 'matchers', ['matcher_fuzzy'])
-let g:SuperTabDefaultCompletionType = "<c-n>"
+
+let g:deoplete#enable_at_startup = 1
+let g:UltiSnipsExpandTrigger="<C-e>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><s-tab> pumvisible() ? "\<C-p>" : "\<TAB>"
 
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
@@ -356,6 +362,8 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+tnoremap <Esc> <C-\><C-n>?\$<CR>
 "
 " map <F9> :make<Return>:copen<Return>
 map <F9> :lclose<Return>
