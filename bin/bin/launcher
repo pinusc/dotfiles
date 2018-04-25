@@ -9,4 +9,9 @@ w=1920
 h=1080
 # dmenu_run -h $h -w $w -l 1 -q -p "                         execute" -fn "$font" -nb "#2d2d2d" -nf "#dedede" -sb "#2d2d2d" -sf "#8b9dc3"
 #dmenu_recent_aliases -w $w -h $h -l 1 -q -p "                         execute" -fn "$font" -nb "#2d2d2d" -nf "#dedede" -sb "#2d2d2d" -sf "#8b9dc3"
-rofi -show run
+
+if [ -n "$1" ]; then
+    rofi -show $1
+else
+    rofi -modi "run,drun,ssh" -show 
+fi
