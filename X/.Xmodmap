@@ -1,4 +1,4 @@
-clear      lock 
+    clear      lock 
 clear   control
 clear      mod1
 clear      mod2
@@ -13,4 +13,5 @@ add        mod2 = Num_Lock
 add        mod3 = Hyper_L
 add        mod4 = Super_L Super_R
 add mod5 = Mode_switch ISO_Level3_Shift
+keycode          78 = Caps_Lock
 clear lock
