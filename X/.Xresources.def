@@ -12,20 +12,23 @@ URxvt*font: \
    xft: Source Han Sans:size=14, \
    xft: wuncon Siji:size=10
 
-:x
-
-
 URxvt*iso14755:true
 URxvt.imLocale:en_US.UTF-8
-Xcursor.theme:Breeze
+Xcursor.theme: Breeze
 xterm*dynamicColors: true
 urxvt*dynamicColors: on
 URxvt.inputMethod: ibus
 URxvt.preeditType: OverTheSpot
+URxvt.internalBorder: 5
+URxvt.perl-ext-common: default,font-size
+URxvt.perl-lib: /home/pinusc/.urxvt/ext
 
-!URxvt*keysym.Home: \033[1~
-!URxvt*keysym.End: \033[4~
-
+URxvt.keysym.C-Up:     font-size:increase
+URxvt.keysym.C-Down:   font-size:decrease
+URxvt.keysym.C-S-Up:   font-size:incglobal
+URxvt.keysym.C-S-Down: font-size:decglobal
+URxvt.keysym.C-equal:  font-size:reset
+URxvt.keysym.C-slash:  font-size:show
 
 *.foreground:   base05
 *.background:   base00
