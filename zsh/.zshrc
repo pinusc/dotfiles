@@ -32,8 +32,6 @@ fi
 source "$fasd_cache"
 unset fasd_cache
 
-source /usr/share/fzf/*.zsh
-
 # fzf + ag configuration
 export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -98,6 +96,3 @@ bindkey '\ek' deer
 fortune | cowsay
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source /usr/share/undistract-me/long-running.bash
-notify_when_long_running_commands_finish_install
-

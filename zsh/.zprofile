@@ -11,7 +11,7 @@
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less'
-export TERM="rxvt-unicode-256color"
+# export TERM="rxvt-unicode-256color"
 
 #
 # Language
