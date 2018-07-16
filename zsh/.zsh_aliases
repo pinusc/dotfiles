@@ -37,6 +37,7 @@ alias zshrc=":e ~/.zshrc"
 alias bspwmrc=":e ~/.config/bspwm/bspwmrc"
 alias sxhkdrc=":e ~/.config/sxhkd/sxhkdrc"
 alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresources"
+alias did="vim +'normal Go' +'r!date' ~/docs/did.txt"
 
 mdmake() {
     cp "$HOME/.config/templates/pandoc/Makefile" "."
@@ -97,4 +98,4 @@ alias pacrem="$FRONTEND -Rns"
 alias pacq="$FRONTEND -Qq"
 alias pacx=pacrem
 
-#other aliases
+source ~/bin/gpg-wrapper.zsh
