@@ -1,11 +1,11 @@
-#!/bin/env zsh
+#!/bin/zsh
 #
 xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
 source $HOME/bin/colors.sh
 
 
-bspc monitor -n 1 -d \
+bspc monitor "^1" -d \
     $(echo -e '\uf0c3')   `# flask` \
     $(echo -e '\uf109')   `# desktop` \
     $(echo -e '\uf025')   `# music` \
@@ -17,21 +17,22 @@ bspc monitor -n 1 -d \
     $(echo -e '\uf135')   `# rocket` \
     $(echo -e '\uf2db')   `# microchip` \
     $(echo -e '\uf21e')   `# hearthbeat`
-# bspc monitor "eDP1" -n 2 -d \
-#     $(echo -e '\uf0ac')  `#internet` \
-#     $(echo -e '\uf121')  `# editor` \
-#     $(echo -e '\uf120')  `# terminal` \
-#     $(echo -e '\uf02d')  `# man` \
-#     $(echo -e '\uf025')  `# music` \
-#     $(echo -e '\uf21e')  `# heartbeat` \
-#     $(echo -e '\uf094')  `# lemon` \
-#     $(echo -e '\uf130')  `# phone`
+bspc monitor "^2" -d \
+    $(echo -e '\uf0ac')  `#internet` \
+    $(echo -e '\uf121')  `# editor` \
+    $(echo -e '\uf120')  `# terminal` \
+    $(echo -e '\uf02d')  `# man` \
+    $(echo -e '\uf025')  `# music` \
+    $(echo -e '\uf21e')  `# heartbeat` \
+    $(echo -e '\uf094')  `# lemon` \
+    $(echo -e '\uf130')  `# phone`
+# bspc monitor "^1" -d I II III IV V VI VII
+# bspc monitor "^2" -d i ii iii iv v vi vii
 # # bspc monitor "eDP1" -n 1 -d internet editor terminal document desktop image player music rocket gear
-NMON=1
 
 # bspc monitor ^1 -s ^2
 
-bspc config top_padding 40
+# bspc config top_padding 40
 bspc config window_gap 6
 
 # Visual options
@@ -58,6 +59,7 @@ bspc config pointer-modifier mod4
 
 # Rules
 bspc rule -a sxiv state=floating center=on
+bspc rule -a Emacs state=tiled
 bspc rule -a Pavucontrol state=floating center=on
 bspc rule -a libreoffice-writer state=tiled follow=on desktop="^5"
 
@@ -76,14 +78,13 @@ if [ -e "$BSPWM_TREE" ] ; then
     rm "$BSPWM_TREE" "$BSPWM_HISTORY" "$BSPWM_STACK"
 fi
 
-#nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +1360+0 {ForceFullCompositionPipeline = On}"
+nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +1440+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}"
 #compton -bcG & # backhround, draw shadows, not on panel
 #conky -c dotfiles/conkyrc2  # clock
 
 xrdb -merge /home/pinusc/.Xresources &
 # setxkbmap it
 xmodmap ~/.Xmodmap
-sxhkd &
 # clipmenud &
 
 feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper
@@ -100,9 +101,11 @@ xsetroot -cursor_name left_ptr
 xautolock -time 15 -locker lock &
 redshift -t 5500:3700 &
 
-panel &
+# panel &
 # (sleep 1; bspc config -m 1 top_padding 36) &
+xset fp+ /usr/share/fonts/X11/gohu &
 bspc config -m 1 top_padding 39 &
 mpd &
 music_player &
 bspc desktop -f \^6
+sxhkd &
