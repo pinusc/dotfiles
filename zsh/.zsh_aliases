@@ -89,7 +89,7 @@ getcurpos() {
 }
 
 #pacman
-FRONTEND="pacaur"
+FRONTEND="yay"
 alias pac="$FRONTEND"
 alias paci="$FRONTEND -S"
 alias pacs="$FRONTEND -Ss"

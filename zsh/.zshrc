@@ -1,5 +1,5 @@
 #!/bin/zsh
-
+fortune | cowsay
 source $HOME/.zprofile
 # load zgen
 source "${HOME}/builds/zgen/zgen.zsh"
@@ -21,9 +21,6 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 #alias lrvm='[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"'
-
-# For DuckPAN
-alias lduckpan='eval $(perl -I${HOME}/perl5/lib/perl5 -Mlocal::lib)'
 
 fasd_cache="$HOME/.fasd-init-bash"
 if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
@@ -93,6 +90,5 @@ autoload -U deer
 zle -N deer
 bindkey '\ek' deer
 
-fortune | cowsay
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
