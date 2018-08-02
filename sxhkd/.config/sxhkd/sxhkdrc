@@ -156,14 +156,11 @@ super + m
 super + p
     ~/bin/dmenu/power
 
-super + g
-    _JAVA_AWT_WM_NONREPARENTING=1 java -jar /home/pinusc/bin/jdotxt-0.4.8.jar
-
 super + z
     info-notify
 
 super + e
-	empty &
+	~/bin/em &
 
 super + shift + e
 	killall empty
