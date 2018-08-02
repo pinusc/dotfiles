@@ -1,7 +1,8 @@
+source icons.sh
 cflag=0
 clock() {
     cloutput=$(bash-fuzzy-clock)
-    echo 'C%{A:echo SWITCH > /tmp/panel-clock-fifo:}\uf017 '$cloutput'%{A}';
+    echo "C%{A:echo SWITCH > /tmp/panel-clock-fifo:}$icon_clock$cloutput%{A}";
 }
 
 calendar() {
@@ -36,8 +37,12 @@ ip() {
 }
 
 mail() {
-    count=$(ls "$MAILDIR" | grep -v '.*2,.*S' | wc -l)
-    echo "M%{A:$MAILCOMMAND:}\uf0e0 $count%{A}"
+    count=$(find "$MAILDIR" -type f | grep -vE ',[^,]*S[^,]*$' | wc -l)
+    if [ $count -gt 0 ]; then
+        echo "Mf%{A3:$FETCHMAILCOMMAND:}%{A:$MAILCOMMAND:}\uf0e0 $count%{A}${A}"
+    else
+        echo "M0%{A3:$FETCHMAILCOMMAND:}%{A:MAILCOMMAND:}\uf0e0%{A}%{A}"
+    fi
 }
 
 #iAir pollution
@@ -49,8 +54,8 @@ pollution() {
     # One should be able to use "http://api.waqi.info/feed/changshu/?token=$API_WAQI", but for some reason API queries by sity always return aqi for Ontario, Canada using my token. Problem does not arise using "demo" as a toke, but that is against terms of service.
     aqi=$(echo $res  | jq -r .data.aqi)
     url=$(echo $res  | jq -r .data.city.url)
-    url_comm="firefox \"${url#*://}\"" # the colon in the URL will interfere with lemonbar's syntax and this is easier than figuring out how to escape ti
-    icon="\uf36d"
+    # url_comm="firefox \"${url#*://}\"" # the colon in the URL will interfere with lemonbar's syntax and this is easier than figuring out how to escape ti
+    icon="\uf075"
     color=""
     if (( $(echo $aqi '<=' 50 | bc -l) )); then
         color="g"
@@ -65,7 +70,8 @@ pollution() {
     elif (( $(echo $aqi '>' 300 | bc -l) )); then
         color="p"
     fi
-    echo A"$color%{A:$url_comm:}$icon $aqi%{A}"
+    # echo A"$color%{A:$url_comm:}$icon $aqi%{A}"
+    echo A"$color$icon $aqi"
 }
 
 weather() {
@@ -215,7 +221,7 @@ keyboard() {
     if [ $var = "disabled" ]; then
         color="r"
     fi
-    echo "K$(setxkbmap -query | tail -c 3)"
+    echo "K$(setxkbmap -query | awk '/layout:/ {print $2; exit}')"
     echo "Kc$color%{A:$dkeyboard:}\uf11c%{A}"
 }
 

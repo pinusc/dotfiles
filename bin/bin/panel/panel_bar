@@ -30,7 +30,7 @@ while read -r line ; do
                     color=$COLOR_YELLOW
                     ;;
             esac
-	    line=${line:2}
+            line=${line:2}
             aqi="$PADDING%{F$color}$line%{F-}"
             ;;
         F*)
@@ -50,7 +50,15 @@ while read -r line ; do
             forecast="$PADDING%{F$color}$line%{F-}"
             ;;
         M*)
-            mail="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}"
+            case $line in
+                M0*)
+                    color=$COLOR_GREEN
+                    ;;
+                Mf*)
+                    color=$COLOR_RED
+                    ;;
+            esac
+            mail="$PADDING%{F$color}${line:2}%{F-}"
             ;;
         Kc*)
             case $line in
@@ -221,7 +229,7 @@ while read -r line ; do
     #printf "%s\n" "%{l}${wm_infos}%{Sf}%{c}${music}%{r}${volume}${date}${clock}"
     case $current_monitor in
         1)
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${keyboard_icon}${mail}${keyboard}${wallpaper}${clock}$PADDING"
             ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"
