@@ -17,15 +17,15 @@ bspc monitor "^1" -d \
     $(echo -e '\uf135')   `# rocket` \
     $(echo -e '\uf2db')   `# microchip` \
     $(echo -e '\uf21e')   `# hearthbeat`
-bspc monitor "^2" -d \
-    $(echo -e '\uf0ac')  `#internet` \
-    $(echo -e '\uf121')  `# editor` \
-    $(echo -e '\uf120')  `# terminal` \
-    $(echo -e '\uf02d')  `# man` \
-    $(echo -e '\uf025')  `# music` \
-    $(echo -e '\uf21e')  `# heartbeat` \
-    $(echo -e '\uf094')  `# lemon` \
-    $(echo -e '\uf130')  `# phone`
+# bspc monitor "^2" -d \
+#     $(echo -e '\uf0ac')  `#internet` \
+#     $(echo -e '\uf121')  `# editor` \
+#     $(echo -e '\uf120')  `# terminal` \
+#     $(echo -e '\uf02d')  `# man` \
+#     $(echo -e '\uf025')  `# music` \
+#     $(echo -e '\uf21e')  `# heartbeat` \
+#     $(echo -e '\uf094')  `# lemon` \
+#     $(echo -e '\uf130')  `# phone`
 # bspc monitor "^1" -d I II III IV V VI VII
 # bspc monitor "^2" -d i ii iii iv v vi vii
 # # bspc monitor "eDP1" -n 1 -d internet editor terminal document desktop image player music rocket gear

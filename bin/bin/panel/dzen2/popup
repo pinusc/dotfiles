@@ -1,0 +1,24 @@
+#!/bin/bash 
+WM_NAME="dzen2-popup-wmname"
+WIDTH=300                                                                       
+HEIGHT=50                                                                       
+source "$HOME/bin/colors.sh"
+
+# while xprop -name $WM_NAME &> /dev/null 
+# do  
+#     kill -KILL "$(xprop -name $WM_NAME | awk '/PID/{print $3}')"
+# done
+
+# This script shows an alert using dzen                                         
+screenWidth=$(xdpyinfo | grep 'dimensions' | grep -E -o "[0-9]+x[0-9]+ pixels" | sed "s/x.*//")
+screenHeight=$(xdpyinfo | grep 'dimensions' | grep -E -o "[0-9]+x[0-9]+ pixels" | grep -E -o "x[0-9]*" | sed "s/x//")
+(( middleY = screenHeight / 2 - (HEIGHT/2) ))                                
+(( middleX  = screenWidth / 2 - (WIDTH/2) ))
+
+# dzen2 -fn "-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*" -title-name "$WM_NAME" -p "$2" -y $middleY -x $middleX -h $HEIGHT -w $WIDTH &
+# dzen2 -title-name "$WM_NAME" -p "$2" -y $(( middleY - 2 )) -x $(( middleX -2 )) -h $(( HEIGHT  + 4 )) -w $(( WIDTH + 4 )) -bg $base0B &
+# sleep 0.0000000001 
+echo "$1" | dzen2 -fn "-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*" -title-name "$WM_NAME" -p "$2" -y $middleY -x $middleX -h $HEIGHT -w $WIDTH &
+
+# echo "^bg($base0B)^r($WIDTH\x$HEIGHT)^ib(1)^pa(2;2)^fg($base00)^r($(( WIDTH - 4 ))x$(( HEIGHT - 4 )))^ib(1)^pa(4;4)^fg(#ffffff)^pa($(( WIDTH / 2));$(( HEIGHT / 2 )))$1" | dzen2 -p $2 -title-name "$WM_NAME" -x $middleX -y $middleY -w $WIDTH -h $HEIGHT -ta l -fn "-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
+# echo "^bg($base0B)^r($WIDTH\x$HEIGHT)^ib(1)^pa(2;2)^fg($base00)^r($(( WIDTH - 4 ))x$(( HEIGHT - 4 )))^ib(1)^pa(4;4)^fg(#ffffff)" | dzen2 -p $2 -title-name "$WM_NAME" -x $middleX -y $middleY -w $WIDTH -h $HEIGHT -ta c -fn "-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"

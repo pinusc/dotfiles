@@ -29,9 +29,9 @@ loop() {
     i=0
     while true; do
         keyboard &
-        # battery &
+        battery &
         music &
-        # wifi & 
+        wifi & 
         wallpaper &
         alsa_volume &
         mail &

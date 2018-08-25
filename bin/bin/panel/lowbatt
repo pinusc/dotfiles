@@ -1,0 +1,27 @@
+#! /bin/bash
+#
+. panel_colors light
+source settings.sh
+
+# Defaults
+BANNER_HEIGHT=30
+BANNERY=0
+
+function finish {
+bspc config bottom_padding 0
+}
+
+trap finish SIGHUP SIGINT SIGTERM EXIT
+
+# read command line parameters
+COLOR_BG="#${COLOR_RED:3}"
+echo $COLOR_BG
+COLOR_FG='#1D2021'
+
+bspc config bottom_padding $BANNER_HEIGHT
+export PANELY=$BANNER_HEIGHT
+BANNER_TEXT="LOW BATTERY"
+
+echo %{c}$BANNER_TEXT | lemonbar -p -b -g x$PANEL_HEIGHT -f "$PANEL_FONT_FAMILY" -F "$COLOR_FOREGROUND" -B "$COLOR_BG" | zsh &
+
+wait
