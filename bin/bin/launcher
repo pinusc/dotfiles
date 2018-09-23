@@ -13,5 +13,5 @@ h=1080
 if [ -n "$1" ]; then
     rofi -show $1
 else
-    rofi -modi "run,drun,ssh" -show 
+    rofi -modi "run,drun,ssh" -show run
 fi
