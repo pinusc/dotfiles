@@ -3,6 +3,7 @@
 	email = giuseppe.stelluto@gmail.com
 [core]
 	editor = nvim
+	autocrlf = input
 [push]
 	default = simple
 [alias]
