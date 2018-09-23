@@ -191,7 +191,9 @@ battery() {
     BATTERY_CRITICAL=0
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
     bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//" | sed "s/%//")
-    if [[ $power = "on" ]]; then
+    if [[ -z $power ]]; then
+        return 1
+    elif [[ $power = "on" ]]; then
         bicon="\uf21e"
         bcolor="f"
     elif [[ $bcharge -ge 95 ]]; then
