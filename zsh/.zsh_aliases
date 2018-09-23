@@ -65,7 +65,8 @@ alias russian-roulette='echo "Pop!"'
 # fzf
 alias v='vim $(fzf)'
 
-alias ls='exa'
+(>&/dev/null which pinfo) && alias info='pinfo'
+(>&/dev/null which exa) && alias ls='exa'
 alias l='ls'
 alias ll='ls -lh'
 alias la='ll -a'
