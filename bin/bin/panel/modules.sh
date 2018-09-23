@@ -118,13 +118,18 @@ weather() {
     elif (( $(echo $temperature '>' 30 | bc -l) )); then
         color="r"
     fi
-    echo -e F"$color%{A:$url_comm:}$icon $temperature%{A}"
+    # echo -e F"$color%{A:$url_comm:}$icon $temperature%{A}"
+    echo -e F"$color$icon $temperature"
     #curl "https://api.darksky.net/forecast/cdd9e613e163fa9768e2a4d3b3219ca6/31.6035,120.7391?exclude=minutely,hourly,daily,alerts,flags" > /tmp/weather
 }
 
 # wifi
 wifi() {
-    if [[ $(iw wlp3s0 link) != "Not Connected" ]]; then
+    link=$(iw wlp3s0 link)
+    if [[ $? -ne 0 ]]; then # happens if no wifi card is installed
+        exit 1
+    fi
+    if [[ $link != "Not Connected" ]]; then
         WIFI_SSID=$(iw wlp3s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
         WIFI_SIGNAL=$(iw wlp3s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
         if [[ $(pingtest.sh 8.8.8.8) = "Up" ]]; then
