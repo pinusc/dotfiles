@@ -1,5 +1,6 @@
 Install notes
 =============
+To execute, run `gnu stow` + each of the desired directories. This directory should be placed directly under $HOME
 
 1. Fonts 
 --------
