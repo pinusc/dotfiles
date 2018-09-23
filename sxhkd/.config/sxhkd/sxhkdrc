@@ -56,6 +56,9 @@ super + {comma,period}
 super + {Left,Right}
 	bspc desktop -f {prev,next}
 
+super + Tab
+  bspc desktop -f last
+
 
 # @Move troughmonitors
 super + shift + {Left,Right}
