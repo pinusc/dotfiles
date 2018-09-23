@@ -31,17 +31,17 @@ loop() {
         keyboard &
         battery &
         music &
-        wifi & 
+        wifi &
         wallpaper &
         alsa_volume &
         mail &
         if (( i % 60 == 0 )); then 
-            clock & 
+            clock &
             calendar &
         fi
         if (( i % 400 == 0 )); then
             # mail &
-            pollution & 
+            pollution &
             weather &
         fi
         i=$((i+1))
