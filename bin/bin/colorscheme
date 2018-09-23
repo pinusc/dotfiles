@@ -16,9 +16,9 @@ ln -fs "$script" "$HOME/.base16_theme"
 eval "$script"
 generate_xresources.sh
 
-exit() {
-    pkill panel; panel &
-}
+# exit() {
+#     pkill panel; panel &
+# }
 
-trap exit EXIT
+# trap exit EXIT
 # base16-builder -s $1 -b light -t gtk-3.0
