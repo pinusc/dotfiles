@@ -1,8 +1,4 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='scp://giuseppe@hong.io/~/mozilla-unified/'
-let g:netrw_dirhist_2='scp://giuseppe@hong.io/~/mozilla-unified/uriloader/'
-let g:netrw_dirhist_3='scp://giuseppe@hong.io/~/mozilla-unified/xpcom/'
-let g:netrw_dirhist_4='scp://giuseppe@hong.io/~/mozilla-unified/xpcom/io/'
-let g:netrw_dirhist_5='scp://giuseppe@hong.io/~/mozilla-unified/uriloader/exthandler/'
-let g:netrw_dirhist_6='scp://giuseppe@hong.io/~/mozilla-unified/'
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/home/pinusc/dotfiles/bin/bin/panel'
+let g:netrw_dirhist_2='/home/pinusc/docs/zib/chapters'
