@@ -92,3 +92,20 @@ bindkey '\ek' deer
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+sudo-expired() [[ $(
+  trap "" XFSZ
+  limit filesize 0
+  LC_ALL=C sudo -n true 2>&1) = *"password is required" ]]
+
+sudo-warning()
+  if sudo-expired; then
+    echo ""
+  else
+    echo '%F{red}# %f'
+  fi
+
+TMOUT=10
+TRAPALRM() zle reset-prompt
+set -o promptsubst
+PS1='$(sudo-warning)'"$PROMPT"
