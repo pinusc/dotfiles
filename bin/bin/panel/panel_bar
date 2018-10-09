@@ -93,7 +93,26 @@ while read -r line ; do
             battery="$PADDING%{F$bcolor}${line#?}%{F-}"
 	    ;;
 	L*)
-            wifi="$PADDING%{F$COLOR_CLOCK}${line#?}%{F-}"
+      l=${line#?}
+      l=${l#?}
+      net_type=${l%%|*}
+
+      o1=${l#*|}
+      status=${o1%*|}
+      other=${o1##*|}
+
+      case $line in
+        Lu*)
+            statuscolor=$COLOR_OK
+            ;;
+        Lp*)
+            statuscolor=$COLOR_WARNING
+            ;;
+        Ld*)
+            statuscolor=$COLOR_ERROR
+            ;;
+      esac
+      network="$PADDING%{F$COLOR_NETWORK}${net_type} %{F-}%{F$statuscolor}${status}${other}%{F-}"
 	    ;;
 	Q*)
             wallpaper="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}"
@@ -229,7 +248,7 @@ while read -r line ; do
     #printf "%s\n" "%{l}${wm_infos}%{Sf}%{c}${music}%{r}${volume}${date}${clock}"
     case $current_monitor in
         1)
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"

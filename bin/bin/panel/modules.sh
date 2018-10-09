@@ -31,7 +31,7 @@ alsa_volume() {
     echo "V%{A:pavucontrol:}$ICON $VOLUME%{A}"
 }
 
-ip() {
+getip() {
     echo -e I'\uf041' $(curl -s icanhazip.com)
     sleep 10
 }
@@ -123,24 +123,60 @@ weather() {
     #curl "https://api.darksky.net/forecast/cdd9e613e163fa9768e2a4d3b3219ca6/31.6035,120.7391?exclude=minutely,hourly,daily,alerts,flags" > /tmp/weather
 }
 
+check_connection() {
+    # returns:
+    # 0 if connected (ssl to $1 works)
+    # 64 if no connection to $1 but dns lookup worked
+    # 65 if dns dnsookup failed but there is connection to dns server
+    # 66 if no dns server but conenction to gateway works
+    # 1 if not at all connected
+    test="$1"
+    gateway="$2"
+    nameserver="$3"
+    checkssl=$(
+        nc -zw1 "$1" 443 && echo | openssl s_client -connect "${1}:443" 2>&1 | awk '
+  handshake && $1 == "Verification" { if ($2=="OK") exit; exit 1 }
+  $1 $2 == "SSLhandshake" { handshake = 1 }';
+    )
+    if $checkssl; then
+        return 0
+    elif host "$test"; then
+        return 64
+    elif nc -zw1 "$nameserver"; then
+        return 65
+    elif nc -zw1 "$gateway"; then
+        return 66
+    else
+        return 1
+    fi
+
+}
+
 # wifi
-wifi() {
-    link=$(iw wlp3s0 link)
-    if [[ $? -ne 0 ]]; then # happens if no wifi card is installed
-        exit 1
-    fi
-    if [[ $link != "Not Connected" ]]; then
-        WIFI_SSID=$(iw wlp3s0 link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
-        WIFI_SIGNAL=$(iw wlp3s0 link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
-        if [[ $(pingtest.sh 8.8.8.8) = "Up" ]]; then
-            connIcon="\uf1eb"
-        else
-            connIcon="\uf05e"
-        fi
-        echo L$connIcon $WIFI_SSID '|' $WIFI_SIGNAL 'dBm'
-    else 
-        echo L'\uf05e'
-    fi
+network() {
+    interface="$(ip link | grep 'state UP' | awk '{ print $2 }')"
+    network_type="${interface:0:2}"
+    check_connection
+    case $? in
+        0) state=u
+           ic_state=$IC_CONNECTED
+           ;;
+        *) state=d
+           ic_state=$IC_NOCONNECTION
+           ;;
+    esac
+    case $network_type in
+        wl)
+            ic_type=$IC_WIFI
+            ssid=$(echo $link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
+            signal=$(echo $link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
+            other=" ${ssid}, ${signal}"
+        ;;
+        en)
+            ic_type=$IC_ETHERNET
+        ;;
+    esac
+    echo "L$state$ic_type|$ic_state|$other"
 }
 
 # music controls
@@ -225,7 +261,7 @@ battery() {
 keyboard() {
     color="b"
     read -r var< "/home/pinusc/.keyboard"
-    if [ $var = "disabled" ]; then
+    if [ "$var" = "disabled" ]; then
         color="r"
     fi
     echo "K$(setxkbmap -query | awk '/layout:/ {print $2; exit}')"

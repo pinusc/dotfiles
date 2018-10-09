@@ -1,0 +1,4 @@
+IC_ETHERNET="\uf01c"
+IC_WIFI="\uf1eb"
+IC_CONNECTED="\uf0dc"
+IC_NOCONNECTION="\uf05e"
