@@ -1,5 +1,4 @@
 source icons.sh
-cflag=0
 clock() {
     if [ -n "$1" ]; then
         dtc="date +%H.%M"
@@ -52,8 +51,10 @@ mail() {
 
 #iAir pollution
 pollution() {
-    city_code="@7874"
-    res=$(curl -s "http://api.waqi.info/feed/$city_code/?token=$API_WAQI")
+    location=$(geolocate)
+    export lng=${location#*,}
+    export lat=${location%,*}
+    export res=$(curl -s "http://api.waqi.info/feed/geo:$lat;$lng/?token=$API_WAQI")
     # 7874 is the Changshu code. When in a place where IP Localization is available, should use "here"
     # Or, to find station id, query as follows: "https://api.waqi.info/search/?token=$API_WAQI&keyword=changshu"
     # One should be able to use "http://api.waqi.info/feed/changshu/?token=$API_WAQI", but for some reason API queries by sity always return aqi for Ontario, Canada using my token. Problem does not arise using "demo" as a toke, but that is against terms of service.
@@ -80,18 +81,19 @@ pollution() {
 }
 
 weather() {
-    export weather_response=$(curl -s "https://api.darksky.net/forecast/$API_DARKSKY/31.6035,120.7391?units=si")
+    location=$(geolocate)
+    weather_response=$(curl -s "https://api.darksky.net/forecast/$API_DARKSKY/$location?units=si&exclude=minutely,hourly,daily,alerts.flags")
     url_comm="firefox darksky.net/forecast/changshu/si12/en"
     apiicon=$(echo $weather_response | jq -r .currently.icon)
-    temperature=$(echo $weather_response | jq -r .currently.temperature)
+    temp=$(echo $weather_response | jq -r .currently.temperature)
 
     # I use en_DK as my locale, which separates decimals with a comma
     # But the api uses a point
     # So when printf is given a decimal number using a point, it gives error and fucks up
     # Setting LC_NUMERIC to C ensures this never happens
-    LC_NUMERIC="C" 
-    temperature_int=$(printf "%.0f" "$temperature")
-    temperature=$(printf "%.1f" "$temperature")
+    LC_NUMERIC="C"
+    temperature_int=$(printf "%.0f" "$temp")
+    temperature=$(printf "%.1f" "$temp")
     icon=""
     color=""  # depending on temperature, can be blue, yellow or red
     case $apiicon in

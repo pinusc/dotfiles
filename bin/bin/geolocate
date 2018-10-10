@@ -1,0 +1,4 @@
+#!/bin/bash
+ip=$(curl -s icanhazip.com)
+location=$(curl -s ipinfo.io/$ip | jq -r .loc)
+echo "$location"
