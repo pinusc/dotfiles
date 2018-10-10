@@ -1,8 +1,20 @@
 source icons.sh
 cflag=0
 clock() {
-    cloutput=$(bash-fuzzy-clock)
-    echo "C%{A:echo SWITCH > /tmp/panel-clock-fifo:}$icon_clock$cloutput%{A}";
+    if [ -n "$1" ]; then
+        dtc="date +%H.%M"
+        if [ -s $1 ]; then
+            clcommand=$(cat "$1")
+            [ "$clcommand" = bash-fuzzy-clock ] && clother="$dtc" || clother="bash-fuzzy-clock"
+        else
+            clcommand=bash-fuzzy-clock
+            clother="$dtc"
+        fi
+    else
+        clcommand=bash-fuzzy-clock
+    fi
+    cloutput=$($clcommand)
+    echo "C%{A:echo $clother > $1:}$icon_clock$cloutput%{A}";
 }
 
 calendar() {
