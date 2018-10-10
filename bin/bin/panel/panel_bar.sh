@@ -76,180 +76,180 @@ while read -r line ; do
         K*)
             keyboard="$PADDING_SHORT%{F$COLOR_KEYBOARD}${line#?}%{F-}"
             ;;
-	B*)
-	    bcolor=$COLOR_CLOCK
-	    case $line in
-          Bf*)
-              bcolor=$COLOR_BATTERY_FULL
-              ;;
-          Bm*)
-              bcolor=$COLOR_BATTERY_MEDIUM
-              ;;
-          Be*)
-              bcolor=$COLOR_BATTERY_EMPTY
-              ;;
-	    esac
-	    #battery
-	    line=${line#?}
+        B*)
+            bcolor=$COLOR_CLOCK
+            case $line in
+                Bf*)
+                    bcolor=$COLOR_BATTERY_FULL
+                    ;;
+                Bm*)
+                    bcolor=$COLOR_BATTERY_MEDIUM
+                    ;;
+                Be*)
+                    bcolor=$COLOR_BATTERY_EMPTY
+                    ;;
+            esac
+            #battery
+            line=${line#?}
             battery="$PADDING%{F$bcolor}${line#?}%{F-}"
-	    ;;
-	L*)
-      l=${line#?}
-      l=${l#?}
-      net_type=${l%%|*}
+            ;;
+        L*)
+            l=${line#?}
+            l=${l#?}
+            net_type=${l%%|*}
 
-      o1=${l#*|}
-      status=${o1%*|}
-      other=${o1##*|}
+            o1=${l#*|}
+            status=${o1%*|}
+            other=${o1##*|}
 
-      case $line in
-          Lu*)
-              statuscolor=$COLOR_OK
-              ;;
-          Lp*)
-              statuscolor=$COLOR_WARNING
-              ;;
-          Ld*)
-              statuscolor=$COLOR_ERROR
-              ;;
-      esac
-      network="$PADDING%{F$COLOR_NETWORK}${net_type} %{F-}%{F$statuscolor}${status}${other}%{F-}"
-	    ;;
-	Q*)
-      wallpaper="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}"
-	    ;;
-    D*)
-        # date output
-        date="$PADDING_SHORT$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
-        ;;
-    C*)
-        # clock output
-        clock="$PADDING%{F$COLOR_CLOCK}${line#?}%{F-}"
-        ;;
+            case $line in
+                Lu*)
+                    statuscolor=$COLOR_OK
+                    ;;
+                Lp*)
+                    statuscolor=$COLOR_WARNING
+                    ;;
+                Ld*)
+                    statuscolor=$COLOR_ERROR
+                    ;;
+            esac
+            network="$PADDING%{F$COLOR_NETWORK}${net_type} %{F-}%{F$statuscolor}${status}${other}%{F-}"
+            ;;
+        Q*)
+            wallpaper="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}"
+            ;;
+        D*)
+            # date output
+            date="$PADDING_SHORT$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
+            ;;
+        C*)
+            # clock output
+            clock="$PADDING%{F$COLOR_CLOCK}${line#?}%{F-}"
+            ;;
 
         # uncomment for window title support
         T*)
-        # xtitle output
-        #title="${line#?}$PADDING"
-        if [[ -n ${line#?} ]]; then
-            title="%{B$COLOR_TITLE_BG}%{F$COLOR_TITLE_FG}$PADDING${line:1:30}%{F-}%{B-}"
-        else
-            title=""
-        fi
-        ;;
+            # xtitle output
+            #title="${line#?}$PADDING"
+            if [[ -n ${line#?} ]]; then
+                title="%{B$COLOR_TITLE_BG}%{F$COLOR_TITLE_FG}$PADDING${line:1:30}%{F-}%{B-}"
+            else
+                title=""
+            fi
+            ;;
 
-    V*)
-        # alsa volume
-        volume="$PADDING${line#?}"
-        ;;
-    W*)
-        # bspwm internal state
-        wm_infos=""
-        IFS=':'
-        case $current_monitor in  # cut line to consider only interested monitor
-            1)
-                line=${line:0:43}  #only consider 1st monitor 
-                set -- "${line#?}"
-                ;;
-            2)
-                line=${line:38}  #only consider 1st monitor 
-                set -- "${line}"
-                ;;
-        esac
-        while [ $# -gt 0 ] ; do
-            item=$1
-            name=${item#?}
-            case $item in
-                M*)
-                    # active monitor
-                    if [ "$num_mon" -gt 1 ] ; then
-                        name_cool=$([[ "$name" == 1 ]] && echo "\uf25b" || echo "\uf259")
-                        # wm_infos="$wm_infos %{F$COLOR_ACTIVE_MONITOR_FG}%{B$COLOR_ACTIVE_MONITOR_BG}$PADDING${name_cool}%{B-}%{F-}  "
-                    fi
+        V*)
+            # alsa volume
+            volume="$PADDING${line#?}"
+            ;;
+        W*)
+            # bspwm internal state
+            wm_infos=""
+            IFS=':'
+            case $current_monitor in  # cut line to consider only interested monitor
+                1)
+                    line=${line:0:43}  #only consider 1st monitor 
+                    set -- ${line#?}
                     ;;
-                m*)
-                    # inactive monitor
-                    if [ "$num_mon" -gt 1 ] ; then
-                        name_cool=$([ "$name" == 1 ] && echo "\uf25b" || echo "\uf259")
-                        # wm_infos="$wm_infos %{F$COLOR_INACTIVE_MONITOR_FG}%{B$COLOR_INACTIVE_MONITOR_BG}$PADDING${name_cool}%{B-}%{F-}  "
-                    fi
-                    ;;
-                O*)
-                    # focused occupied desktop
-                    name1=$(echo -n -e "$name" | tail -c 3)
-                    wm_infos="${wm_infos}%{F$COLOR_FOCUSED_OCCUPIED_FG}%{B$COLOR_FOCUSED_OCCUPIED_BG}%{U$COLOR_FOREGROUND}%{+o}$PADDING_SHORT${name1}$PADDING_SHORT%{-o}%{B-}%{F-}"
-                    ;;
-                F*)
-                    # focused free desktop
-                    name1=$(echo -n -e "$name" | tail -c 3)
-                    wm_infos="${wm_infos}%{F$COLOR_FOCUSED_FREE_FG}%{B$COLOR_FOCUSED_FREE_BG}%{U$COLOR_FOREGROUND}%{+o}$PADDING_SHORT${name1}$PADDING_SHORT%{-o}%{B-}%{F-}"
-                    ;;
-                U*)
-                    # focused urgent desktop
-                    name1=$(echo -n -e "$name" | tail -c 3)
-                    wm_infos="${wm_infos}%{F$COLOR_FOCUSED_URGENT_FG}%{B$COLOR_FOCUSED_URGENT_BG}%{U$COLOR_FOREGROUND}%{+o}$PADDING_SHORT${name1}$PADDING_SHORT%{-o}%{B-}%{F-}"
-                    ;;
-                o*)
-                    # occupied desktop
-                    name1=$(echo -n -e "$name" | tail -c 3)
-                    wm_infos="${wm_infos}%{F$COLOR_OCCUPIED_FG}%{B$COLOR_OCCUPIED_BG}%{A:bspc desktop -f ${name}:}$PADDING_SHORT${name1}$PADDING_SHORT%{A}%{B-}%{F-}"
-                    ;;
-                f*)
-                    # free desktop
-                    name1=$(echo -n -e "$name" | tail -c 3)
-                    # ALERT: chdesktop function is declared in ~/.zsh_aliases
-                    # I did not use an hardwritten command because lemonbar %{A} tag doesn't like colons
-                    wm_infos="${wm_infos}%{F$COLOR_FREE_FG}%{B$COLOR_FREE_BG}%{A:bspc desktop -f ${name}:}$PADDING_SHORT${name1}$PADDING_SHORT%{A}%{B-}%{F-}"
-                    ;;
-                u*)
-                    # urgent desktop
-                    name1=$(echo -n -e "$name" | tail -c 3)
-                    wm_infos="${wm_infos}%{F$COLOR_URGENT_FG}%{B$COLOR_URGENT_BG}$PADDING_SHORT${name1}$PADDING_SHORT%{B-}%{F-}"
+                2)
+                    line=${line:38}  #only consider 1st monitor 
+                    set -- ${line}
                     ;;
             esac
-            shift
-        done
-        ;;
-    P*)
-        pom_rem=${line#?}
-        if [ -n "$pom_rem" ]; then
-            case $pom_rem in
-                P*)
-                    color_pom=$COLOR_POMODORO_ACTIVE
-                    pom_rem=$PADDING${pom_rem#?}
-                    ;;
-                p*)
-                    color_pom=$COLOR_POMODORO_PAUSE
-                    pom_rem=$PADDING${pom_rem#?}
-                    ;;
-                n*)
-                    color_pom=$COLOR_POMODORO_INACTIVE
-                    pom_rem=${pom_rem#?}
-                    ;;
-            esac
-        else
-            color_pom=$COLOR_POMODORO_INACTIVE
-        fi
+            while [ $# -gt 0 ] ; do
+                item=$1
+                name=${item#?}
+                case $item in
+                    M*)
+                        # active monitor
+                        if [ $num_mon -gt 1 ] ; then
+                            name_cool=$([[ "$name" == 1 ]] && echo "\uf25b" || echo "\uf259")
+                            # wm_infos="$wm_infos %{F$COLOR_ACTIVE_MONITOR_FG}%{B$COLOR_ACTIVE_MONITOR_BG}$PADDING${name_cool}%{B-}%{F-}  "
+                        fi
+                        ;;
+                    m*)
+                        # inactive monitor
+                        if [ $num_mon -gt 1 ] ; then
+                            name_cool=$([ "$name" == 1 ] && echo "\uf25b" || echo "\uf259")
+                            # wm_infos="$wm_infos %{F$COLOR_INACTIVE_MONITOR_FG}%{B$COLOR_INACTIVE_MONITOR_BG}$PADDING${name_cool}%{B-}%{F-}  "
+                        fi
+                        ;;
+                    O*)
+                        # focused occupied desktop
+                        name1=$(echo -n -e $name | tail -c 3)
+                        wm_infos="${wm_infos}%{F$COLOR_FOCUSED_OCCUPIED_FG}%{B$COLOR_FOCUSED_OCCUPIED_BG}%{U$COLOR_FOREGROUND}%{+o}$PADDING_SHORT${name1}$PADDING_SHORT%{-o}%{B-}%{F-}"
+                        ;;
+                    F*)
+                        # focused free desktop
+                        name1=$(echo -n -e $name | tail -c 3)
+                        wm_infos="${wm_infos}%{F$COLOR_FOCUSED_FREE_FG}%{B$COLOR_FOCUSED_FREE_BG}%{U$COLOR_FOREGROUND}%{+o}$PADDING_SHORT${name1}$PADDING_SHORT%{-o}%{B-}%{F-}"
+                        ;;
+                    U*)
+                        # focused urgent desktop
+                        name1=$(echo -n -e $name | tail -c 3)
+                        wm_infos="${wm_infos}%{F$COLOR_FOCUSED_URGENT_FG}%{B$COLOR_FOCUSED_URGENT_BG}%{U$COLOR_FOREGROUND}%{+o}$PADDING_SHORT${name1}$PADDING_SHORT%{-o}%{B-}%{F-}"
+                        ;;
+                    o*)
+                        # occupied desktop
+                        name1=$(echo -n -e $name | tail -c 3)
+                        wm_infos="${wm_infos}%{F$COLOR_OCCUPIED_FG}%{B$COLOR_OCCUPIED_BG}%{A:bspc desktop -f ${name}:}$PADDING_SHORT${name1}$PADDING_SHORT%{A}%{B-}%{F-}"
+                        ;;
+                    f*)
+                        # free desktop
+                        name1=$(echo -n -e $name | tail -c 3)
+                        # ALERT: chdesktop function is declared in ~/.zsh_aliases
+                        # I did not use an hardwritten command because lemonbar %{A} tag doesn't like colons
+                        wm_infos="${wm_infos}%{F$COLOR_FREE_FG}%{B$COLOR_FREE_BG}%{A:bspc desktop -f ${name}:}$PADDING_SHORT${name1}$PADDING_SHORT%{A}%{B-}%{F-}"
+                        ;;
+                    u*)
+                        # urgent desktop
+                        name1=$(echo -n -e $name | tail -c 3)
+                        wm_infos="${wm_infos}%{F$COLOR_URGENT_FG}%{B$COLOR_URGENT_BG}$PADDING_SHORT${name1}$PADDING_SHORT%{B-}%{F-}"
+                        ;;
+                esac
+                shift
+            done
+            ;;
+        P*)
+            pom_rem=${line#?}
+            if [ -n "$pom_rem" ]; then
+                case $pom_rem in
+                    P*)
+                        color_pom=$COLOR_POMODORO_ACTIVE
+                        pom_rem=$PADDING${pom_rem#?}
+                        ;;
+                    p*)
+                        color_pom=$COLOR_POMODORO_PAUSE
+                        pom_rem=$PADDING${pom_rem#?}
+                        ;;
+                    n*)
+                        color_pom=$COLOR_POMODORO_INACTIVE
+                        pom_rem=${pom_rem#?}
+                        ;;
+                esac
+            else
+                color_pom=$COLOR_POMODORO_INACTIVE
+            fi
 
-        pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}$IC_POMODORO${pom_rem}%{A}%{A}%{F-}"
-        ;;
-    R*)
-        # music info
-        music="%{B$COLOR_FOCUSED_OCCUPIED_BG}%{F$COLOR_FOCUSED_OCCUPIED_FG}$PADDING${line#?}%{F-}%{B-}"
-        ;;
-    m*)
-        #music controls only
-        music="$PADDING${line#?}"
-        ;;
-    I*)
-        #IP
-        ip="$PADDING${line#?}"
-        ;;
+            pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}$IC_POMODORO${pom_rem}%{A}%{A}%{F-}"
+            ;;
+        R*)
+            # music info
+            music="%{B$COLOR_FOCUSED_OCCUPIED_BG}%{F$COLOR_FOCUSED_OCCUPIED_FG}$PADDING${line#?}%{F-}%{B-}"
+            ;;
+        m*)
+            #music controls only
+            music="$PADDING${line#?}"
+            ;;
+        I*)
+            #IP
+            ip="$PADDING${line#?}"
+            ;;
     esac
     #printf "%s\n" "%{l}${wm_infos}%{Sf}%{c}${music}%{r}${volume}${date}${clock}"
     case $current_monitor in
         1)
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"
