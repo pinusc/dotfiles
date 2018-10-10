@@ -34,10 +34,10 @@ loop() {
     while true; do
         keyboard &
         # battery &
-        music &
+        which mpc 2>&1 >/dev/null && music &
         network &
         wallpaper &
-        alsa_volume &
+        pulse_volume &
         mail &
         clock $CLOCKFILE &
         if (( i % 60 == 0 )); then

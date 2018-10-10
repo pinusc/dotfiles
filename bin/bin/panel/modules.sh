@@ -22,25 +22,18 @@ calendar() {
     echo "D%{A:$dzencommand_calendar:}%{A3:$url_comm:}$IC_CALENDAR $(date +'%a %b %d')%{A}%{A}"
 }
 
-alsa_volume() {
-    ALSA_STATE=1
-    VOLUME=$(ponymix get-volume)
-    ICON=$IC_VOLUME_MAX
-    if [ $ALSA_STATE ]; then
-        if [[ $VOLUME -ge 70 ]]
-        then
-            ICON=$IC_VOLUME_MAX
-        fi
-        if [[ $VOLUME -gt 0 && $VOLUME -lt 70 ]]
-        then
-            ICON=$IC_VOLUME_MAX
-        fi
-        if [[ $VOLUME -eq 0 ]]
-        then
-            ICON=$IC_VOLUME_MAX
-        fi
+pulse_volume() {
+    volume=$(ponymix get-volume)
+    ponymix | grep --silent bluez && bluetooth="$IC_BLUETOOTH "
+    icon=$IC_VOLUME_MAX
+    if [[ $volume -ge 70 ]]; then
+        icon=$IC_VOLUME_MAX
+    elif [[ $volume -gt 0 && $volume -lt 70 ]]; then
+        icon=$IC_VOLUME_MEDIUM
+    elif [[ $volume -eq 0 ]]; then
+        icon=$IC_VOLUME_MIN
     fi
-    echo "V%{A:pavucontrol:}$ICON $VOLUME%{A}"
+    echo "V%{A:pavucontrol:}$bluetooth$icon $volume%{A}"
 }
 
 getip() {
@@ -170,7 +163,6 @@ network() {
 
 # music controls
 music() {
-    which mpc 2>&1 >/dev/null || return
     if [[ $(mpc) ]]; then
         SONG_NAME=$(mpc -f "%title%" | head -n1)
         if [ "${#SONG_NAME}" -eq 0 ]; then

@@ -1,4 +1,5 @@
 IC_ETHERNET="\uf6ff"
+IC_BLUETOOTH="\uf5af"
 IC_WIFI="\uf1eb"
 IC_CONNECTED="\uf0dc"
 IC_NOCONNECTION="\uf05e"
