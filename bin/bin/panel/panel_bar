@@ -46,7 +46,7 @@ while read -r line ; do
                     color=$COLOR_YELLOW
                     ;;
             esac
-	    line=${line:2}
+            line=${line:2}
             forecast="$PADDING%{F$color}$line%{F-}"
             ;;
         M*)
