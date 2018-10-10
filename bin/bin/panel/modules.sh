@@ -60,7 +60,7 @@ mail() {
 #iAir pollution
 pollution() {
     city_code="@7874"
-    res=$(curl "http://api.waqi.info/feed/$city_code/?token=$API_WAQI")
+    res=$(curl -s "http://api.waqi.info/feed/$city_code/?token=$API_WAQI")
     # 7874 is the Changshu code. When in a place where IP Localization is available, should use "here"
     # Or, to find station id, query as follows: "https://api.waqi.info/search/?token=$API_WAQI&keyword=changshu"
     # One should be able to use "http://api.waqi.info/feed/changshu/?token=$API_WAQI", but for some reason API queries by sity always return aqi for Ontario, Canada using my token. Problem does not arise using "demo" as a toke, but that is against terms of service.
@@ -87,7 +87,7 @@ pollution() {
 }
 
 weather() {
-    export weather_response=$(curl "https://api.darksky.net/forecast/$API_DARKSKY/31.6035,120.7391?units=si")
+    export weather_response=$(curl -s "https://api.darksky.net/forecast/$API_DARKSKY/31.6035,120.7391?units=si")
     url_comm="firefox darksky.net/forecast/changshu/si12/en"
     apiicon=$(echo $weather_response | jq -r .currently.icon)
     temperature=$(echo $weather_response | jq -r .currently.temperature)
