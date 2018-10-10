@@ -1,8 +1,10 @@
-source icons.sh
+#!/usr/bin/bash
+. icons.sh
+. settings.sh
 clock() {
     if [ -n "$1" ]; then
         dtc="date +%H.%M"
-        if [ -s $1 ]; then
+        if [ -s "$1" ]; then
             clcommand=$(cat "$1")
             [ "$clcommand" = bash-fuzzy-clock ] && clother="$dtc" || clother="bash-fuzzy-clock"
         else
@@ -13,7 +15,7 @@ clock() {
         clcommand=bash-fuzzy-clock
     fi
     cloutput=$($clcommand)
-    echo "C%{A:echo $clother > $1:}$icon_clock$cloutput%{A}";
+    echo "C%{A:echo $clother > $1:}$IC_CLOCK$cloutput%{A}";
 }
 
 calendar() {
@@ -24,25 +26,25 @@ calendar() {
 pulse_volume() {
     volume=$(ponymix get-volume)
     ponymix | grep --silent bluez && bluetooth="$IC_BLUETOOTH "
-    icon=$IC_VOLUME_MAX
+    icon="$IC_VOLUME_MAX"
     if [[ $volume -ge 70 ]]; then
-        icon=$IC_VOLUME_MAX
+        icon="$IC_VOLUME_MAX"
     elif [[ $volume -gt 0 && $volume -lt 70 ]]; then
-        icon=$IC_VOLUME_MEDIUM
+        icon="$IC_VOLUME_MEDIUM"
     elif [[ $volume -eq 0 ]]; then
-        icon=$IC_VOLUME_MIN
+        icon="$IC_VOLUME_MIN"
     fi
     echo "V%{A:pavucontrol:}$bluetooth$icon $volume%{A}"
 }
 
 getip() {
-    echo -e I$IC_IP $(curl -s icanhazip.com)
+    echo -e I$IC_IP "$(curl -s icanhazip.com)"
     sleep 10
 }
 
 mail() {
-    count=$(find "$MAILDIR" -type f | grep -vE ',[^,]*S[^,]*$' | wc -l)
-    if [ $count -gt 0 ]; then
+    count=$(find "$MAILDIR" -type f | grep -cvE ',[^,]*S[^,]*$')
+    if [ "$count" -gt 0 ]; then
         echo "Mf%{A3:$FETCHMAILCOMMAND:}%{A:$MAILCOMMAND:}$IC_MAIL $count%{A}${A}"
     else
         echo "M0%{A3:$FETCHMAILCOMMAND:}%{A:MAILCOMMAND:}$IC_MAIL%{A}%{A}"
@@ -52,28 +54,28 @@ mail() {
 #iAir pollution
 pollution() {
     location=$(geolocate)
-    export lng=${location#*,}
-    export lat=${location%,*}
-    export res=$(curl -s "http://api.waqi.info/feed/geo:$lat;$lng/?token=$API_WAQI")
+    lng=${location#*,}
+    lat=${location%,*}
+    res=$(curl -s "http://api.waqi.info/feed/geo:$lat;$lng/?token=$API_WAQI")
     # 7874 is the Changshu code. When in a place where IP Localization is available, should use "here"
     # Or, to find station id, query as follows: "https://api.waqi.info/search/?token=$API_WAQI&keyword=changshu"
     # One should be able to use "http://api.waqi.info/feed/changshu/?token=$API_WAQI", but for some reason API queries by sity always return aqi for Ontario, Canada using my token. Problem does not arise using "demo" as a toke, but that is against terms of service.
-    aqi=$(echo $res  | jq -r .data.aqi)
-    url=$(echo $res  | jq -r .data.city.url)
+    aqi=$(echo "$res"  | jq -r .data.aqi)
+    # url=$(echo "$res"  | jq -r .data.city.url)
     # url_comm="firefox \"${url#*://}\"" # the colon in the URL will interfere with lemonbar's syntax and this is easier than figuring out how to escape ti
     icon=$IC_POLLUTION
     color=""
-    if (( $(echo $aqi '<=' 50 | bc -l) )); then
+    if (( aqi <= 50 )); then
         color="g"
-    elif (( $(echo 50 '<' $aqi '&&' $aqi '<=' 100 | bc -l) )); then
+    elif (( aqi < 100 )); then
         color="y"
-    elif (( $(echo 100 '<' $aqi '&&' $aqi '<=' 150 | bc -l) )); then
+    elif (( aqi < 150 )); then
         color="o"
-    elif (( $(echo 151 '<' $aqi '&&' $aqi '<=' 200 | bc -l) )); then
+    elif (( aqi < 200 )); then
         color="r"
-    elif (( $(echo 201 '<' $aqi '&&' $aqi '<=' 300 | bc -l) )); then
+    elif (( aqi < 300 )); then
         color="b"
-    elif (( $(echo $aqi '>' 300 | bc -l) )); then
+    else
         color="p"
     fi
     # echo A"$color%{A:$url_comm:}$icon $aqi%{A}"
@@ -84,8 +86,8 @@ weather() {
     location=$(geolocate)
     weather_response=$(curl -s "https://api.darksky.net/forecast/$API_DARKSKY/$location?units=si&exclude=minutely,hourly,daily,alerts.flags")
     url_comm="firefox darksky.net/forecast/changshu/si12/en"
-    apiicon=$(echo $weather_response | jq -r .currently.icon)
-    temp=$(echo $weather_response | jq -r .currently.temperature)
+    apiicon=$(echo "$weather_response" | jq -r .currently.icon)
+    temp=$(echo "$weather_response" | jq -r .currently.temperature)
 
     # I use en_DK as my locale, which separates decimals with a comma
     # But the api uses a point
@@ -125,11 +127,11 @@ weather() {
             icon=$IC_WEATHER_FOG
             ;;
     esac
-    if [ $temperature_int -lt 15 ]; then
+    if [ "$temperature_int" -lt 15 ]; then
         color="b"
-    elif [ 15 -lt $temperature_int ] && [ $temperature_int -lt 30 ]; then
+    elif [ 15 -lt "$temperature_int" ] && [ "$temperature_int" -lt 30 ]; then
         color="y"
-    elif [ $temperature_int -gt 30 ]; then
+    elif [ "$temperature_int" -gt 30 ]; then
         color="r"
     fi
     # echo -e F"$color%{A:$url_comm:}$icon $temperature%{A}"
@@ -151,9 +153,10 @@ network() {
     esac
     case $network_type in
         wl)
+            link=$(iw "$interface" link)
             ic_type=$IC_WIFI
-            ssid=$(echo $link | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
-            signal=$(echo $link | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
+            ssid=$(echo "$link" | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
+            signal=$(echo "$link" | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
             other=" ${ssid}, ${signal}"
         ;;
         en)
@@ -168,14 +171,13 @@ music() {
     if [[ $(mpc) ]]; then
         SONG_NAME=$(mpc -f "%title%" | head -n1)
         if [ "${#SONG_NAME}" -eq 0 ]; then
-            SONG_NAME=$(grep -B 1 -m 1 `mpc | head -n 1` .youtube-mpd | head -n 1)
+            SONG_NAME=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
         fi
         if [ "${#SONG_NAME}" -gt 25 ]; then
             SONG_NAME="${SONG_NAME:0:25}..."
         fi
-        if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
-            if [[ -n $(mpc status | grep paused) ]]
-            then
+        if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
+            if mpc status | grep -q "paused"; then
                 echo "R%{T3}%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A}  %{A:mpc next:}$IC_MUSIC_NEXT%{A}%{T1} $SONG_NAME"
             else
                 echo "R%{T3}%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}%{T1} %{A:$dzencommand_music:}$SONG_NAME%{A} "
@@ -185,25 +187,24 @@ music() {
 }
 
 songScroll() {
-    zscroll -l 25 -n -u -b "R%{T3}%{A:mpc prev:}\uf048%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}\uf04c%{A}%{A} %{A:mpc next:}\uf051%{A}%{T1} " -d 0.3 "getSongName" > "$PANEL_FIFO" &
+    zscroll -l 25 -n -u -b "R%{T3}%{A:mpc prev:}$IC_MUSIC_PREV%{A}%{A3:$dzencommand_music:} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A}%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}%{T1} " -d 0.3 "getSongName" > "$PANEL_FIFO" &
+
 }
 
 # music play only
 musicp() {
-        SONG_NAME=$(mpc | head -n1)
-        if [[ $(echo $(mpc status)| awk '/volume/ {print $2}') != "n/a" ]]; then
-            if [[ -n $(mpc status | grep paused) ]]
-            then
-                command="play"
-                icon=$IC_MUSIC_PLAY
-            else
-                command="pause"
-                icon=$IC_MUSIC_PAUSE
-            fi
-            echo "m%{A:mpc $command:}%{A3:$dzencommand_music:}$icon%{A}%{A}"
-            # echo "m%{A:mpc $command:}$icon%{A}"
+    SONG_NAME=$(mpc | head -n1)
+    if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
+        if mpc status | grep -q paused; then
+            command="play"
+            icon=$IC_MUSIC_PLAY
+        else
+            command="pause"
+            icon=$IC_MUSIC_PAUSE
         fi
-    sleep 1
+        echo "m%{A:mpc $command:}%{A3:$dzencommand_music:}$icon%{A}%{A}"
+        # echo "m%{A:mpc $command:}$icon%{A}"
+    fi
 }
 
 #pomodoro
@@ -213,29 +214,27 @@ pomodoro() {
 
 #battery
 battery() {
-    BATTERY_CRITICAL=0
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
     bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//" | sed "s/%//")
     if [[ -z $power ]]; then
         return 1
     elif [[ $power = "on" ]]; then
-        bicon="\uf21e"
+        bicon="$IC_BATTERY_POWER"
         bcolor="f"
     elif [[ $bcharge -ge 95 ]]; then
-        bicon="\uf240"
+        bicon="$IC_BATTERY_FULL"
         bcolor="f"
     elif [[ $bcharge -ge 65 ]]; then
-        bicon="\uf241"
+        bicon="$IC_BATTERY_GT_65"
         bcolor="f"
     elif [[ $bcharge -ge 35 ]]; then
-        bicon="\uf242"
+        bicon="$IC_BATTERY_GT_35"
         bcolor="m"
     elif [[ $bcharge -ge 10 ]]; then
-        BATTERY_CRITICAL=1
-        bicon="\uf243"
+        bicon="$IC_BATTERY_GT_10"
         bcolor="m"
     else
-        bicon="\uf244"
+        bicon="$IC_BATTERY_EMPTY"
         bcolor="e"
     fi
     echo "B$bcolor$bicon $bcharge%"
@@ -249,10 +248,10 @@ keyboard() {
         color="r"
     fi
     echo "K$(setxkbmap -query | awk '/layout:/ {print $2; exit}')"
-    echo "Kc$color%{A:$dkeyboard:}\uf11c%{A}"
+    echo "Kc$color%{A:$dkeyboard:}$IC_KEYBOARD%{A}"
 }
 
 #wallpaper
 wallpaper() {
-    echo "Q%{A:randomwallpaper.sh:}%{A3:fortunewallpaper.sh:}\uf03e%{A}%{A}"
+    echo "Q%{A:randomwallpaper.sh:}%{A3:fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
 }

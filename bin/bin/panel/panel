@@ -13,7 +13,7 @@ init() {
     source modules.sh
     source settings.sh
     bspc config -m "^1" top_padding $(( PANEL_HEIGHT + PANEL_GAP + 1))
-    . panel_colors light
+    . panel_colors.sh light
     CLOCKFILE=$(mktemp /tmp/clockfile.XXXX)
     PANEL_FIFO=$(mktemp -u /tmp/panel_fifo.XXXX)
     mkfifo "$PANEL_FIFO"
@@ -24,7 +24,7 @@ shutdown() {
     jobs -p | xargs kill
     rm -rf "$CLOCKFILE"
     rm -rf "$PANEL_FIFO"
-    [ -e "$PANEL_FIFO_2 "] && rm -rf "$PANEL_FIFO_2"
+    # [ -n "$PANEL_FIFO_2" ] && rm -rf "$PANEL_FIFO_2"
 }
 
 trap shutdown EXIT SIGTERM SIGUSR1
@@ -34,12 +34,12 @@ loop() {
     while true; do
         keyboard &
         # battery &
-        which mpc 2>&1 >/dev/null && music &
+        command -v mpc >/dev/null 2>&1 && music &
         network &
         wallpaper &
         pulse_volume &
         mail &
-        clock $CLOCKFILE &
+        clock "$CLOCKFILE" &
         if (( i % 60 == 0 )); then
             # clock &
             calendar &
@@ -52,7 +52,7 @@ loop() {
         i=$((i+1))
         # Just in case $i gets enormously large and causes problems. 
         # The value in brackets should be a multiple of the other cycles' values
-        (( i >= 1600 )) && i=0 
+        (( i >= 1600 )) && i=0
         sleep 1
     done > "$PANEL_FIFO" &
 }
@@ -61,7 +61,7 @@ main() {
     init
     loop
     PANEL_WM_NAME="bar_wmname"
-    panel_bar 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
+    . panel_bar.sh 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP}+${PANEL_GAP}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
     # Depending on the font/platform used, add -o -4 or so to shuift the text up
     # Not necessary with FontAwesome.ttf (4.7.0) and Gohu GohuFont ttf (through AUR)
 
