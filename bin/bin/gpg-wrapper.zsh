@@ -1,10 +1,16 @@
 encrypt() {
     if [ -f "$1" ]; then
         gpg --default-recipient-self -e $1
-        /bin/rm $1
+        /bin/rm "$1"
+    elif [ -L "$1" ]; then
+        rp="$(realpath $1)"
+        encrypt "$rp"
+        /bin/rm "$1"
+        mv "$rp.tar.gz.gpg" "$1.tar.gz.gpg" 
     elif [ -d "$1" ]; then
-        tmptar=$(mktemp -p /dev/shm/ "$1.tar.gz.XXXX")
-        tar czf "$tmptar" "$1"
+        name="$(basename $1)"
+        tmptar=$(mktemp -p /dev/shm/ "$name.tar.gz.XXXX")
+        tar czf "$tmptar" -C "$1" .
         encrypt "$tmptar"
         mv "${tmptar}.gpg" "$1.tar.gz.gpg"
         /bin/rm -r "$1"
@@ -15,11 +21,12 @@ decrypt() {
     case "$1" in
         *tar.gz.gpg|*tgz.gpg)
             filename=$(mktemp -p /dev/shm/ "${1%.*}".XXXX)
-            gpg -d $1 >> $filename
+            gpg -d "$1" >> "$filename"
             dirname=$(mktemp -d -p /dev/shm/ "${1%%.*}".XXXX)
             tar xzf "$filename" -C "$dirname"
-            /bin/rm "$filename"
-            ln -s "$dirname/${1%%.*}" ./"${1%%.*}"
+            # /bin/rm "$filename"
+            # ln -s "$dirname/${1%%.*}" ./"${1%%.*}"
+            ln -s "$dirname" "${1%%.*}"
             ;;
         *.gpg)
             filename=$(mktemp -p /dev/shm/ "${1%%.*}".XXXX)
