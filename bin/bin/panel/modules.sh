@@ -141,40 +141,11 @@ weather() {
     echo -e F"$color$icon $temperature"
 }
 
-check_connection() {
-    # returns:
-    # 0 if connected (ssl to $1 works)
-    # 64 if no connection to $1 but dns lookup worked
-    # 65 if dns dnsookup failed but there is connection to dns server
-    # 66 if no dns server but conenction to gateway works
-    # 1 if not at all connected
-    test="$1"
-    gateway="$2"
-    nameserver="$3"
-    checkssl=$(
-        nc -zw1 "$1" 443 && echo | openssl s_client -connect "${1}:443" 2>&1 | awk '
-  handshake && $1 == "Verification" { if ($2=="OK") exit; exit 1 }
-  $1 $2 == "SSLhandshake" { handshake = 1 }';
-    )
-    if $checkssl; then
-        return 0
-    elif host "$test"; then
-        return 64
-    elif nc -zw1 "$nameserver"; then
-        return 65
-    elif nc -zw1 "$gateway"; then
-        return 66
-    else
-        return 1
-    fi
-
-}
-
 # wifi
 network() {
     interface="$(ip link | grep 'state UP' | awk '{ print $2 }')"
     network_type="${interface:0:2}"
-    check_connection
+    check_connection gstelluto.com
     case $? in
         0) state=u
            ic_state=$IC_CONNECTED
@@ -199,6 +170,7 @@ network() {
 
 # music controls
 music() {
+    which mpc 2>&1 >/dev/null || return
     if [[ $(mpc) ]]; then
         SONG_NAME=$(mpc -f "%title%" | head -n1)
         if [ "${#SONG_NAME}" -eq 0 ]; then
@@ -278,7 +250,7 @@ battery() {
 #keyboard
 keyboard() {
     color="b"
-    read -r var< "/home/pinusc/.keyboard"
+    [ -f "$HOME/.keyboard" ] && read -r var< "$HOME/.keyboard"
     if [ "$var" = "disabled" ]; then
         color="r"
     fi
