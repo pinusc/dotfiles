@@ -30,18 +30,21 @@ shutdown() {
 trap shutdown EXIT SIGTERM SIGUSR1
 
 loop() {
-    2>&1 >/dev/null acpi -b | grep -q "Battery" && has_battery=1
-    2>&1 >/dev/null command -v mpc -b && has_mpc=1
-    2>&1 >/dev/null command -v ponymix && has_pulse=1
-    2>&1 >/dev/null command -v gpg-agent-connect && has_gpg=1
-    2>&1 >/dev/null has_api_keys="$HAS_API"
+    {
+        acpi -b | grep -q "Battery" && has_battery=1
+        command -v mpc -b && has_mpc=1
+        command -v ponymix && has_pulse=1
+        command -v gpg-connect-agent && has_gpg=1
+        (command -v mpc || command -v mpris) && has_music=1
+        has_api_keys="$HAS_API"
+    } >/dev/null 2>&1
     i=0
     while true; do
         keyboard &
-        test "$has_battery" && battery &
-        test "$has_mpc" && music &
-        test "$has_pulse" && pulse_volume &
-        test "$has_gpg" && gpg_info "gnome-keyring-daemon -r -d" &
+        [[ -n ${has_music+x} ]] && music &
+        [[ -n ${has_battery+x} ]] && battery &
+        [[ -n ${has_pulse+x} ]] && pulse_volume &
+        [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
         clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
         if (( i == 0 )); then
            wallpaper &
