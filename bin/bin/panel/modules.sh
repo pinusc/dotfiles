@@ -255,3 +255,22 @@ keyboard() {
 wallpaper() {
     echo "Q%{A:randomwallpaper.sh:}%{A3:fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
 }
+
+
+gpg_info () {
+    # If $1 is passed, it gets called as command after locking the agent.
+    # This is useful e.g. for resetting gnome-keyring (with gnome-keyring-daemon -r -d)
+    # if it contains the password
+
+    # The regex works because `keyinfo --list` (check `help keyinfo`)
+    # lists a bunch of information after the key grips. CACHED state is 1 or -
+    # and it immediately precedes PROTECTION, which is either P, C or -
+    # So if there's a 1 right before a [PC-], we know at least one key is unlocked
+    command="gpg-connect-agent 'reloadagent' /bye; $1"
+    if gpg-connect-agent 'keyinfo --list' /bye | grep -q -E "1 [PC-]"; then
+        icon="$IC_UNLOCK"
+    else
+        icon="$IC_LOCK"
+    fi
+    echo "g%{A:$command:}$icon%{A}"
+}

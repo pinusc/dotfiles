@@ -40,6 +40,7 @@ loop() {
         pulse_volume &
         mail &
         clock "$CLOCKFILE" &
+        gpg_info "gnome-keyring-daemon -r -d" &
         if (( i % 60 == 0 )); then
             # clock &
             calendar &

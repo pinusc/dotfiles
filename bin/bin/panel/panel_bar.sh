@@ -126,18 +126,6 @@ while read -r line ; do
             # clock output
             clock="$PADDING%{F$COLOR_CLOCK}${line#?}%{F-}"
             ;;
-
-        # uncomment for window title support
-        T*)
-            # xtitle output
-            #title="${line#?}$PADDING"
-            if [[ -n ${line#?} ]]; then
-                title="%{B$COLOR_TITLE_BG}%{F$COLOR_TITLE_FG}$PADDING${line:1:30}%{F-}%{B-}"
-            else
-                title=""
-            fi
-            ;;
-
         V*)
             # alsa volume
             volume="$PADDING${line#?}"
@@ -245,12 +233,17 @@ while read -r line ; do
             #IP
             ip="$PADDING${line#?}"
             ;;
+        g*)
+            gpginfo="$PADDING%{F$COLOR_LOCK}${line#?}%{F-}"
+            ;;
     esac
     #printf "%s\n" "%{l}${wm_infos}%{Sf}%{c}${music}%{r}${volume}${date}${clock}"
     case $current_monitor in
         1)
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
-            ;;
+            # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+            # ;;
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+        ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"
             ;;
