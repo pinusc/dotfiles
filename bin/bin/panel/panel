@@ -35,15 +35,17 @@ loop() {
         keyboard &
         # battery &
         command -v mpc >/dev/null 2>&1 && music &
-        network &
         wallpaper &
         pulse_volume &
-        mail &
-        clock "$CLOCKFILE" &
         gpg_info "gnome-keyring-daemon -r -d" &
+        clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
+        if (( i % 10 == 0 )); then
+            network &
+        fi
         if (( i % 60 == 0 )); then
             # clock &
             calendar &
+            mail &
         fi
         if (( i % 400 == 0 )); then
             # mail &
