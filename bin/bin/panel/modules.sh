@@ -83,6 +83,7 @@ pollution() {
 }
 
 weather() {
+    >&2 echo "WEATHER"
     location=$(geolocate)
     weather_response=$(curl -s "https://api.darksky.net/forecast/$API_DARKSKY/$location?units=si&exclude=minutely,hourly,daily,alerts.flags")
     url_comm="firefox darksky.net/forecast/changshu/si12/en"
@@ -94,7 +95,6 @@ weather() {
     # So when printf is given a decimal number using a point, it gives error and fucks up
     # Setting LC_NUMERIC to C ensures this never happens
     LC_NUMERIC="C"
-    temperature_int=$(printf "%.0f" "$temp")
     temperature=$(printf "%.1f" "$temp")
     icon=""
     color=""  # depending on temperature, can be blue, yellow or red
@@ -127,14 +127,16 @@ weather() {
             icon=$IC_WEATHER_FOG
             ;;
     esac
-    if [ "$temperature_int" -lt 15 ]; then
+    temperature_int=$(printf "%.0f" "$temp")
+    if (( temperature_int < 15 )); then
         color="b"
-    elif [ 15 -lt "$temperature_int" ] && [ "$temperature_int" -lt 30 ]; then
+    elif (( temperature_int < 30 )); then
         color="y"
-    elif [ "$temperature_int" -gt 30 ]; then
+    else
         color="r"
     fi
     # echo -e F"$color%{A:$url_comm:}$icon $temperature%{A}"
+    >&2 echo -e F"$color$icon $temperature"
     echo -e F"$color$icon $temperature"
 }
 
