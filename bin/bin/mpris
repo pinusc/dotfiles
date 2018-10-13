@@ -1,0 +1,1195 @@
+#!/usr/bin/env perl
+# mpris - control MPRISv2 compatible players
+# (c) 2012-2016 Mantas Mikulėnas <grawity@gmail.com>
+# Released under the MIT License <https://spdx.org/licenses/MIT>
+#
+# Inspired by: http://incise.org/mpris-remote.html
+# MPRISv2 spec: http://specifications.freedesktop.org/mpris-spec/latest/
+
+use feature qw(say state switch);
+use strict;
+use warnings;
+no if $] >= 5.017011, warnings => qw(experimental::smartmatch);
+use Data::Dumper;
+use List::Util qw(max);
+use Net::DBus qw(:typing);
+use Net::DBus::Reactor;
+use constant {
+	DBUS_PROPERTY_IFACE	=> 'org.freedesktop.DBus.Properties',
+	MPRIS_MAIN_IFACE	=> 'org.mpris.MediaPlayer2',
+	MPRIS_PLAYER_IFACE	=> 'org.mpris.MediaPlayer2.Player',
+	MPRIS_PLAYLIST_IFACE	=> 'org.mpris.MediaPlayer2.Playlists',
+};
+
+BEGIN {
+	if (eval {require Nullroute::Lib}) {
+		Nullroute::Lib->import(qw(_debug _warn _err _die));
+	} else {
+		our ($warnings, $errors);
+		sub _debug { warn "debug: @_\n" if $ENV{DEBUG}; }
+		sub _warn  { warn "warning: @_\n"; ++$::warnings; }
+		sub _err   { warn "error: @_\n"; ! ++$::errors; }
+		sub _die   { _err(@_); exit 1; }
+	}
+}
+
+my $bus = Net::DBus->session;
+
+my %notification_bus;
+
+my $prefix_re = qr/^org\.mpris\.MediaPlayer2\./;
+my $instance_re = qr/\.instance-?\d+$/;
+my $suffix_re = qr/[^.]+(?:$instance_re)?$/;
+
+my %meta_format = (
+	"mpris:length" => ["t", "Length"],
+	"mpris:trackid" => ["o", "Track ID"],
+	"xesam:title" => ["s", "Title"],
+	"xesam:url" => ["s", "URL"],
+);
+
+# usage() - print usage text
+#
+# help(topic) - print help text
+#
+# _die2(str) - like _die(), but always exits with status 2
+
+sub usage {
+	say for
+	"Usage: mpris [{<player>|--all} <cmd> [args...]]",
+	"       mpris <player> {activate|is-running}",
+	"       mpris --list",
+	"       mpris --help {commands|get|set|printf}",
+	"",
+	"This script implements the MPRIS v2.2 specification:",
+	"  http://specifications.freedesktop.org/mpris-spec/latest/",
+	;
+}
+
+sub help {
+	my $cmd = shift;
+	for ($cmd) {
+	    when (undef) { usage(); }
+	    when ("commands") {
+		say for
+		"# CONTROL",
+		"  next",
+		"  open-uri <uri>",
+		"  pause",
+		"  play",
+		"  playlist [<playlist-path>]",
+		"  prev",
+		"  repeat [{None|Playlist|Track}]",
+		"  seek [<pos>[@<track>]]",
+		"  set <property> <value>",
+		"  skip <offset>",
+		"  shuffle [{on|off}]",
+		"  stop",
+		"  toggle",
+		"# STATUS",
+		"  get <property>",
+		"  meta",
+		"  printf [<format>]",
+		"  notify-idle",
+		"  notify-once",
+		"  playlists",
+		"  summary",
+		"# APPLICATION",
+		"  activate",
+		"  is-running",
+		"  raise",
+		"  quit",
+		;
+	    }
+	    when ("get") {
+		say for
+		"# APPLICATION",
+		"  can-fullscreen",
+		"  can-raise",
+		"  can-quit",
+		"  desktop",
+		"  fullscreen",
+		"  has-track-list",
+		"  identity",
+		"  mime-types",
+		"  uri-schemes",
+		"# PLAYER",
+		"  player/can-control",
+		"  player/can-go-next",
+		"  player/can-go-prev",
+		"  player/can-pause",
+		"  player/can-play",
+		"  player/can-seek",
+		"  player/loop-status",
+		"  player/metadata",
+		"  player/position",
+		"  player/position\@track",
+		"  player/rate",
+		"  player/rate-max",
+		"  player/rate-min",
+		"  player/shuffle",
+		"  player/status",
+		"  player/volume",
+		"# PLAYLIST",
+		"  playlist/active",
+		;
+	    }
+	    when ("set") {
+		say for
+		"# APPLICATION",
+		"  fullscreen {on|off}",
+		"# PLAYER",
+		"  player/loop-status {None|Playlist|Track}",
+		"  player/rate (player:rate-max)~(player:rate-min)",
+		"  player/position <pos>[@<track>]",
+		"  player/shuffle {on|off}",
+		"  player/status {Paused|Playing|Stopped|Toggle}",
+		"  player/volume 0.0~1.0",
+		"# PLAYLIST",
+		"  playlist/active <playlist-path>",
+		;
+	    }
+	    when (/^printf(?:-formats)?$/) {
+		say for
+		"Usage: mpris <player> printf <format>",
+		"",
+		"In <format>, templates like %{property-name} are expanded to values shown by",
+		"the 'meta' or 'get player/metadata' subcommands; for example, %{xesam:title}",
+		"will expand to the current song's title. The default format is:",
+		"",
+		"    %{xesam:artist} – %{xesam:title}",
+		"",
+		"For multi-value properties (such as artist name), the property name optionally",
+		"can be suffixed with [sep] to use a different separator, with [, ] being the",
+		"default – e.g. \"%{xesam:artist[, ]}\". Use [] to separate values with newlines.",
+		;
+	    }
+	    default { usage(); }
+	}
+}
+
+sub _die2 { _err(shift); exit 2; }
+
+# saybool(bool) - print "yes"/"no" and exit with boolean status
+
+sub saybool {
+	my $b = shift;
+	say $b ? "yes" : "no";
+	exit !$b;
+}
+
+# MediaPlayer(busname) - return player service closure
+#   ->([optional] object) - return object in service
+
+sub MediaPlayer {
+	my $busname = shift;
+	my $service = $bus->get_service($busname);
+	sub {
+		my $path = shift;
+		$service->get_object($path // "/org/mpris/MediaPlayer2");
+	};
+}
+
+# Notifications() - return libnotify object
+
+sub Notifications {
+	$bus
+	->get_service("org.freedesktop.Notifications")
+	->get_object("/org/freedesktop/Notifications");
+}
+
+# int2time(seconds) - format number of seconds as human-readable time
+#
+# time2int(timestr) - parse human-readable time into number of seconds
+#
+# frombool(str) - parse a string as a boolean value
+
+sub int2time {
+	my $int = shift // return "∞";
+
+	$int = int($int / 1_000_000);
+	$int -= my $s = $int % 60; $int /= 60;
+	$int -= my $m = $int % 60; $int /= 60;
+	$int -= my $h = $int % 24; $int /= 24;
+	$int -= my $d = $int;
+
+	$d ? sprintf("%dd%dh%dm%ds", $d, $h, $m, $s)
+	   : $h ? sprintf("%dh%02d:%02d", $h, $m, $s)
+	        : sprintf("%d:%02d", $m, $s);
+}
+
+sub time2int {
+	my $time = shift;
+	my $secs = 0;
+	my $sign = 1;
+
+	if ($time =~ s/^-//) {
+		$sign = -1;
+	}
+
+	my $re_dhms = qr/^ (?: (\d+) d )?
+			   (?: (\d+) h )?
+			   (?: (\d+) m )?
+			   (?: (\d+) s )? $/x;
+
+	my $re_hmsu = qr/^ (?:
+			      (?: (\d+) [h:] )?
+			      (\d+) :
+			   )?
+			   (
+			      \d+
+			      (?: \. \d+ )?
+			   ) $/x;
+
+	for ($time) {
+		when (undef) {
+			return undef;
+		}
+		when (/^\d+$/) {
+			$secs = $_;
+			if ($secs > 100_000) {
+				# more than 27 hours? very likely to be already
+				# in microseconds, just like 'get player/position'
+				# used to output
+				$secs /= 1_000_000;
+			}
+		}
+		when (/$re_dhms/) {
+			$secs += ($1 // 0) * 86400;
+			$secs += ($2 // 0) * 3600;
+			$secs += ($3 // 0) * 60;
+			$secs += ($4 // 0);
+		}
+		when (/$re_hmsu/) {
+			$secs += ($1 // 0) * 3600;
+			$secs += ($2 // 0) * 60;
+			$secs += $3;
+		}
+		default {
+			return undef;
+		}
+	}
+
+	return $sign * $secs * 1_000_000;
+}
+
+sub frombool {
+	my $str = shift;
+	my $die = shift // 1;
+	for ($str) {
+		when (undef) {
+			$die ? _die2("missing boolean parameter") : undef;
+		}
+		when (/^(yes|true|on|1)$/i) {
+			return dbus_boolean(1);
+		}
+		when (/^(no|false|off|0)$/i) {
+			return dbus_boolean(0);
+		}
+		default {
+			$die ? _die2("invalid boolean parameter '$str'") : undef;
+		}
+	}
+}
+
+# fmt(text, colors, [io]) - add ANSI format codes if writing to a tty
+
+sub fmt {
+	my ($text, $fmts, $io) = @_;
+	if (-t ($io // *STDOUT)) {
+		return "\e[".$fmts."m".$text."\e[m";
+	} else {
+		return $text;
+	}
+}
+
+# enumerate() - list MPRIS v2 bus names, return suffixes
+
+sub enumerate {
+	my $names = $bus->get_bus_object->ListNames();
+	sort grep {/$prefix_re/} @$names;
+}
+
+# enumerate_unique() - list bus names avoiding duplicates (vlc / vlc.instanceXXX)
+
+sub enumerate_unique {
+	my @names = enumerate();
+	my %names = map {$_ => 1} @names;
+	# collect basenames of bus names that have an instance suffix
+	my %dupes = map {$_ => 1} grep {s/$instance_re//} @names;
+	delete $names{$_} for keys %dupes;
+	sort keys %names;
+}
+
+# describe(name) - show identity and status of player
+#
+# describe_as_separator(name) - show player identity, usable as separator
+
+sub describe {
+	my $name = shift;
+	my $player = MediaPlayer($name);
+
+	if ($name =~ /^$prefix_re($suffix_re)/) {
+		$name = $1;
+	}
+
+	my $out = $name;
+
+	my $identity = eval {$player->()->Get(MPRIS_MAIN_IFACE, "Identity")};
+	$out .= " ($identity)" if defined $identity;
+
+	my $status = eval {$player->()->Get(MPRIS_PLAYER_IFACE, "PlaybackStatus")};
+	$out .= " – $status" if defined $status;
+
+	say $out;
+}
+
+sub describe_as_separator {
+	my $name = shift;
+	my $player = MediaPlayer($name);
+
+	if ($name =~ /^$prefix_re($suffix_re)/) {
+		$name = $1;
+	}
+
+	my $out = $name;
+
+	my $identity = eval {$player->()->Get(MPRIS_MAIN_IFACE, "Identity")};
+	$out .= " ($identity)" if defined $identity;
+
+	say "-- $out --";
+}
+
+# check_version(name, bus_name) -- die if player is MPRISv1-only
+
+sub check_version {
+	my ($player, $bus_name) = @_;
+	if ($bus->get_service_owner($bus_name)) {
+		return 1;
+	} elsif ($bus->get_service_owner("org.mpris.$player")) {
+		_die("player '$player' does not support MPRIS v2, only v1");
+	} else {
+		return 0;
+	}
+}
+
+sub list_players {
+	my $verbose = shift;
+	my @names = enumerate();
+	if ($verbose) {
+		describe($_) for @names;
+		say "No MPRIS v2 players are running." if !@names;
+	} else {
+		say for @names;
+	}
+}
+
+sub _notify_handle_action {
+	my ($id, $action) = @_;
+
+	my $bus_name;
+	my $player;
+
+	$bus_name = $notification_bus{$id};
+
+	if (!$bus_name) {
+		_debug("invoked '$action' for unknown notification $id");
+		return;
+	}
+
+	_debug("invoked '$action' for player '$bus_name'");
+
+	$player = MediaPlayer($bus_name);
+
+	for ($action) {
+		when ("media-skip-backward") {
+			$player->()->Previous();
+		}
+		when ("media-playback-start") {
+			$player->()->Play();
+		}
+		when ("media-playback-pause") {
+			$player->()->Pause();
+		}
+		when ("media-skip-forward") {
+			$player->()->Next();
+		}
+	}
+}
+
+sub show_notification {
+	my ($bus_name, $player, $status, $meta) = @_;
+
+	state %notification_id;
+	state %app_name;
+	state %app_desktop;
+
+	my $summary;
+	my $body;
+	my $app_id;
+	my $icon;
+	my @actions;
+	my %hints;
+	my $new_id;
+
+	if ($status eq "Stopped") {
+		$summary = "Stopped.";
+		$body = "";
+	} else {
+		my $artist = $meta->{"xesam:artist"} // ["unknown artist"];
+		$summary = $meta->{"xesam:title"} // "Unnamed song";
+		$body = "by ".join(", ", @$artist);
+	}
+
+	$app_id = $bus_name;
+	$app_id =~ s/$prefix_re//;
+
+	$app_name{$bus_name} //= $player->()->Get(MPRIS_MAIN_IFACE, "Identity");
+	$app_name{$bus_name} //= $app_id;
+
+	$app_desktop{$bus_name} //= $player->()->Get(MPRIS_MAIN_IFACE, "DesktopEntry");
+	$app_desktop{$bus_name} //= $app_id;
+
+	for ($status) {
+		when ("Playing") { $icon = "media-playback-start-symbolic" }
+		when ("Paused")  { $icon = "media-playback-pause-symbolic" }
+		when ("Stopped") { $icon = "media-playback-stop-symbolic" }
+		default          { $icon = "audio-x-generic-symbolic" }
+	}
+
+	if ($status eq "Playing" && ($ENV{DESKTOP_SESSION} // "") =~ /gnome/i) {
+		$icon = $meta->{"mpris:artUrl"} // $icon;
+	}
+
+	@actions = (
+		"media-skip-backward" => "Previous",
+		$status eq "Playing"
+			? ("media-playback-pause" => "Pause")
+			: ("media-playback-start" => "Play"),
+		"media-skip-forward" => "Next",
+	);
+
+	%hints = (
+		"action-icons" => dbus_boolean(1),
+		"category" => "x-gnome.music",
+		"desktop-entry" => $app_desktop{$bus_name},
+		"resident" => dbus_boolean(1),
+		"urgency" => dbus_byte(0),
+	);
+
+	_debug("status=$status, icon='$icon'");
+
+	$new_id = Notifications->Notify(
+			$app_name{$bus_name},
+			$notification_id{$bus_name} // 0,
+			$icon,
+			$summary,
+			$body,
+			\@actions,
+			\%hints,
+			2*1000);
+
+	$notification_id{$bus_name} = $new_id;
+	$notification_bus{$new_id} = $bus_name;
+}
+
+sub _notify_handle_propchange {
+	my ($bus_name, $interface, $changed, $invalidated) = @_;
+	my %changed = %$changed;
+	my @invalidated = @$invalidated;
+
+	state %status;
+	state %meta;
+
+	my $player = MediaPlayer($bus_name);
+	my $status;
+	my $meta;
+
+	if ("PlaybackStatus" ~~ %changed) {
+		$status = $changed{"PlaybackStatus"};
+	} elsif ("PlaybackStatus" ~~ @invalidated || !defined $status{$bus_name}) {
+		$status = $player->()->Get(MPRIS_PLAYER_IFACE, "PlaybackStatus");
+	} else {
+		$status = $status{$bus_name};
+	}
+
+	if ("Metadata" ~~ %changed) {
+		$meta = $changed{"Metadata"};
+	} elsif ("Metadata" ~~ @invalidated || !defined $meta{$bus_name}) {
+		$meta = $player->()->Get(MPRIS_PLAYER_IFACE, "Metadata");
+	} else {
+		$meta = $meta{$bus_name};
+	}
+
+	my @old = ($status{$bus_name},
+		$meta{$bus_name}->{"xesam:artist"},
+		$meta{$bus_name}->{"xesam:title"});
+	my @new = ($status,
+		$meta->{"xesam:artist"},
+		$meta->{"xesam:title"});
+
+	if (@old ~~ @new) {
+		return;
+	}
+
+	$status{$bus_name} = $status;
+	$meta{$bus_name} = $meta;
+
+	show_notification($bus_name, $player, $status, $meta);
+}
+
+sub _event_setup_propchange {
+	my ($bus_name, $handler) = @_;
+	my $player_obj = MediaPlayer($bus_name)->();
+	my $introspector = $player_obj->can("_net_dbus_introspector")
+			 ? $player_obj->_net_dbus_introspector
+			 : $player_obj->_introspector;
+	if (!$introspector->has_signal("PropertiesChanged")) {
+		# Qt4 did not include the "PropertiesChanged" signal
+		# in its introspection data. Probably no longer needed
+		# for Qt5, but whatevs, old versions never truly go away.
+		_debug("adding 'PropertiesChanged' signal to introspection");
+		$introspector->add_signal(
+				"PropertiesChanged",
+				["string",
+				 ["dict", "string", ["variant"]],
+				 ["array", "string"]],
+				"org.freedesktop.DBus.Properties",
+				{deprecated => 0},
+				["interface_name",
+				 "changed_properties",
+				 "invalidated_properties"]);
+	}
+	$player_obj->connect_to_signal("PropertiesChanged", sub {
+		$handler->($bus_name, @_);
+	});
+}
+
+sub event_setup {
+	my ($bus_name, $handler) = @_;
+
+	state $bus_obj = $bus->get_bus_object;
+	state %sig_pc;
+
+	if (!defined $bus_name) {
+		$bus_obj->connect_to_signal("NameOwnerChanged", sub {
+			my ($name, $old_owner, $new_owner) = @_;
+			if ($new_owner && $name =~ $prefix_re && !$sig_pc{$name}) {
+				_debug("found player: $name");
+				$sig_pc{$name} = _event_setup_propchange($name, $handler);
+			}
+		});
+	} elsif ($bus->get_service_owner($bus_name)) {
+		_debug("found player: $bus_name");
+		$sig_pc{$bus_name} = _event_setup_propchange($bus_name, $handler);
+	} else {
+		$bus_obj->connect_to_signal("NameOwnerChanged", sub {
+			my ($name, $old_owner, $new_owner) = @_;
+			if ($new_owner && $bus_name eq $name && !$sig_pc{$name}) {
+				_debug("found player: $name");
+				$sig_pc{$name} = _event_setup_propchange($name, $handler);
+			}
+		});
+	}
+}
+
+# player_getprop(player, propname) - handler for "mpris get"
+
+# player_setprop(player, propname, ...) - handler for "mpris set"
+#
+# player_doprop(propname, player, @args) - handler for "set" if @args given, "get" otherwise
+#
+# property(...) - return closure calling player_doprop(...)
+
+sub player_getprop {
+	my $player = shift;
+	my $property = shift;
+	for ($property) {
+		when (undef) {
+			_err("missing property name");
+			help("get");
+			return 2;
+		}
+		when (["properties", "--help"]) {
+			help("get");
+			return 0;
+		}
+
+		# main:
+
+		when ("can-fullscreen") {
+			saybool eval {$player->()->Get(MPRIS_MAIN_IFACE,
+							"CanSetFullscreen")} // 0;
+		}
+		when ("can-raise") {
+			saybool $player->()->Get(MPRIS_MAIN_IFACE, "CanRaise");
+		}
+		when ("can-quit") {
+			saybool $player->()->Get(MPRIS_MAIN_IFACE, "CanQuit");
+		}
+		when ("desktop") {
+			say eval {$player->()->Get(MPRIS_MAIN_IFACE,
+							"DesktopEntry")} // "";
+		}
+		when ("fullscreen") {
+			saybool eval {$player->()->Get(MPRIS_MAIN_IFACE,
+							"Fullscreen")} // 0;
+		}
+		when ("has-track-list") {
+			saybool $player->()->Get(MPRIS_MAIN_IFACE, "HasTrackList");
+		}
+		when ("identity") {
+			say $player->()->Get(MPRIS_MAIN_IFACE, "Identity");
+		}
+		when ("mime-types") {
+			my $types = $player->()->Get(MPRIS_MAIN_IFACE,
+							"SupportedMimeTypes");
+			say for @$types;
+		}
+		when ("uri-schemes") {
+			my $schemes = $player->()->Get(MPRIS_MAIN_IFACE,
+							"SupportedUriSchemes");
+			say for @$schemes;
+		}
+
+		# player:
+
+		when ("player/can-control") {
+			saybool $player->()->Get(MPRIS_PLAYER_IFACE, "CanControl");
+		}
+		when ("player/can-go-next") {
+			saybool $player->()->Get(MPRIS_PLAYER_IFACE, "CanGoNext");
+		}
+		when ("player/can-go-prev") {
+			saybool $player->()->Get(MPRIS_PLAYER_IFACE, "CanGoPrevious");
+		}
+		when ("player/can-pause") {
+			saybool $player->()->Get(MPRIS_PLAYER_IFACE, "CanPause");
+		}
+		when ("player/can-play") {
+			saybool $player->()->Get(MPRIS_PLAYER_IFACE, "CanPlay");
+		}
+		when ("player/can-seek") {
+			saybool $player->()->Get(MPRIS_PLAYER_IFACE, "CanSeek");
+		}
+		when ("player/loop-status") {
+			say $player->()->Get(MPRIS_PLAYER_IFACE, "LoopStatus");
+		}
+		when ("player/metadata") {
+			my $meta = $player->()->Get(MPRIS_PLAYER_IFACE, "Metadata");
+			my @wantkeys = @_ ? @_ : keys(%$meta);
+			for my $key (sort @wantkeys) {
+				my $value = $meta->{$key};
+				if (!defined $value) {
+					say "!${key}";
+				}
+				elsif (ref $value eq 'ARRAY') {
+					say "${key}[]=$_" for @$value;
+				}
+				elsif (ref $value eq '') {
+					say "$key=$value";
+				}
+				else {
+					print Dumper($key, $value);
+				}
+			}
+		}
+		when ("player/position") {
+			my $pos = $player->()->Get(MPRIS_PLAYER_IFACE, "Position");
+			say int2time($pos);
+		}
+		when ("player/position\@track") {
+			my $pos = $player->()->Get(MPRIS_PLAYER_IFACE, "Position");
+			my $meta = $player->()->Get(MPRIS_PLAYER_IFACE, "Metadata");
+			my $track = $meta->{"mpris:trackid"};
+			if (!defined $track) {
+				_die2("couldn't get current track ID");
+			}
+			elsif ($track =~ m|^/org/mpris/MediaPlayer2/Track/(\d+)$|) {
+				$track = $1;
+			}
+			say int2time($pos)."\@".$track;
+		}
+		when ("player/rate") {
+			say $player->()->Get(MPRIS_PLAYER_IFACE, "Rate");
+		}
+		when ("player/rate-max") {
+			say $player->()->Get(MPRIS_PLAYER_IFACE, "MaximumRate");
+		}
+		when ("player/rate-min") {
+			say $player->()->Get(MPRIS_PLAYER_IFACE, "MinimumRate");
+		}
+		when ("player/shuffle") {
+			saybool $player->()->Get(MPRIS_PLAYER_IFACE, "Shuffle");
+		}
+		when ("player/status") {
+			say $player->()->Get(MPRIS_PLAYER_IFACE, "PlaybackStatus");
+		}
+		when ("player/volume") {
+			say $player->()->Get(MPRIS_PLAYER_IFACE, "Volume");
+		}
+
+		# playlist:
+
+		when ("playlist/active") {
+			my $ret = $player->()->Get(MPRIS_PLAYLIST_IFACE, "ActivePlaylist");
+			my ($valid, $struct) = @$ret;
+			if ($valid) {
+				my ($obj, $name, $icon) = @$struct;
+				say "$obj ($name)";
+			} else {
+				say "/ (no active playlist)";
+			}
+		}
+
+		default {
+			_die2("unknown property '$property'");
+		}
+	}
+	# implicit return
+}
+
+sub player_setprop {
+	my $player = shift;
+	my $property = shift;
+	for ($property) {
+		when (undef) {
+			_err("missing property name");
+			help("set");
+			return 2;
+		}
+		when (["properties", "--help"]) {
+			help("set");
+			return 0;
+		}
+
+		# main:
+
+		when ("fullscreen") {
+			my $arg = frombool(shift);
+			$player->()->Set(MPRIS_MAIN_IFACE, "Fullscreen", $arg);
+		}
+
+		when ("player/loop-status") {
+			my $arg = shift;
+			for ($arg) {
+				when (undef) {
+					_die2("missing status {None, Playlist, Track}");
+				}
+				when (/^(none|off)$/i) {
+					$arg = "None";
+				}
+				when (/^(playlist|all)$/i) {
+					$arg = "Playlist";
+				}
+				when (/^(track|song|single|one)$/i) {
+					$arg = "Track";
+				}
+				default {
+					_die2("unknown loop status '$_'");
+				}
+			}
+			$player->()->Set(MPRIS_PLAYER_IFACE, "LoopStatus", $arg);
+		}
+		when ("player/position") {
+			my $position = shift;
+			my $track;
+			my $time;
+			if (!defined $position) {
+				_die2("missing position or position\@track");
+			} elsif ($position =~ /^(,+)@(\d+)$/) {
+				$position = $1;
+				$track = "/org/mpris/MediaPlayer2/Track/$2";
+			} elsif ($position =~ /^(.+)@(\/.+)$/) {
+				$position = $1;
+				$track = $2;
+			} elsif ($position =~ /@/) {
+				_die2("invalid track number '$position'");
+			} else {
+				my $meta = $player->()->Get(MPRIS_PLAYER_IFACE,
+							"Metadata");
+				$track = $meta->{"mpris:trackid"};
+				if (!defined $track) {
+					_die2("couldn't get current track ID");
+				}
+			}
+			$time = time2int($position);
+			if (defined $time) {
+				$player->()->SetPosition($track, $time);
+			} else {
+				_die2("invalid position '$position'");
+			}
+		}
+		when ("player/rate") {
+			my $arg = shift;
+			if (!defined $arg) {
+				my $min = eval {$player->()->Get(MPRIS_PLAYER_IFACE,
+							"MinimumRate")} // 1.0;
+				my $max = eval {$player->()->Get(MPRIS_PLAYER_IFACE,
+							"MaximumRate")} // 1.0;
+				_die2("missing value [$min .. $max]");
+			}
+			$arg = dbus_double($arg);
+			$player->()->Set(MPRIS_PLAYER_IFACE, "Rate", $arg);
+		}
+		when ("player/shuffle") {
+			my $arg = frombool(shift);
+			$player->()->Set(MPRIS_PLAYER_IFACE, "Shuffle", $arg);
+		}
+		when ("player/status") {
+			my $arg = shift;
+			for ($arg) {
+				when (undef) {
+					_die2("missing status {Playing, Paused, Stopped}");
+				}
+				when (/^(paused?)$/i) {
+					$player->()->Pause();
+				}
+				when (/^(play|playing)$/i) {
+					$player->()->Play();
+				}
+				when (/^(stop|stopped)$/i) {
+					$player->()->Stop();
+				}
+				when (/^toggle$/i) {
+					$player->()->PlayPause();
+				}
+				default {
+					_die2("unknown playback status '$_'");
+				}
+			}
+		}
+		when ("player/volume") {
+			my $arg = shift;
+			if (!defined $arg) {
+				_die2("missing value [0.0 .. 1.0]");
+			}
+			$arg = dbus_double($arg);
+			$player->()->Set(MPRIS_PLAYER_IFACE, "Volume", $arg);
+		}
+
+		when ("playlist/active") {
+			my $arg = shift;
+			if (!defined $arg) {
+				my $orderings = $player->()->Get(MPRIS_PLAYLIST_IFACE,
+							"Orderings");
+				my $playlists = $player->()->GetPlaylists(0, 9999,
+							@$orderings[0], dbus_boolean(0));
+				warn "Missing playlist name:\n";
+				for my $playlist (@$playlists) {
+					my ($obj, $name, $icon) = @$playlist;
+					warn "$obj ($name)\n";
+				}
+				return 2;
+			}
+			$player->()->ActivatePlaylist($arg);
+		}
+
+		default {
+			_die2("property '$property' is read-only or unknown");
+		}
+	}
+	return 0;
+}
+
+sub player_doprop {
+	my ($property, $player, @args) = @_;
+	if (@args) {
+		player_setprop($player, $property, @args);
+	} else {
+		player_getprop($player, $property);
+	}
+}
+
+sub property {
+	my $property = shift;
+	return sub {
+		player_doprop($property, @_);
+	};
+}
+
+my %commands = (
+	activate => sub {
+		# handled by main func
+	},
+	get => sub {
+		player_getprop(@_);
+	},
+	"is-running" => sub {
+		# handled by main func
+	},
+	meta => sub {
+		player_getprop(shift, "player/metadata");
+	},
+	metadata => sub {
+		player_getprop(shift, "player/metadata");
+	},
+	next => sub {
+		shift->()->Next();
+	},
+	"notify-idle" => sub {
+		# handled by main func
+	},
+	"notify-once" => sub {
+		my $player = shift;
+		my $bus_name = $player->()->get_service->get_service_name;
+		my $status = $player->()->Get(MPRIS_PLAYER_IFACE, "PlaybackStatus");
+		my $meta = $player->()->Get(MPRIS_PLAYER_IFACE, "Metadata");
+		show_notification($bus_name, $player, $status, $meta);
+		return 0;
+	},
+	pause => sub {
+		shift->()->Pause();
+	},
+	play => sub {
+		shift->()->Play();
+	},
+	playlists => sub {
+		my $player = shift;
+		my $orderings = $player->()->Get(MPRIS_PLAYLIST_IFACE, "Orderings");
+		my $playlists = $player->()->GetPlaylists(0, 9999,
+						@$orderings[0], dbus_boolean(0));
+		for my $playlist (@$playlists) {
+			my ($obj, $name, $icon) = @$playlist;
+			say "$obj ($name)";
+		}
+		return 0;
+	},
+	playlist => property("playlist/active"),
+	prev => sub {
+		shift->()->Previous();
+	},
+	"open-uri" => sub {
+		my $player = shift;
+		my $uri = shift;
+		if (defined $uri) {
+			$player->()->OpenUri($uri);
+		} else {
+			_die2("missing URI to open");
+		}
+	},
+	quit => sub {
+		shift->()->Quit();
+	},
+	printf => sub {
+		my $player = shift;
+		my $format = shift // "%{xesam:artist} – %{xesam:title}";
+
+		if ($format eq "--help") {
+			return help("printf");
+		}
+
+		my $meta = $player->()->Get(MPRIS_PLAYER_IFACE, "Metadata");
+		my $fmt_re = qr/ %\{
+				# property name
+				( \w+:\w+ )
+				# optional [] or [separator]
+				( \[\] | \[[^}\w]+\] )?
+			     \} /x;
+		while ($format =~ /$fmt_re/g) {
+			my $item = $meta->{$1} // "Unknown";
+			if (ref $item eq 'ARRAY') {
+				if (!defined $2) {
+					$item = join(", ", @$item);
+				} elsif ($2 eq "[]") {
+					$item = join("\n", @$item);
+				} elsif ($2 =~ /^\[ (.+) \]$/x) {
+					$item = join($1, @$item);
+				} else {
+					$item = join($2, @$item);
+				}
+			}
+			$format =~ s//$item/;
+		}
+		say $format;
+		return 0;
+	},
+	raise => sub {
+		shift->()->Raise();
+	},
+	repeat => property("player/loop-status"),
+	seek => property("player/position"),
+	set => sub {
+		player_setprop(@_);
+	},
+	skip => sub {
+		my $player = shift;
+		my $offset = time2int(shift);
+		if (defined $offset) {
+			$player->()->Seek($offset);
+		} else {
+			_die2("invalid seek offset");
+		}
+	},
+	shuffle => property("player/shuffle"),
+	status => property("player/status"),
+	stop => sub {
+		shift->()->Stop();
+	},
+	summary => sub {
+		my $player = shift;
+		my $props = $player->()->GetAll(MPRIS_PLAYER_IFACE);
+		my $status = $props->{PlaybackStatus};
+		my %colors = (
+			Playing => "1;32",
+			Paused  => "1;33",
+			Stopped => "1;31",
+		);
+		if ($status =~ /^(Playing|Paused)$/) {
+			my %meta = %{$props->{Metadata}};
+			my $pos = int2time($props->{Position} // 0);
+			my $len = int2time($meta{"mpris:length"});
+			my $artist = $meta{"xesam:artist"} // "Unknown artist";
+			if (ref $artist eq 'ARRAY') {
+				$artist = join(", ", @$artist);
+			}
+			my $track = $meta{"xesam:title"} // "Unknown track";
+			say fmt("[$status]", $colors{$status})." $artist – $track ($pos/$len)";
+			my $width = max map {length $_} keys %meta;
+			for my $key (sort keys %meta) {
+				my $value = $meta{$key};
+				if (my $format = $meta_format{$key}) {
+					($format, $key) = @$format;
+					if ($format eq "t") {
+						$value = int2time($value);
+					}
+				}
+				if (ref $value eq 'ARRAY') {
+					$value = join(", ", @$value);
+				}
+				printf "  %-*s : %s\n", $width, $key, $value;
+			}
+		} else {
+			say fmt("[$status]", $colors{$status})." No track";
+		}
+		my $vol = int (($props->{Volume} // 0) * 100);
+		my $loop = lc ($props->{LoopStatus} // "none");
+		my $shuf = ($props->{Shuffle} // 0) ? "on" : "off";
+		say "(volume: $vol%, repeat: $loop, shuffle: $shuf)";
+		return 0;
+	},
+	toggle => sub {
+		shift->()->PlayPause();
+	},
+);
+
+my $player = shift(@ARGV);
+my $cmd = shift(@ARGV);
+my $bus_name;
+
+for ($player) {
+	when (undef) {
+		list_players(1);
+		exit;
+	}
+	when (/^(-l|--list)/) {
+		list_players(0);
+		exit;
+	}
+	when (/^(-a|--all)/) {
+		$bus_name = "all";
+	}
+	when (/^(--)?help$/) {
+		help($cmd);
+		exit;
+	}
+	when (/^--parse-time$/) {
+		say time2int($cmd);
+		exit;
+	}
+	when (/^--format-time$/) {
+		say int2time($cmd);
+		exit;
+	}
+	when (/^-/) {
+		_die2("unknown option '$player'");
+	}
+	when (/^$prefix_re/) {
+		# full MPRIS v2 bus name
+		$bus_name = $player;
+	}
+	when (/^org\.mpris\.([^.]+)/) {
+		# full MPRIS v1 bus name
+		_err("MPRIS v1 is not supported by this script");
+		$bus_name = "org.mpris.MediaPlayer2.$1";
+		if ($bus->get_service_owner($bus_name)) {
+			warn "\e[1;33mtrying MPRIS v2 using bus name '$bus_name'\e[m\n";
+		} else {
+			_err("ask player author to implement MPRIS v2");
+			exit 3;
+		}
+	}
+	when (/^$suffix_re/) {
+		# suffix with optional .instance-[PID]
+		$bus_name = "org.mpris.MediaPlayer2.$player";
+		check_version($player, $bus_name);
+	}
+	when (/\./) {
+		# possible bus name (at least two components)
+		# unlikely but possible: activate a MPRIS player via vendor name
+		# (e.g. Banshee via org.bansheeproject.Banshee)
+		$bus_name = $player;
+	}
+	default {
+		# suffix (only one component)
+		# NOTE: /^$suffix_re/ above should catch all such instances
+		$bus_name = "org.mpris.MediaPlayer2.$player";
+		check_version($player, $bus_name);
+	}
+}
+
+for ($cmd) {
+	when (undef) {
+		_err("missing command");
+		help("commands");
+		exit 2;
+	}
+	when (["commands", "--help"]) {
+		help("commands");
+	}
+	when ("activate") {
+		if ($bus_name eq "all") {
+			_die2("bus name not specified (--all won't work here)");
+		}
+		MediaPlayer($bus_name);
+	}
+	when ("is-running") {
+		if ($bus_name eq "all") {
+			saybool enumerate_unique();
+		} else {
+			saybool $bus->get_service_owner($bus_name);
+		}
+	}
+	when ("notify-idle") {
+		my $handler = \&_notify_handle_propchange;
+		if ($bus_name eq "all") {
+			event_setup(undef, $handler);
+			event_setup($_, $handler) for enumerate_unique();
+		} else {
+			event_setup($bus_name, $handler);
+		}
+		Notifications->connect_to_signal("ActionInvoked",
+						\&_notify_handle_action);
+		_debug("waiting for events");
+		Net::DBus::Reactor->main->run;
+	}
+	default {
+		if (!exists $commands{$cmd}) {
+			_die2("unknown command '$cmd'");
+		}
+		elsif ($bus_name eq "all") {
+			my @r = map {describe_as_separator($_);
+				     $commands{$cmd}->(MediaPlayer($_), @ARGV) // 0}
+				enumerate_unique();
+			exit max @r;
+		}
+		elsif (!$bus->get_service_owner($bus_name)) {
+			_err("player '$bus_name' is not running");
+			exit 4;
+		}
+		else {
+			my $r = $commands{$cmd}->(MediaPlayer($bus_name), @ARGV) // 0;
+			exit $r;
+		}
+	}
+}

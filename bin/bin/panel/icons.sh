@@ -14,6 +14,7 @@ export IC_VOLUME_MIN="\\uf026"
 
 export IC_IP="\\uf041"
 export IC_MAIL="\\uf0e0"
+export IC_SPOTIFY="\\uf1bc"
 
 
 export IC_POLLUTION="\\ue36d"

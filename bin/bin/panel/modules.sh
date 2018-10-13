@@ -144,7 +144,7 @@ weather() {
 network() {
     interface="$(ip link | grep 'state UP' | awk '{ print $2 }')"
     network_type="${interface:0:2}"
-    check_connection gstelluto.com
+    check_connection 54.37.204.227
     case $? in
         0) state=u
            ic_state=$IC_CONNECTED
@@ -170,21 +170,49 @@ network() {
 
 # music controls
 music() {
-    if [[ $(mpc) ]]; then
-        SONG_NAME=$(mpc -f "%title%" | head -n1)
-        if [ "${#SONG_NAME}" -eq 0 ]; then
-            SONG_NAME=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
-        fi
-        if [ "${#SONG_NAME}" -gt 25 ]; then
-            SONG_NAME="${SONG_NAME:0:25}..."
-        fi
-        if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
-            if mpc status | grep -q "paused"; then
-                echo "R%{T3}%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A}  %{A:mpc next:}$IC_MUSIC_NEXT%{A}%{T1} $SONG_NAME"
+    {
+        if command -v mpris && [[ -n $(mpris --list ) ]]; then
+            echo "mpris"
+            player=$(mpris --list | awk -F '.' '{ print $4; }')
+            meta="$(mpris $player meta)"
+            readarray -t metarray <<< "$meta"
+            for l in "${!metarray[@]}"; do
+                # lines are of the form mpris:$propname=$prop
+                p="${metarray[$l]#*:}"  # gets the line and strips "mpris:"
+                propname="${p%=*}"
+                # for some reason sometimes artist is artist[]
+                propname=$(echo "$propname" | tr -dc "[:alnum:]") # remove special characters
+                value="${p#*=}"
+                eval "${propname}=\"${value}\""
+            done
+            if [[ $(mpris "$player" get player/status) = "Paused" ]]; then
+                command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player play:}$IC_MUSIC_PLAY%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
             else
-                echo "R%{T3}%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}%{T1} %{A:$dzencommand_music:}$SONG_NAME%{A} "
+                command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player pause:}$IC_MUSIC_PAUSE%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
+            fi
+            [[ "$player" = spotify ]] && command="${command} $IC_SPOTIFY"
+
+        elif command -v mpc; then
+            title=$(mpc -f "%title%" | head -n1)
+            if [ "${#SONG_NAME}" -eq 0 ]; then
+                title=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
+            fi
+            if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
+                status="p"
+                if mpc status | grep -q "paused"; then
+                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                else
+                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                fi
             fi
         fi
+    } > /dev/null 2>&1
+
+    if [[ -n "$title" ]] && [[ -n "$command" ]]; then
+        if [ "${#title}" -gt 25 ]; then
+            title="${title:0:25}..."
+        fi
+        echo "R$command  %{A:$dzencommand_music:}$title%{A} "
     fi
 }
 
@@ -260,6 +288,7 @@ wallpaper() {
 
 
 gpg_info () {
+    echo GPGINFO
     # If $1 is passed, it gets called as command after locking the agent.
     # This is useful e.g. for resetting gnome-keyring (with gnome-keyring-daemon -r -d)
     # if it contains the password
