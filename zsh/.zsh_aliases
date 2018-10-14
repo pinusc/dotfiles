@@ -45,6 +45,9 @@ mdmake() {
 }
 
 alias gst="git status"
+alias gan="git annex"
+alias gans="git annex sync"
+alias gag="git annex get"
 alias dd="echo 'Fuck you Shen'"
 
 # fasd 
