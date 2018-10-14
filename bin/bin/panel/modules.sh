@@ -194,11 +194,10 @@ music() {
 
         elif command -v mpc; then
             title=$(mpc -f "%title%" | head -n1)
-            if [ "${#SONG_NAME}" -eq 0 ]; then
+            if [[ -z "$title" ]]; then
                 title=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
             fi
             if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
-                status="p"
                 if mpc status | grep -q "paused"; then
                     command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
                 else
