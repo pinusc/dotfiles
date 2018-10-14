@@ -89,8 +89,8 @@ super + ctrl + {1-9}
 #super + {_,shift,alt}+{1-9,0}
 #bspc {desktop -f,node -d} ^{1-9,10}
 
-super + {_,shift} + {grave,1-9,0}
-	bspc desktop -f "{1-2}:^$(( {0,1-9,10} + 1))"
+super + {_,alt} + {_,shift} + {grave,1-9,0}
+	bspc {desktop -f,node -d} "{_,2:}^$(( {0,1-9,10} + 1))"
 
 # focus the last node/desktop
 super + {grave,Tab}
