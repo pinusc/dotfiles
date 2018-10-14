@@ -4,7 +4,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neomake/neomake'
 " Plug 'ervandew/supertab'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug '~/projects/webcomplete/src/vim-plugin'
+" Plug '~/projects/webcomplete/src/vim-plugin'
 
 Plug 'zchee/deoplete-jedi'
 Plug 'carlitux/deoplete-ternjs'
