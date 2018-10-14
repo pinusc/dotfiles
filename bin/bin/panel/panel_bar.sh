@@ -99,7 +99,7 @@ while read -r line ; do
             net_type=${l%%|*}
 
             o1=${l#*|}
-            status=${o1%*|}
+            status=${o1%|*}
             other=${o1##*|}
 
             case $line in
