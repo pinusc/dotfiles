@@ -64,10 +64,10 @@ while read -r line ; do
         Kc*)
             case $line in
                 Kcb*)
-                    kcolor=$COLOR_KEYBOARD
+                    kcolor="$COLOR_KEYBOARD"
                     ;;
                 Kcr*)
-                    kcolor=$COLOR_KEYBOARD_DISABLED
+                    kcolor="$COLOR_KEYBOARD_DISABLED"
                     ;;
             esac
             line=${line:3}
