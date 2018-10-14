@@ -1,5 +1,6 @@
 #! /bin/bash
-. panel_colors light
+. panel_colors.sh light
+. icons.sh
 
 num_mon=$(bspc query -M | wc -l)
 PADDING="  "
@@ -46,7 +47,7 @@ while read -r line ; do
                     color=$COLOR_YELLOW
                     ;;
             esac
-	    line=${line:2}
+            line=${line:2}
             forecast="$PADDING%{F$color}$line%{F-}"
             ;;
         M*)
@@ -75,29 +76,48 @@ while read -r line ; do
         K*)
             keyboard="$PADDING_SHORT%{F$COLOR_KEYBOARD}${line#?}%{F-}"
             ;;
-	B*)
-	    bcolor=$COLOR_CLOCK
-	    case $line in
-		Bf*)
-		    bcolor=$COLOR_BATTERY_FULL
-		    ;;
-		Bm*)
-		    bcolor=$COLOR_BATTERY_MEDIUM
-		    ;;
-		Be*)
-		    bcolor=$COLOR_BATTERY_EMPTY
-		    ;;
-	    esac
-	    #battery
-	    line=${line#?}
+        B*)
+            bcolor=$COLOR_CLOCK
+            case $line in
+                Bf*)
+                    bcolor=$COLOR_BATTERY_FULL
+                    ;;
+                Bm*)
+                    bcolor=$COLOR_BATTERY_MEDIUM
+                    ;;
+                Be*)
+                    bcolor=$COLOR_BATTERY_EMPTY
+                    ;;
+            esac
+            #battery
+            line=${line#?}
             battery="$PADDING%{F$bcolor}${line#?}%{F-}"
-	    ;;
-	L*)
-            wifi="$PADDING%{F$COLOR_CLOCK}${line#?}%{F-}"
-	    ;;
-	Q*)
+            ;;
+        L*)
+            l=${line#?}
+            l=${l#?}
+            net_type=${l%%|*}
+
+            o1=${l#*|}
+            status=${o1%*|}
+            other=${o1##*|}
+
+            case $line in
+                Lu*)
+                    statuscolor=$COLOR_OK
+                    ;;
+                Lp*)
+                    statuscolor=$COLOR_WARNING
+                    ;;
+                Ld*)
+                    statuscolor=$COLOR_ERROR
+                    ;;
+            esac
+            network="$PADDING%{F$COLOR_NETWORK}${net_type} %{F-}%{F$statuscolor}${status}${other}%{F-}"
+            ;;
+        Q*)
             wallpaper="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}"
-	    ;;
+            ;;
         D*)
             # date output
             date="$PADDING_SHORT$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
@@ -106,18 +126,6 @@ while read -r line ; do
             # clock output
             clock="$PADDING%{F$COLOR_CLOCK}${line#?}%{F-}"
             ;;
-
-            # uncomment for window title support
-            T*)
-            # xtitle output
-            #title="${line#?}$PADDING"
-            if [[ -n ${line#?} ]]; then
-                title="%{B$COLOR_TITLE_BG}%{F$COLOR_TITLE_FG}$PADDING${line:1:30}%{F-}%{B-}"
-            else
-                title=""
-            fi
-            ;;
-
         V*)
             # alsa volume
             volume="$PADDING${line#?}"
@@ -211,7 +219,7 @@ while read -r line ; do
                 color_pom=$COLOR_POMODORO_INACTIVE
             fi
 
-            pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}\uf058${pom_rem}%{A}%{A}%{F-}"
+            pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}$IC_POMODORO${pom_rem}%{A}%{A}%{F-}"
             ;;
         R*)
             # music info
@@ -225,12 +233,17 @@ while read -r line ; do
             #IP
             ip="$PADDING${line#?}"
             ;;
+        g*)
+            gpginfo="$PADDING%{F$COLOR_LOCK}${line#?}%{F-}"
+            ;;
     esac
     #printf "%s\n" "%{l}${wm_infos}%{Sf}%{c}${music}%{r}${volume}${date}${clock}"
     case $current_monitor in
         1)
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${pom}${battery}${wifi}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
-            ;;
+            # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+            # ;;
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+        ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"
             ;;

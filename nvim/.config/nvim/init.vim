@@ -323,7 +323,7 @@ autocmd FileType html,css,scss imap <buffer> <TAB> <plug>(emmet-expand-abbr)
 let g:NERDCustonDelimiters = {
             \ 'python': {'right': '# '}}
 
-call deoplete#custom#set('ultisnips', 'matchers', ['matcher_fuzzy'])
+call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
 
 let g:deoplete#enable_at_startup = 1
 let g:UltiSnipsExpandTrigger="<C-e>"

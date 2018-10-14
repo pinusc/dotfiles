@@ -1,5 +1,15 @@
 #!/bin/bash
 source ~/bin/colors.sh
+COLOR_BLUE="#FF$base0D_nohash"
+COLOR_RED="#FF$base08_nohash"
+COLOR_YELLOW="#FF$base0A_nohash"
+COLOR_ORANGE="#FF$base09_nohash"
+COLOR_PURPLE="#FF$base0E_nohash"
+COLOR_GREEN="#FF$base0B_nohash"
+
+COLOR_OK=$COLOR_GREEN
+COLOR_ERROR=$COLOR_RED
+COLOR_WARNING=$COLOR_YELLOW
 
 COLOR_FOREGROUND="#FF$base07_nohash"
 COLOR_BACKGROUND="#FF$base00_nohash"
@@ -48,14 +58,9 @@ COLOR_BATTERY_MEDIUM="#FF$base0A_nohash"
 COLOR_BATTERY_EMPTY="#FF$base08_nohash"
 COLOR_KEYBOARD="#FF$base0D_nohash"
 COLOR_KEYBOARD_DISABLED="#FF$base0_nohash"
+COLOR_NETWORK="$COLOR_BLUE"
 
-COLOR_BLUE="#FF$base0D_nohash"
-COLOR_RED="#FF$base08_nohash"
-COLOR_YELLOW="#FF$base0A_nohash"
-COLOR_ORANGE="#FF$base09_nohash"
-COLOR_PURPLE="#FF$base0E_nohash"
-COLOR_GREEN="#FF$base0B_nohash"
-
+COLOR_LOCK="$COLOR_BLUE"
 
 SEP_R="\ue0b0"
 #SEP_R=""

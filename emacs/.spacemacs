@@ -23,6 +23,7 @@ values."
      html
      javascript
      python
+     shell-scripts
      (clojure :variables
               clojure-enable-fancify-symbols t)
 
@@ -31,6 +32,11 @@ values."
      git
      markdown
      org
+     latex
+     markdowm
+     java
+     c-c++
+     rust
 
      erc
      pdf-tools
@@ -45,14 +51,14 @@ values."
      (spell-checking :variables enable-flyspell-auto-completion t spell-checking-enable-auto-dictionary t)
      syntax-checking
      auto-completion
+     theming
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
-   '(
-     ;; evil-lispy
+   '(;; evil-lispy
      evil-cleverparens
      base16-theme
      sendmail
@@ -77,13 +83,6 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
-   ;; possible. Set it to nil if you have no way to use HTTPS in your
-   ;; environment, otherwise it is strongly recommended to let it set to t.
-   ;; This variable has no effect if Emacs is launched with the parameter
-   ;; `--insecure' which forces the value of this variable to nil.
-   ;; (default t)
-   dotspacemacs-elpa-https t
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
@@ -116,13 +115,12 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(base16-gruvbox-dark-medium
-                         base16-gruvbox-light-medium
-                         )
+                         base16-gruvbox-light-medium)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Gohu GohuFont"
                                :size 14
                                :weight extra-light
                                :width normal
@@ -136,7 +134,7 @@ values."
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
    dotspacemacs-major-mode-leader-key ","
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m)
+   ;; (default "C-M-m")
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
    ;; These variables control whether separate commands are bound in the GUI to
    ;; the key pairs C-i, TAB and C-m, RET.
@@ -232,7 +230,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -247,6 +245,8 @@ values."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
+
+   dotspacemacs-folding-method 'origami
    ))
 
 (defun dotspacemacs/user-init ()
@@ -256,8 +256,8 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  )
-
+  (setq theming-modifications '((base16-gruvbox-dark-medium
+                                 (font-lock-comment-face :foreground "#877d69" :slant italic)))))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -306,15 +306,33 @@ you should place your code here."
    #b00000000
    #b00000000
    #b00000000])
+
 ; #3c3836
   (setq browse-url-browser-function 'browse-url-generic
       engine/browser-function 'browse-url-generic
       browse-url-generic-program "firefox")
   (setq org-agenda-files (list "~/docs/org"))
+  (setq org-stuck-projects
+        '("+project/!-MAYBE-DONE-SENT" ("NEXT") ("")
+          "\\<IGNORE\\>"))
   (setq org-todo-keywords
         '((sequence "TODO" "NEXT" "|" "DONE")
-          (sequence "TOWRITE" "DRAFTING" "TOREVISE" "|" "DRAFTED" "SENT")
-          (sequence "HABIT" "|" "FULFILLED")))
+          (sequence "TOWRITE" "DRAFTING" "TOREVISE" "DRAFTED" "|" "SENT")
+          (sequence "HABIT" "|" "FULFILLED")
+          (sequence "CONTACT" "|" "CONTACTED")))
+  (setq org-todo-keyword-faces
+        '(("CONTACT" . org-drawer)
+          ("HABIT" . org-link)
+          ("DRAFTED" . org-quote)))
+  (defadvice org-archive-subtree (around my-org-archive-subtree activate)
+    (let ((org-archive-location
+           (if (save-excursion (org-back-to-heading)
+                               (> (org-outline-level) 1))
+               (concat (car (split-string org-archive-location "::"))
+                       "::* "
+                       (car (org-get-outline-path)))
+             org-archive-location)))
+      ad-do-it))
   (setq message-kill-buffer-on-exit t)
   (with-eval-after-load 'smtpmail
     (setq message-send-mail-function 'smtpmail-send-it
@@ -356,8 +374,7 @@ you should place your code here."
               :match-func (lambda (msg)
                             (when msg
                               (string-prefix-p "/giuseppe@gstelluto.com" (mu4e-message-field msg :maildir))))
-              :vars '(
-                      (user-mail-address . "giuseppe@gstelluto.com")
+              :vars '((user-mail-address . "giuseppe@gstelluto.com")
                       (mu4e-sent-folder . "/giuseppe@gstelluto.com/Sent")
                       (mu4e-trash-folder . "/giuseppe@gstelluto.com/Trash")
                       (mu4e-refile-folder . "/giuseppe@gstelluto.com/Archive")))
@@ -433,12 +450,13 @@ you should place your code here."
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (helm-dictionary erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks sql-indent evil-cleverparens yaml-mode zoutline swiper web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data lispyville ivy parinfer base16-gruvbox-dark-medium-theme writeroom-mode visual-fill-column writegood-mode geiser mu4e-maildirs-extension mu4e-alert ht ac-ispell flyspell-popup spray engine-mode spotify helm-spotify-plus multi base16-theme pdf-tools tablist yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc helm-company helm-c-yasnippet fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck cython-mode company-tern dash-functional tern company-statistics company-anaconda company clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider sesman queue clojure-mode auto-yasnippet auto-dictionary auto-complete anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode xkcd smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub with-editor ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
+    (toml-mode racer flycheck-rust disaster company-emacs-eclim eclim company-c-headers company-auctex cmake-mode clang-format cargo rust-mode auctex-latexmk auctex origami insert-shebang fish-mode company-shell helm-dictionary erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks sql-indent evil-cleverparens yaml-mode zoutline swiper web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data lispyville ivy parinfer base16-gruvbox-dark-medium-theme writeroom-mode visual-fill-column writegood-mode geiser mu4e-maildirs-extension mu4e-alert ht ac-ispell flyspell-popup spray engine-mode spotify helm-spotify-plus multi base16-theme pdf-tools tablist yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc helm-company helm-c-yasnippet fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck cython-mode company-tern dash-functional tern company-statistics company-anaconda company clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider sesman queue clojure-mode auto-yasnippet auto-dictionary auto-complete anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode xkcd smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub with-editor ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(font-lock-comment-face ((t (:foreground "#877d69" :slant italic))))
  '(outline-4 ((t (:inherit font-lock-type-face))))
  '(outline-5 ((t (:inherit font-lock-constant-face))))
  '(outline-6 ((t (:inherit font-lock-builtin-face))))

@@ -2,4 +2,5 @@ nvim/.config/nvim/plugged/
 mpd/.config/mpd/*
 !mpd/.config/mpd/mpd.conf
 !mpd/.config/mpd/playlilsts/
-
+**/ranger/bookmarks
+**/ranger/history

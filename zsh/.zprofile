@@ -9,6 +9,7 @@
 #
 
 export EDITOR='nvim'
+export BROWSER='/usr/bin/firefox'
 export VISUAL='nvim'
 export PAGER='less'
 # export TERM="rxvt-unicode-256color"

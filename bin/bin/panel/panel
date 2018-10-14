@@ -12,52 +12,69 @@ init() {
     source api_keys.sh
     source modules.sh
     source settings.sh
-    . panel_colors light
-    echo $(( PANEL_HEIGHT + PANEL_GAP ))
     bspc config -m "^1" top_padding $(( PANEL_HEIGHT + PANEL_GAP + 1))
-    mkfifo "$PANEL_FIFO_2" "$CLOCK_FIFO" "$PANEL_FIFO"
+    . panel_colors.sh light
+    CLOCKFILE=$(mktemp /tmp/clockfile.XXXX)
+    PANEL_FIFO=$(mktemp -u /tmp/panel_fifo.XXXX)
+    mkfifo "$PANEL_FIFO"
     bspc subscribe > "$PANEL_FIFO" &
 }
 
 shutdown() {
     jobs -p | xargs kill
+    rm -rf "$CLOCKFILE"
+    rm -rf "$PANEL_FIFO"
+    # [ -n "$PANEL_FIFO_2" ] && rm -rf "$PANEL_FIFO_2"
 }
 
 trap shutdown EXIT SIGTERM SIGUSR1
 
 loop() {
+    {
+        acpi -b | grep -q "Battery" && has_battery=1
+        command -v mpc -b && has_mpc=1
+        command -v ponymix && has_pulse=1
+        command -v gpg-connect-agent && has_gpg=1
+        (command -v mpc || command -v mpris) && has_music=1
+        has_api_keys="$HAS_API"
+    } >/dev/null 2>&1
     i=0
     while true; do
         keyboard &
-        battery &
-        music &
-        wifi &
-        wallpaper &
-        alsa_volume &
-        mail &
-        if (( i % 60 == 0 )); then 
-            clock &
+        [[ -n ${has_music+x} ]] && music &
+        [[ -n ${has_battery+x} ]] && battery &
+        [[ -n ${has_pulse+x} ]] && pulse_volume &
+        [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
+        clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
+        if (( i == 0 )); then
+           wallpaper &
+        fi
+        if (( i % 10 == 0 )); then
+            network &
+        fi
+        if (( i % 60 == 0 )); then
+            # clock &
             calendar &
+            mail &
         fi
         if (( i % 400 == 0 )); then
             # mail &
-            pollution &
-            weather &
+            test "$has_api_keys" && pollution &
+            test "$has_api_keys" && weather &
         fi
         i=$((i+1))
         # Just in case $i gets enormously large and causes problems. 
         # The value in brackets should be a multiple of the other cycles' values
-        (( i >= 1600 )) && i=0 
+        (( i >= 1600 )) && i=0
         sleep 1
-    done > "$PANEL_FIFO" 2>/dev/null &
+    done > "$PANEL_FIFO" &
 }
 
 main() {
     init
     loop
     PANEL_WM_NAME="bar_wmname"
-    echo $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP
-    panel_bar 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g $PANEL_WIDTH\x$PANEL_HEIGHT+$PANEL_GAP+$PANEL_GAP -f "$PANEL_FONT_FAMILY" -f "$POWERLINE_FONT" -f "$ICON_FONT" -f "$ICON_FONT_2" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 |  zsh &
+    . panel_bar.sh 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP}+${PANEL_GAP}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
     # Depending on the font/platform used, add -o -4 or so to shuift the text up
     # Not necessary with FontAwesome.ttf (4.7.0) and Gohu GohuFont ttf (through AUR)
 

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# returns:
+# 0 if connected (ssl to $1 works)
+# 64 if no connection to $1 but dns lookup worked
+# 65 if dns dnsookup failed but there is connection to dns server
+# 66 if no dns server but conenction to gateway works
+# 1 if not at all connected
+test="$1"
+gateway="$2"
+nameserver="$3"
+[ -n "$test" ] || test=google.com
+[ -n "$gateway" ] || gateway=$(ip route | awk '/default via/{ print $3; }')
+[ -n "$nameserver" ] || nameserver=$(</etc/resolv.conf awk '/nameserver/{ print $2; exit }')
+checkssl=$(
+    netcat -zw1 "$test" 443 && echo | openssl s_client -connect "$test:443" 2>&1 | awk '
+handshake && $1 == "Verification" { if ($2=="OK") exit; exit 1 }
+$1 $2 == "SSLhandshake" { handshake = 1 }';
+)
+if $checkssl; then
+    exit 0
+elif host "$test"; then
+    exit 64
+elif nc -zw1 "$nameserver"; then
+    exit 65
+elif nc -zw1 "$gateway"; then
+    exit 66
+else
+    exit 1
+fi
