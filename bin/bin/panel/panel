@@ -32,7 +32,6 @@ trap shutdown EXIT SIGTERM SIGUSR1
 loop() {
     {
         acpi -b | grep -q "Battery" && has_battery=1
-        command -v mpc -b && has_mpc=1
         command -v ponymix && has_pulse=1
         command -v gpg-connect-agent && has_gpg=1
         (command -v mpc || command -v mpris) && has_music=1
@@ -53,12 +52,10 @@ loop() {
             network &
         fi
         if (( i % 60 == 0 )); then
-            # clock &
             calendar &
             mail &
         fi
         if (( i % 400 == 0 )); then
-            # mail &
             test "$has_api_keys" && pollution &
             test "$has_api_keys" && weather &
         fi
