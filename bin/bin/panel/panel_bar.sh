@@ -1,7 +1,6 @@
 #! /bin/bash
 . panel_colors.sh light
 . icons.sh
-
 num_mon=$(bspc query -M | wc -l)
 PADDING="  "
 PADDING_SHORT=" "
@@ -242,7 +241,7 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
         ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"
