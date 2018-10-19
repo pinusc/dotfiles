@@ -1,0 +1,11 @@
+djui/alias-tips
+zsh-users/zsh-completions
+zsh-users/zsh-autosuggestions
+mafredri/zsh-async
+zsh-users/zsh-completions
+rupa/z
+andrewferrier/fzf-z
+
+/home/pinusc/builds/clean
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-history-substring-search

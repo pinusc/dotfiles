@@ -12,6 +12,9 @@ export EDITOR='nvim'
 export BROWSER='/usr/bin/firefox'
 export VISUAL='nvim'
 export PAGER='less'
+export HISTFILE='$HOME/.zhistory'
+export HISTSIZE=5000
+export SAVEHIST=40000
 # export TERM="rxvt-unicode-256color"
 
 #
