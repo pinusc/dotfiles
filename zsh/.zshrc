@@ -109,3 +109,20 @@ TMOUT=10
 TRAPALRM() zle reset-prompt
 set -o promptsubst
 PS1='$(sudo-warning)'"$PROMPT"
+
+#
+# BEGIN: Shen's definitely not suspicious additions ;)
+#
+function AES-1337(){
+  # AES-1337: Super top secret UNCRACKABLE encryption code (quantum-safe too :D)
+  echo "$@" | tr '[a-m][n-z][A-M][N-Z]' '[n-z][a-m][N-Z][A-M]' | cat
+}
+
+# Extra naughty hot and haughty. Definitely not executable. It's just a string!
+PKG="CNLYBNQ='./zrffntr-cnlybnq.gkg';
+    cevags '\r[1;34z~[Furavfz bs gur Qnl]~\a\r[0z';
+    NRF-1337 \$(urnq -\$((\${ENAQBZ} % \`jp -y < \$CNLYBNQ\` + 1)) \$CNLYBNQ |
+    gnvy -1)"
+
+# What do you mean 'eval' is scary? eval is the nicest thing ever. Super safe!
+eval "$(AES-1337 $PKG)"
