@@ -142,7 +142,7 @@ weather() {
 
 # wifi
 network() {
-    interface="$(ip link | grep 'state UP' | awk '{ print $2 }')"
+    interface="$(ip link | grep '(wl|en)p.*s.*:' | grep 'state UP' | awk '{ print $2 }')"
     network_type="${interface:0:2}"
     check_connection 54.37.204.227
     case $? in
