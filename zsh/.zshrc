@@ -1,5 +1,25 @@
 #!/bin/zsh
 setopt AUTO_CD
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.zsh_history
+HISTSIZE=5000
+SAVEHIST=10000
+setopt appendhistory inc_append_history share_history
+bindkey -v
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]} m:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle :compinstall filename '/home/pinusc/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
 
 spaces=$(printf " %.0s" {1..$(( (COLUMNS - 40) / 2 ))})
 fortune | cowsay | sed "s/^/$spaces/"
@@ -21,4 +41,3 @@ if [ "${gnupg_SSH_AUTH_SHOCK_by:-0}" -ne $$ ]; then
 fi
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye &> /dev/null
-

@@ -1,4 +1,7 @@
+# to update git_plugins.sh, run:
+# antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
 djui/alias-tips
+mdumitru/git-aliases
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
 mafredri/zsh-async
