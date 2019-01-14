@@ -12,5 +12,6 @@ export dzencommand_music="$HOME/bin/panel/dzen2/scripts/mpdzen"
 export dzencommand_calendar="zsh $HOME/bin/panel/dzen2/calendar"
 export dkeyboard="$HOME/bin/dkeyboard"
 export MAILDIR="$HOME/mail"
+export MAILDIR_IMPORTANT="$HOME/mail/giuseppe@gstelluto.com"
 export MAILCOMMAND='emacsclient -nqc --socket-name=/tmp/emacs1000/server -e "(mu4e)"'
 export FETCHMAILCOMMAND='systemctl --user kill --signal=SIGUSR1 offlineimap'
