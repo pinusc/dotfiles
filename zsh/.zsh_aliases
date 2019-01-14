@@ -46,10 +46,11 @@ mdmake() {
     cp "$HOME/.config/templates/pandoc/doc.md" "$1"
 }
 
-alias gst="git status"
 alias gan="git annex"
 alias gans="git annex sync"
 alias gag="git annex get"
+alias gll="git log --stat --color" # normally glg
+alias glg="git log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all" # Normally glola
 alias dd="echo 'Fuck you Shen'"
 
 # fasd 
@@ -71,7 +72,11 @@ alias russian-roulette='echo "Pop!"'
 alias v='vim $(fzf)'
 
 (>&/dev/null which pinfo) && alias info='pinfo'
-(>&/dev/null which exa) && alias ls='exa'
+(>&/dev/null which exa) && {
+    alias ls='exa'   
+    alias lt='exa -T'
+    alias lg='exa --long --git'
+}
 alias l='ls'
 alias ll='ls -lh'
 alias la='ll -a'

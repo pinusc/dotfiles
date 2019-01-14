@@ -33,7 +33,7 @@ values."
      markdown
      org
      latex
-     markdowm
+     ;; markdowm
      java
      c-c++
      rust
@@ -48,8 +48,11 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     (spell-checking :variables enable-flyspell-auto-completion t spell-checking-enable-auto-dictionary t)
-     syntax-checking
+     (spell-checking :variables
+                     enable-flyspell-auto-completion t
+                     spell-checking-enable-auto-dictionary t)
+     (auto-completion :variables
+                      auto-completion-enable-help-tooltip t)
      auto-completion
      theming
      )
@@ -59,12 +62,21 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
    '(;; evil-lispy
+     org-pdfview
+     pandoc
+     pandoc-mode
+     yasnippet-snippets
+     evil-numbers
      evil-cleverparens
      base16-theme
      sendmail
      gnus-dired
      helm-dictionary
      sentence-highlight
+     langtool
+     smooth-scrolling
+     synosaurus
+     wordsmith-mode
      writeroom-mode
      writegood-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -87,7 +99,7 @@ values."
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. (default t)
-   dotspacemacs-check-for-update t
+   dotspacemacs-check-for-update nil
    ;; One of `vim', `emacs' or `hybrid'. Evil is always enabled but if the
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
@@ -114,17 +126,17 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-gruvbox-dark-medium
-                         base16-gruvbox-light-medium)
+   dotspacemacs-themes '(base16-gruvbox-dark-hard
+                         base16-gruvbox-light-hard)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Gohu GohuFont"
-                               :size 14
-                               :weight extra-light
+   dotspacemacs-default-font '("DejaVu Sans mono"
+                               :height 126
+                               :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.6)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -247,6 +259,8 @@ values."
    dotspacemacs-whitespace-cleanup nil
 
    dotspacemacs-folding-method 'origami
+
+   evil-insert-state-cursor '((bar . 2) "yellow")
    ))
 
 (defun dotspacemacs/user-init ()
@@ -257,7 +271,9 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq theming-modifications '((base16-gruvbox-dark-medium
-                                 (font-lock-comment-face :foreground "#877d69" :slant italic)))))
+                                 (font-lock-comment-face :foreground "#877d69" :slant italic))))
+
+  (setq langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -266,17 +282,54 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (spacemacs/toggle-highlight-current-line-globally-off)
   (setq-default evil-escape-key-sequence "jk")
   ;; (setq-default evil-escape-delay 0.2)
 
   (evil-leader/set-key
     "q q" 'spacemacs/frame-killer)
 
+  ;; (smooth-scrolling-mode 1)
+  ;; (setq smooth-scroll-margin 5)
+
   ;; (evil-leader/set-key "m T s" 'evil-cleverparens-mode)
-  ;; (evil-leader/set-key writeroom-mode "t m w" 'writeroom-toggle-mode-line) 
+  ;; (evil-leader/set-key writeroom-mode "t m w" 'writeroom-toggle-mode-line)
 
   (add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
   (add-to-list 'magic-mode-alist '(".* boot" . clojure-mode))
+
+  (define-key global-map (kbd "C-+") 'text-scale-increase)
+  (define-key global-map (kbd "C--") 'text-scale-decrease)
+
+  (defface proportional
+    '((t :family "EB Garamond" :height 1.3))
+    "Just sets a proportional font"
+    :group 'basic-faces)
+
+  (defun toggle-proportional ()
+    (interactive)
+    (buffer-face-toggle 'proportional))
+
+  (evil-leader/set-key
+    "t P" 'toggle-proportional)
+
+  (evil-leader/set-key
+    "x w t" 'synosaurus-lookup)
+
+  (evil-leader/set-key
+    "x w T" 'synosaurus-choose-and-replace)
+
+  (defun set-proportional-face ()
+    (interactive)
+    (face-remap-add-relative 'default (:family "EB Garamond")))
+
+  (defun set-monospaced-face ()
+    (interactive)
+    (face-remap-remove-relative '(default :family "EB Garamond")))
+
+  (setq powerline-default-separator 'contour)
+
+  (setq latex-enable-auto-fill nil)
 
   ;; ERQ
   (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
@@ -286,7 +339,9 @@ you should place your code here."
     (interactive)
     (shell-command "make view &")
     (add-hook 'after-save-hook (lambda () (shell-command "make"))))
-  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'text-mode-hook 'visual-line-mode)
+  (add-hook 'text-mode-hook 'synosaurus-mode)
+
   ;; (set-face-background 'hl-line "#202020")
   (define-fringe-bitmap 'right-curly-arrow
   [#b00000000
@@ -311,6 +366,9 @@ you should place your code here."
   (setq browse-url-browser-function 'browse-url-generic
       engine/browser-function 'browse-url-generic
       browse-url-generic-program "firefox")
+  (eval-after-load 'org '(require 'org-pdfview))  
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))) 
+  (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . (lambda (file link) (org-pdfview-open link)))) 
   (setq org-agenda-files (list "~/docs/org"))
   (setq org-stuck-projects
         '("+project/!-MAYBE-DONE-SENT" ("NEXT") ("")
@@ -344,81 +402,78 @@ you should place your code here."
           smtpmail-default-smtp-server "mail.gstelluto.com"
           smtpmail-smtp-server "mail.gstelluto.com"
           smtpmail-smtp-service 587
-          smtpmail-debug-info t)
-    (setq mu4e-maildir "~/mail"
-          mu4e-reply-to-address "giuseppe@gstelluto.com"
-          user-mail-address "giuseppe@gstelluto.com"
-          user-full-name  "Giuseppe Stelluto"))
-  (with-eval-after-load
-      'mu4e
-    ;; (setq mu4e-user-mail-address-list '("giuseppe@gstelluto.com" "giuseppe.stelluto@gmail.com" "logins@gstelluto.com"))
-    (defun gnus-dired-mail-buffers ()
-      "Return a list of active message buffers."
-      (let (buffers)
-        (save-current-buffer
-          (dolist (buffer (buffer-list t))
-            (set-buffer buffer)
-            (when (and (derived-mode-p 'message-mode)
-                       (null message-sent-message-via))
-              (push (buffer-name buffer) buffers))))
-        (nreverse buffers)))
+          smtpmail-debug-info t))
+  ;; (setq mu4e-user-mail-address-list '("giuseppe@gstelluto.com" "giuseppe.stelluto@gmail.com" "logins@gstelluto.com"))
+  (setq mu4e-maildir "~/mail"
+        mu4e-reply-to-address "giuseppe@gstelluto.com"
+        user-mail-address "giuseppe@gstelluto.com"
+        user-full-name  "Giuseppe Stelluto")
+  (defun gnus-dired-mail-buffers ()
+    "Return a list of active message buffers."
+    (let (buffers)
+      (save-current-buffer
+        (dolist (buffer (buffer-list t))
+          (set-buffer buffer)
+          (when (and (derived-mode-p 'message-mode)
+                     (null message-sent-message-via))
+            (push (buffer-name buffer) buffers))))
+      (nreverse buffers)))
 
-    (setq gnus-dired-mail-mode 'mu4e-user-agent)
-    (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-    (setq mu4e-get-mail-command "systemctl --user kill --signal=SIGUSR1 offlineimap")
+  (setq gnus-dired-mail-mode 'mu4e-user-agent)
+  (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+  (setq mu4e-get-mail-command "kill -SIGUSR1 $(ps aux | grep offlineimap | awk '/python/{print $2;}')")
 
-    (setq mu4e-contexts
-          `(
-            ,(make-mu4e-context
-              :name "giuseppe@gstelluto.com"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/giuseppe@gstelluto.com" (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address . "giuseppe@gstelluto.com")
-                      (mu4e-sent-folder . "/giuseppe@gstelluto.com/Sent")
-                      (mu4e-trash-folder . "/giuseppe@gstelluto.com/Trash")
-                      (mu4e-refile-folder . "/giuseppe@gstelluto.com/Archive")))
-            ,(make-mu4e-context
-              :name "giuseppe.stelluto@gmail.com"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/giuseppe.stelluto@gmail.com" (mu4e-message-field msg :maildir))))
-              :vars '(
-                      (user-mail-address . "giuseppe.stelluto@gmail.com")
-                      (mu4e-sent-folder . "/giuseppe.stelluto@gmail.com/[Gmail].Sent Mail")
-                      (mu4e-trash-folder . "/giuseppe.stelluto@gmail.com/[Gmail].Trash")
-                      (mu4e-refile-folder . "/giuseppe.stelluto@gmail.com/[Gmail].Archive")))
-            ,(make-mu4e-context
-              :name "gstelluto@uwcchina.org"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/gstelluto@uwcchina.org" (mu4e-message-field msg :maildir))))
-              :vars '(
-                      (user-mail-address . "gstelluto@uwcchina.org")
-                      (user-sent-folder . "/gstelluto@uwcchina.org/Sent Items")
-                      (mu4e-trash-folder . "/gstelluto@uwcchina.org/Deleted Items")
-                      (mu4e-refile-folder . "/gstelluto@uwcchina.org/Archive")))
+  (setq mu4e-contexts
+        `(
+          ,(make-mu4e-context
+            :name "giuseppe@gstelluto.com"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/giuseppe@gstelluto.com" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "giuseppe@gstelluto.com")
+                    (mu4e-sent-folder . "/giuseppe@gstelluto.com/Sent")
+                    (mu4e-trash-folder . "/giuseppe@gstelluto.com/Trash")
+                    (mu4e-refile-folder . "/giuseppe@gstelluto.com/Archive")))
+          ,(make-mu4e-context
+            :name "giuseppe.stelluto@gmail.com"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/giuseppe.stelluto@gmail.com" (mu4e-message-field msg :maildir))))
+            :vars '(
+                    (user-mail-address . "giuseppe.stelluto@gmail.com")
+                    (mu4e-sent-folder . "/giuseppe.stelluto@gmail.com/[Gmail].Sent Mail")
+                    (mu4e-trash-folder . "/giuseppe.stelluto@gmail.com/[Gmail].Trash")
+                    (mu4e-refile-folder . "/giuseppe.stelluto@gmail.com/[Gmail].Archive")))
+          ,(make-mu4e-context
+            :name "gstelluto@uwcchina.org"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/gstelluto@uwcchina.org" (mu4e-message-field msg :maildir))))
+            :vars '(
+                    (user-mail-address . "gstelluto@uwcchina.org")
+                    (user-sent-folder . "/gstelluto@uwcchina.org/Sent Items")
+                    (mu4e-trash-folder . "/gstelluto@uwcchina.org/Deleted Items")
+                    (mu4e-refile-folder . "/gstelluto@uwcchina.org/Archive")))
 
-            ,(make-mu4e-context
-              :name "logins@gstelluto.com"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/logins@gstelluto.com" (mu4e-message-field msg :maildir))))
-              :vars '(
-                      (user-mail-address . "logins@gstelluto.com")
-                      (mu4e-trash-folder . "/logins@gstelluto.com/Trash")
-                      (mu4e-refile-folder . "/logins@gstelluto.com/Archive")))
-            ))
-    (setq mu4e-user-mail-address-list
-          (delq nil
-                (mapcar (lambda (context)
-                          (when (mu4e-context-vars context)
-                            (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
-                        mu4e-contexts)))
-    (setq mu4e-context-policy 'pick-first)
-    (require 'org-protocol)
-    )
-)
+          ,(make-mu4e-context
+            :name "logins@gstelluto.com"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/logins@gstelluto.com" (mu4e-message-field msg :maildir))))
+            :vars '(
+                    (user-mail-address . "logins@gstelluto.com")
+                    (mu4e-trash-folder . "/logins@gstelluto.com/Trash")
+                    (mu4e-refile-folder . "/logins@gstelluto.com/Archive")))
+          ))
+  (setq mu4e-user-mail-address-list
+        (delq nil
+              (mapcar (lambda (context)
+                        (when (mu4e-context-vars context)
+                          (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                      mu4e-contexts)))
+  (setq mu4e-context-policy 'pick-first)
+  (require 'org-protocol)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -431,6 +486,14 @@ you should place your code here."
    (quote
     ("8be07a2c1b3a7300860c7a65c0ad148be6d127671be04d3d2120f1ac541ac103" "7bef2d39bac784626f1635bd83693fae091f04ccac6b362e0405abf16a32230c" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "50ff65ab3c92ce4758cc6cd10ebb3d6150a0e2da15b751d7fbee3d68bba35a94" "eae831de756bb480240479794e85f1da0789c6f2f7746e5cc999370bbc8d9c8a" "16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" "4feee83c4fbbe8b827650d0f9af4ba7da903a5d117d849a3ccee88262805f40d" "45a8b89e995faa5c69aa79920acff5d7cb14978fbf140cdd53621b09d782edcf" "6daa09c8c2c68de3ff1b83694115231faa7e650fdbb668bc76275f0f2ce2a437" default)))
  '(evil-want-Y-yank-to-eol t)
+ '(minimap-always-recenter t)
+ '(minimap-dedicated-window t)
+ '(minimap-hide-fringes t)
+ '(minimap-highlight-line nil)
+ '(minimap-mode t)
+ '(minimap-recenter-type (quote middle))
+ '(minimap-width-fraction 0.1)
+ '(minimap-window-location (quote right))
  '(org-bullets-bullet-list (quote ("◉" "•" "◦" "*" "✸")))
  '(org-capture-templates
    (quote
@@ -450,15 +513,20 @@ you should place your code here."
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (smooth-scrolling rc-mode toml-mode racer flycheck-rust disaster company-emacs-eclim eclim company-c-headers company-auctex cmake-mode clang-format cargo rust-mode auctex-latexmk auctex origami insert-shebang fish-mode company-shell helm-dictionary erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks sql-indent evil-cleverparens yaml-mode zoutline swiper web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data lispyville ivy parinfer base16-gruvbox-dark-medium-theme writeroom-mode visual-fill-column writegood-mode geiser mu4e-maildirs-extension mu4e-alert ht ac-ispell flyspell-popup spray engine-mode spotify helm-spotify-plus multi base16-theme pdf-tools tablist yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc helm-company helm-c-yasnippet fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck cython-mode company-tern dash-functional tern company-statistics company-anaconda company clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider sesman queue clojure-mode auto-yasnippet auto-dictionary auto-complete anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode xkcd smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub with-editor ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
+    (yasnippet-snippets company-quickhelp langtool synosaurus org-pdfview smooth-scrolling minimap pandoc-mode pandoc wordsmith-mode toml-mode racer flycheck-rust disaster company-emacs-eclim eclim company-c-headers company-auctex cmake-mode clang-format cargo rust-mode auctex-latexmk auctex origami insert-shebang fish-mode company-shell helm-dictionary erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks sql-indent evil-cleverparens yaml-mode zoutline swiper web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data lispyville ivy parinfer base16-gruvbox-dark-medium-theme writeroom-mode visual-fill-column writegood-mode geiser mu4e-maildirs-extension mu4e-alert ht ac-ispell flyspell-popup spray engine-mode spotify helm-spotify-plus multi base16-theme pdf-tools tablist yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc helm-company helm-c-yasnippet fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck cython-mode company-tern dash-functional tern company-statistics company-anaconda company clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider sesman queue clojure-mode auto-yasnippet auto-dictionary auto-complete anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode xkcd smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub with-editor ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
+ '(send-mail-function nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(font-lock-comment-face ((t (:foreground "#877d69" :slant italic))))
+ '(minimap-active-region-background ((t (:background "gray7"))))
+ '(minimap-font-face ((t (:height 30 :family "minimap"))))
+ '(org-column ((t (:background "gray8"))))
  '(outline-4 ((t (:inherit font-lock-type-face))))
  '(outline-5 ((t (:inherit font-lock-constant-face))))
  '(outline-6 ((t (:inherit font-lock-builtin-face))))
  '(outline-7 ((t (:inherit font-lock-string-face))))
  '(outline-8 ((t (:inherit font-lock-type-face)))))
+

@@ -1,112 +1,49 @@
 #!/bin/zsh
 fortune | cowsay
-source $HOME/.zprofile
 # load zgen
-source "${HOME}/builds/zgen/zgen.zsh"
-source ~/.zsh_aliases
 
 fpath=(~/.completions $fpath)
-autoload -U compinit
+setopt AUTO_CD
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.zsh_history
+HISTSIZE=5000
+SAVEHIST=10000
+setopt appendhistory inc_append_history share_history
+bindkey -v
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]} m:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle :compinstall filename '/home/pinusc/.zshrc'
+
+autoload -Uz compinit
 autoload -U zmv
 compinit
+# End of lines added by compinstall
 
-#BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"
-#[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+spaces=$(printf " %.0s" {1..$(( (COLUMNS - 40) / 2 ))})
+fortune | cowsay | sed "s/^/$spaces/"
+source .zsh_plugins.sh
+source .zsh_aliases
+source .zprofile
+source "${HOME}/builds/zgen/zgen.zsh"
 
-#if [ -n "$PS1" ]; then # if statement guards adding these helpers for non-interative shells
-#  eval "$(~/.config/base16-shell/profile_helper.sh)"
-#fi
-#
-# # Customize to your needs...
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# necessary for correct VIM colors
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
-#alias lrvm='[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"'
-
-fasd_cache="$HOME/.fasd-init-bash"
-if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-  fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install >| "$fasd_cache"
-fi
-source "$fasd_cache"
-unset fasd_cache
-
-# fzf + ag configuration
-export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS='
---color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
---color info:108,prompt:109,spinner:108,pointer:168,marker:168
-'
-
-export FZF_DEFAULT_COMMAND='ag -f -g ""' 
-
+# SSH & GPG agent config
 unset SSH_AGENT_PID
 if [ "${gnupg_SSH_AUTH_SHOCK_by:-0}" -ne $$ ]; then
     export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye &> /dev/null
-
-#
-# virtalenvwrapper
-# export WORKON_HOME=$HOME/.virtualenvs
-# export PROJECT_HOME=$HOME/Devel
-# source /usr/bin/virtualenvwrapper.sh
-
-# ls colors: eliminate that ugly green background
-#eval "$(dircolors ~/.config/dircolors)";
-
-
-# check if there's no init script
-if ! zgen saved; then
-    echo "Creating a zgen save"
-
-    # prezto options
-    zgen prezto editor key-bindings 'vi'
-    zgen prezto prompt theme 'sorin'
-
-    # prezto and modules
-    zgen prezto
-    zgen prezto git
-    zgen prezto syntax-highlighting
-    zgen prezto history-substring-search 
-
-    # completions
-    zgen load zsh-users/zsh-completions src
-    zgen load Tarrasch/zsh-autoenv
-    zgen load zsh-users/zsh-syntax-highlighting
-    zgen load Vifon/deer
-
-    zgen load changyuheng/fz
-    zgen load rupa/z
-    zgen load zuxfoucault/colored-man-pages_mod
-
-
-    # save all to init script
-    zgen save
-fi
-
-autoload -U deer
-zle -N deer
-bindkey '\ek' deer
-
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-sudo-expired() [[ $(
-  trap "" XFSZ
-  limit filesize 0
-  LC_ALL=C sudo -n true 2>&1) = *"password is required" ]]
-
-sudo-warning()
-  if sudo-expired; then
-    echo ""
-  else
-    echo '%F{red}# %f'
-  fi
-
-TMOUT=10
-TRAPALRM() zle reset-prompt
-set -o promptsubst
-PS1='$(sudo-warning)'"$PROMPT"

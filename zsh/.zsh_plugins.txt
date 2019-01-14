@@ -1,0 +1,14 @@
+# to update git_plugins.sh, run:
+# antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
+djui/alias-tips
+mdumitru/git-aliases
+zsh-users/zsh-completions
+zsh-users/zsh-autosuggestions
+mafredri/zsh-async
+zsh-users/zsh-completions
+rupa/z
+andrewferrier/fzf-z
+
+/home/pinusc/builds/clean
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-history-substring-search
