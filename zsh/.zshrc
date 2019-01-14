@@ -7,6 +7,7 @@ source ~/.zsh_aliases
 
 fpath=(~/.completions $fpath)
 autoload -U compinit
+autoload -U zmv
 compinit
 
 #BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-eighties.sh"

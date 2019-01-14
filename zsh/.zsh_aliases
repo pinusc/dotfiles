@@ -38,6 +38,8 @@ alias bspwmrc=":e ~/.config/bspwm/bspwmrc"
 alias sxhkdrc=":e ~/.config/sxhkd/sxhkdrc"
 alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresources"
 alias did="vim +'normal Go' +'r!date' ~/docs/did.txt"
+alias mail="mail -r giuseppe@gstelluto.com"
+alias mutt=neomutt
 
 mdmake() {
     cp "$HOME/.config/templates/pandoc/Makefile" "."
