@@ -22,6 +22,11 @@ zstyle :compinstall filename '/home/pinusc/.zshrc'
 autoload -Uz compinit
 autoload -U zmv
 compinit
+
+autoload -Uz run-help
+unalias run-help
+alias help=run-help
+bindkey -a 'H' run-help # press H in command mode to see manpage
 # End of lines added by compinstall
 
 spaces=$(printf " %.0s" {1..$(( (COLUMNS - 40) / 2 ))})
