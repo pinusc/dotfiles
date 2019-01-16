@@ -1,6 +1,4 @@
 #!/bin/zsh
-fortune | cowsay
-# load zgen
 
 fpath=(~/.completions $fpath)
 setopt AUTO_CD
@@ -31,7 +29,6 @@ fortune | cowsay | sed "s/^/$spaces/"
 source .zsh_plugins.sh
 source .zsh_aliases
 source .zprofile
-source "${HOME}/builds/zgen/zgen.zsh"
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
