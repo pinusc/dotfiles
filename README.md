@@ -30,3 +30,13 @@ To execute, run `gnu stow` + each of the desired directories. This directory sho
     - python-pylint
     - eslint
     - tidy (html)
+    
+3. Setup commands
+-----------------
+- Enable Emacs daemon: `systemctl --user enable --now emacs`
+
+4. Server setup
+---------------
+Run 
+    
+    $ scp bash/.* aliases/.* servername
