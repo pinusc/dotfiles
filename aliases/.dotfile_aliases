@@ -1,0 +1,6 @@
+alias preztorc=":e ~/.zpreztorc"
+alias aliasrc=":e ~/.zsh_aliases"
+alias zshrc=":e ~/.zshrc"
+alias bspwmrc=":e ~/.config/bspwm/bspwmrc"
+alias sxhkdrc=":e ~/.config/sxhkd/sxhkdrc"
+alias xresources="cpp -P ~/.Xresources.def ~/.Xresources;xrdb -load ~/.Xresources"

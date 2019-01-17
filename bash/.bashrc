@@ -3,7 +3,7 @@ case $- in # If not running interactively, don't do anything
     *) return;;
 esac
 
-source $HOME/sensible.bash
+source $HOME/.sensible.bash
 
 export EDITOR=vim
 export SUDO_EDITOR=vim
@@ -29,7 +29,7 @@ CLEAN_PATH_STYLE=1
 prompt () {
     if [ "$color_prompt" = "yes" ]; then
         color_host="\E[33m"
-        color="\E[34m"
+        color="\E[33m"
         reset_color="\E(B\E[m"
     fi
 

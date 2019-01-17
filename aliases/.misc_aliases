@@ -1,0 +1,45 @@
+alias upfont="sudo fc-cache -fv"
+alias cal="cal -m" # Monday it's always the first day of the week here!
+alias tmux="tmux -2"
+alias pingg="ping -a www.google.com"
+
+# Python aliases
+alias v="source venv/bin/activate"
+alias d="deactivate"
+
+alias setclip='xclip -selection c'
+alias getclip='xclip -selection clipboard -o'
+
+alias screensaver_off="xset s off;xset -dpms;xset s noblank"
+
+#fast edit shiortcuts
+[ -f "/usr/bin/nvim" ] && alias vim="/usr/bin/nvim"
+alias :e=em
+
+alias did="vim +'normal Go' +'r!date' ~/docs/did.txt"
+alias mail="mail -r giuseppe@gstelluto.com"
+(>&/dev/null which neomutt) && alias mutt='neomutt'
+
+mdmake() {
+    cp "$HOME/.config/templates/pandoc/Makefile" "."
+    cp "$HOME/.config/templates/pandoc/doc.md" "$1"
+}
+
+
+(>&/dev/null which pinfo) && alias info='pinfo'
+(>&/dev/null which exa) && {
+    alias ls='exa'   
+    alias lt='exa -T'
+    alias lg='exa --long --git'
+}
+alias l='ls'
+alias ll='ls -lh'
+alias la='ll -a'
+
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+addalias() {
+    echo "alias $1=\"$2\"" >> ~/.zsh_aliases
+}
+
+[ -e "$HOME/bin/gpg-wrapper" ] && source ~/bin/gpg-wrapper.zsh

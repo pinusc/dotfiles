@@ -1,0 +1,7 @@
+#apt as pacman
+alias paci="apt install"
+alias pacs="apt search"
+alias pacu="apt update && apt upgrade"
+alias pacrem="apt remove"
+alias pacq="apt show"
+alias pacx=pacrem
