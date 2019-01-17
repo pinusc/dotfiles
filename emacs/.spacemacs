@@ -132,8 +132,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("DejaVu Sans mono"
-                               :height 126
+   dotspacemacs-default-font '("Gohu GohuFont"
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.6)
@@ -382,6 +382,33 @@ you should place your code here."
         '(("CONTACT" . org-drawer)
           ("HABIT" . org-link)
           ("DRAFTED" . org-quote)))
+  (setq org-publish-project-alist
+        '(("gstelluto.org-html"
+          :base-directory "~/projects/org-gstelluto.com/org"
+          :recursive t
+          :publishing-directory "/tmp/gstell/html"
+          :publishing-function org-html-publish-to-html
+          :email "giuseppe@gstelluto.com"
+          :html-postamble t
+          :html-postamble-format (("en" "<p class=\"author\">Author: %a (%e)</p>
+                                    <p class=\"date\">Date: %d</p>
+                                    <p class=\"creator\">%c</p>"))
+          :date t
+          :with-toc nil
+          :makeindex t
+          :html-doctype "html5"
+          :html-html5-fancy t
+          :html-container "section"
+          :section-numbers nil
+          :html-preamble t
+          :html-head-include-default-style nil
+          :html-head "<link rel=stylesheet href=/tmp/gstell/res/tufte.css />")
+          ("gstelluto.org-res"
+           :publishing-function org-publish-attachment
+           :base-directory "~/projects/org-gstelluto.com/res/"
+           :publishing-directory "/tmp/gstell/res"
+           :base-extension "css")
+          ("gstelluto" :components ("gstelluto.org-html" "gstelluto.org-res")))) 
   (defadvice org-archive-subtree (around my-org-archive-subtree activate)
     (let ((org-archive-location
            (if (save-excursion (org-back-to-heading)
@@ -392,7 +419,7 @@ you should place your code here."
              org-archive-location)))
       ad-do-it))
   (setq message-kill-buffer-on-exit t)
-  (with-eval-after-load 'smtpmail
+  (with-eval-after-load smtpmail
     (setq message-send-mail-function 'smtpmail-send-it
           starttls-use-gnutls t
           smtpmail-starttls-credentials
@@ -508,6 +535,7 @@ you should place your code here."
       (file+olp "~/docs/org/main.org" "Content Management" "Websites")
       "* %:annotation :website:
 %?"))))
+ '(org-export-backends (quote (ascii html icalendar latex md odt)))
  '(org-modules
    (quote
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
