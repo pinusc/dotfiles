@@ -7,6 +7,8 @@ if [[ -n $(xrandr --listproviders | grep NVIDIA-0) ]]; then
 fi
 xrandr --auto
 
+which nvidia-settings && nvidia-settings -l
+
 NMON=$(xrandr --query | grep " connected" | wc -l)
 
 bspc monitor "^1" -d \
