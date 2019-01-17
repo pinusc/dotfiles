@@ -42,3 +42,7 @@ export IC_BATTERY_EMPTY="\\uf244"
 
 export IC_KEYBOARD="\\uf11c"
 export IC_WALLPAPER="\\uf03e"
+
+export IC_POMODORO_FULL="\\ue001"
+export IC_POMODORO_EMPTY="\\ue002"
+export IC_POMODORO_TICKING="\\ue003"

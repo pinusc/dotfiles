@@ -205,9 +205,9 @@ music() {
             fi
             if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
                 if mpc status | grep -q "paused"; then
-                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
-                else
                     command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                else
+                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
                 fi
             fi
         fi
@@ -243,8 +243,12 @@ musicp() {
 }
 
 #pomodoro
-pomodoro() {
-    echo "P$(pomodoro -r -h)"
+pcheck_pomodoro() {
+    echo "P$(pomodoro -r -H)"
+    if [ "$(pomodoro -r)" = p0 ]; then
+        notify-send POMODORO Completed
+        paplay /usr/share/sounds/freedesktop/stereo/complete.oga
+    fi
 }
 
 #battery

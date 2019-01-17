@@ -43,6 +43,7 @@ loop() {
         [[ -n ${has_music+x} ]] && music &
         [[ -n ${has_battery+x} ]] && battery &
         [[ -n ${has_pulse+x} ]] && pulse_volume &
+        pcheck_pomodoro &
         [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
         clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
         if (( i == 0 )); then
