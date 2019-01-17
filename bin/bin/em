@@ -2,6 +2,8 @@
 # from https://medium.com/@bobbypriambodo/blazingly-fast-spacemacs-with-persistent-server-92260f2118b7
 
 # Checks if there's a frame open
+#
+alias emacsclient="emacsclient -s /tmp/emacs1000/server"
 emacsclient -n -e "(if (> (length (frame-list)) 1) 't)" 2> /dev/null | grep t &> /dev/null
 
 if [ "$?" -eq "1" ]; then
