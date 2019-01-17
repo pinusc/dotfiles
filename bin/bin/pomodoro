@@ -16,14 +16,20 @@ if [[ ! -s $POMO_FILE ]]; then
   touch $POMO_FILE
 fi
 
-HELP="USAGE: pomodoro [OPTION] [COMMAND]
+HELP="Usage: pomodoro [OPTION] [COMMAND]
 Manage pomodoros
 
-With no COMMAND, it shows current pomodoro
+With no Command, it shows current pomodoro
 
+Options:
   -r, --remaining     Instead of showing the elapsed time, print the remaining
-  -h, --human         Print in mm:ss instead of sssss
-  --help              Print this help
+  -H, --human         Print in mm:ss instead of sssss
+  -h, --help              Print this help
+
+These are available commands:
+start\t\tstarts a pomodoro
+stop\t\tstops the current timer
+start-pause\tstarts a pause
 "
 
 while test $# -gt 0
@@ -32,10 +38,10 @@ do
         --remaining|-r) 
           opt_rem=1
           ;;
-        --human|-h) 
+        --human|-H) 
           opt_human=1
           ;;
-        --help)
+        --help|-h)
           echo $HELP
           exit 0
           ;;
