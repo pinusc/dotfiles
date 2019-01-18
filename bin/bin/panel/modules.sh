@@ -292,7 +292,7 @@ keyboard() {
 
 #wallpaper
 wallpaper() {
-    echo "Q%{A:randomwallpaper.sh:}%{A3:fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
+    echo "Q%{A:random_wallpaper.sh:}%{A3:fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
 }
 
 
