@@ -17,6 +17,7 @@ To execute, run `gnu stow` + each of the desired directories. This directory sho
 - compton
 - xautolock
 - redshift
+- mpv e mpv-mpris
 
 ### Vim
 - Deoplete deps:
