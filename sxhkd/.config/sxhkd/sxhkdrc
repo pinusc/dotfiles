@@ -21,6 +21,9 @@ super + b
 super + {s,f}
 	bspc node -t \~{floating,fullscreen}
 
+super + shift + s
+  bspc node -g sticky
+
 #super + {grave,Tab}
 #	bspc {node,desktop} -f last
 
@@ -189,6 +192,13 @@ XF86AudioNext
 
 XF86AudioStop
   mpc stop
+
+Pause
+  mpc toggle
+
+Print
+  cd ~/pics/screenshots && nux move android folder
+  scrot
 
 # make sxhkd and panel reload its configuration files:
 super + Escape
