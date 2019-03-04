@@ -13,9 +13,10 @@ echo -e "if !exists('g:colors_name') || g:colors_name != 'base16-$theme'\n  colo
 [ -e "$HOME/.base16_theme" ] && rm "$HOME/.base16_theme"
 
 ln -fs "$script" "$HOME/.base16_theme"
-eval "$script"
+# eval "$script"
 generate_xresources.sh
-
+emacsclient -s /tmp/emacs1000/server -e "(load-theme '${script_name} t)"
+{ killall panel; panel & } 2>/dev/null
 # exit() {
 #     pkill panel; panel &
 # }
