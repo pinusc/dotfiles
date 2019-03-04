@@ -13,7 +13,7 @@ set -o vi
 umask 022
 
 
-(>&/dev/null which fortune) && fortune
+>&/dev/null hash fortune && fortune
 
 bind -m vi-insert \C-l:clear-screen
 
@@ -25,23 +25,11 @@ esac
 sudo-active() [[ ! $(trap "" XFSZ
                      LC_ALL=C sudo -n true 2>&1) = *"password is required" ]]
 
-CLEAN_PATH_STYLE=1
-prompt () {
-    if [ "$color_prompt" = "yes" ]; then
-        color_host="\E[33m"
-        color="\E[33m"
-        reset_color="\E(B\E[m"
-    fi
-
-    if [ "$CLEAN_PATH_STYLE" = "1" ]; then
-        d=$(awk -F/ '{for (i=1;i<NF;i++) $i=substr($i,1,1+($i~/^[.]/))} 1' OFS=/ <(dirs))
-    else
-        d="$(dirs)"
-    fi
-    echo -e "$color$USER@${HOSTNAME%%.*} $d$reset_color "
-}
-
-PS1='$(prompt)'
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+bold=$(tput bold)
+reset=$(tput sgr0)
+PS1="\[$green$bold\]\h\[$reset\] \[$blue$bold\]\w\[$reset\] \$ "
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -81,3 +69,5 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
