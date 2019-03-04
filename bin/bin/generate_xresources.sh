@@ -13,4 +13,4 @@ do
 done
 
 echo -e $text | cat - $HOME/.Xresources.def | cpp -P - -o $HOME/.Xresources
-xrdb -merge $HOME/.Xresources
+xrdb $HOME/.Xresources
