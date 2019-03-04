@@ -24,8 +24,6 @@ Plug 'tpope/vim-commentary'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 """ Clojure
 Plug 'guns/vim-clojure-static', {'for': 'clojure'}
 Plug 'tpope/vim-fireplace', {'for': 'clojure'}
@@ -68,12 +66,10 @@ Plug 'klen/python-mode', { 'for': 'python' }
 Plug 'mattn/emmet-vim'
 
 "Base16
-Plug 'chriskempson/base16-vim'
-Plug 'reedes/vim-colors-pencil'
+Plug 'pinusc/term.vim'
 
 "Cool start screen
 Plug 'mhinz/vim-startify'
-Plug 'mbbill/undotree'
 Plug 'easymotion/vim-easymotion'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'Yggdroot/indentLine'
@@ -88,35 +84,37 @@ filetype plugin indent on
 set ignorecase
 set smartcase
 
-set t_Co=256
+set t_Co=16
 set background=dark
+colorscheme term
 
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+" let base16colorspace=256
+" colorscheme base16-vim
 
-colorscheme base16-gruvbox-dark-medium
+" if filereadable(expand("~/.vimrc_background"))
+"   let base16colorspace=256
+"   source ~/.vimrc_background
+" endif
 
-augroup on_change_colorschema
-  autocmd!
-  autocmd ColorScheme * call s:base16_customize()
-augroup END
+" augroup on_change_colorschema
+"   autocmd!
+"   autocmd ColorScheme * call s:base16_customize()
+" augroup END
 
-function! s:base16_customize() abort
-    call Base16hi("LineNr", g:base16_gui02, g:base16_gui00, g:base16_cterm02, g:base16_cterm00, "", "")
-    call Base16hi("Folded", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "italic", "")
-    call Base16hi("FoldColumn", g:base16_gui0C, g:base16_gui00, g:base16_cterm0C, g:base16_cterm00, "", "")
-    call Base16hi("GitGutterAdd", g:base16_gui0B, g:base16_gui00, g:base16_cterm0B, g:base16_cterm00, "", "")
-    call Base16hi("GitGutterChange", g:base16_gui0D, g:base16_gui00, g:base16_cterm0D, g:base16_cterm00, "", "")
-    call Base16hi("GitGutterDelete", g:base16_gui08, g:base16_gui00, g:base16_cterm08, g:base16_cterm00, "", "")
-    call Base16hi("GitGutterChangeDelete", g:base16_gui0E, g:base16_gui01, g:base16_cterm0E, g:base16_cterm01, "", "")
-    call Base16hi("htmlItalic", g:base16_gui05, g:base16_gui00, g:base16_cterm05, g:base16_cterm00, "italic", "italic")
-    call Base16hi("htmlBold", g:base16_gui05, g:base16_gui00, g:base16_cterm05, g:base16_cterm00, "bold", "bold")
-    hi StartifySection ctermfg=1
-    hi StartifyHeader ctermfg=4
-    hi StartifyPath ctermfg=243
-endfunction
+" function! s:base16_customize() abort
+"     call Base16hi("LineNr", g:base16_gui02, g:base16_gui00, g:base16_cterm02, g:base16_cterm00, "", "")
+"     call Base16hi("Folded", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "italic", "")
+"     call Base16hi("FoldColumn", g:base16_gui0C, g:base16_gui00, g:base16_cterm0C, g:base16_cterm00, "", "")
+"     call Base16hi("GitGutterAdd", g:base16_gui0B, g:base16_gui00, g:base16_cterm0B, g:base16_cterm00, "", "")
+"     call Base16hi("GitGutterChange", g:base16_gui0D, g:base16_gui00, g:base16_cterm0D, g:base16_cterm00, "", "")
+"     call Base16hi("GitGutterDelete", g:base16_gui08, g:base16_gui00, g:base16_cterm08, g:base16_cterm00, "", "")
+"     call Base16hi("GitGutterChangeDelete", g:base16_gui0E, g:base16_gui01, g:base16_cterm0E, g:base16_cterm01, "", "")
+"     call Base16hi("htmlItalic", g:base16_gui05, g:base16_gui00, g:base16_cterm05, g:base16_cterm00, "italic", "italic")
+"     call Base16hi("htmlBold", g:base16_gui05, g:base16_gui00, g:base16_cterm05, g:base16_cterm00, "bold", "bold")
+"     hi StartifySection ctermfg=1
+"     hi StartifyHeader ctermfg=4
+"     hi StartifyPath ctermfg=243
+" endfunction
 
 
 let g:indentLine_char = '│'
@@ -247,9 +245,6 @@ autocmd FileType clojure call TurnOnClojureFolding()
 set statusline+=%#warningmsg#
 set statusline+=%*
 set laststatus=2
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='base16_shell'
 
 let g:gitgutter_enabled = 1
 let g:gitgutter_sign_added = '·'
@@ -397,7 +392,7 @@ map <F5> :!java %:r
 :nnoremap <A-j> <C-w>j
 :nnoremap <A-k> <C-w>k
 :nnoremap <A-l> <C-w>l
-imap jj <Esc>
+imap jk <Esc>
 map <f2> :NERDTreeToggle<cr>
 let mapleader = "\<Space>"
 map <leader>w :w<CR>
@@ -424,5 +419,26 @@ command! StartMakeView call StartMakeView()
 nmap ; :Buffers<CR>
 nmap <Leader>t :Files<CR>
 nmap <Leader>r :Tags<CR>
+
+" }}}
+
+" {{{ Statusline 
+
+set laststatus=2
+set statusline=
+set statusline+=%#User1#\ %l
+set statusline+=\ %*
+set statusline+=\ ‹‹
+set statusline+=\ %f\ %*
+set statusline+=\ ››
+set statusline+=\ %m
+set statusline+=%#User2#\ %F
+set statusline+=%=
+" set statusline+=\ %{LinterStatus()}
+set statusline+=\ ‹‹
+set statusline+=\ %{strftime('%R',getftime(expand('%')))}
+set statusline+=\ ::
+set statusline+=\ %n
+set statusline+=\ ››\ %*
 
 " }}}
