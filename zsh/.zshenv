@@ -9,12 +9,13 @@ typeset -gU cdpath fpath mailpath path
 path=(
   $HOME/bin
   $HOME/bin/panel
+  $HOME/bin/modules
   # /usr/local/heroku/bin
   /usr/local/{bin,sbin}
-  $HOME/.dotfiles/bin
   # $(ruby -rubygems -e "puts Gem.user_dir")/bin
   $path
 )
+export GOPATH="$HOME/.local/share/go"
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
