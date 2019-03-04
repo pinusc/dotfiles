@@ -1,0 +1,5 @@
+#!/bin/bash
+xdotool getmouselocation | egrep -oh "[0-9]+" | head -n 2
+# return coordinates in the form 
+# x y 0 0
+# use head and tail to get x and y
