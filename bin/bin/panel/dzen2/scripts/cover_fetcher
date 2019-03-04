@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # this is a simple operation, really. all we do is fetch data from last.fm, get
 # the albm cover links, download them, and put them in the right place.
@@ -6,7 +6,12 @@
 
 #(( $# != 2 )) && echo 'Usage: $0 Artist Album' && return 1
 
-if [[ -e $1/$2.xpm ]]; then
+if [[ -z "$3" ]]; then
+    3="."
+fi
+path="$3"
+
+if [[ -e "$1/$2.xpm" ]]; then
     echo "Error: File exists: $1/$2.xpm"
     return 2
 fi
@@ -17,32 +22,45 @@ echo "Fetching Artist $1, Album $2..."
 data=$(curl \
     --data-urlencode method=album.getinfo \
     --data-urlencode api_key=2f63459bcb2578a277c5cf5ec4ca62f7 \
-    --data-urlencode artist=$1 \
-    --data-urlencode album=$2 \
+    --data-urlencode artist="$1" \
+    --data-urlencode album="$2" \
     -G -s http://ws.audioscrobbler.com/2.0/)
 
-[[ $? > 0 ]] && echo 'Error: Unable to fetch album data!' && return 3
+if [[ $? -ne 0 ]]; then
+    echo 'Error: Unable to fetch album data!'
+    exit 3
+fi
+
+
 
 # try to find a cover art link
-setopt rematchpcre
-[[ $data =~ '<image size="medium">([^<]+)</image>' ]] || { echo 'Error: No cover art found in album info.' && return 4 }
+# setopt rematchpcre
+match=$(echo "$data" | grep -oP '<image size="mega">([^<]+)</image>' | sed -Ee 's|<image.*(https://.*)</image>|\1|')
+if [[ -z "$match" ]]; then
+    echo 'Error: No cover art found in album info.'
+    exit 4
+fi
 
-echo "Found data url: $match"
-
-1=${1:gs/\//_}
-2=${2:gs/\//_}
+artist="${1/\//_}"
+album="${2/\//_}"
 
 # make sure this dir exists..
-if [[ ! -d $1 ]]; then
-    echo "Creating $1.."
-    mkdir $1
+if [[ ! -d "$3/$artist" ]]; then
+    echo "Creating $artist.."
+    mkdir "$3/$artist"
 fi
 
-if [[ ! -n $3 ]]; then
-    3="."
-fi
 # download and convert. heh.
 echo 'Downloading and converting..'
-curl -s $match | convert - -resize 64x64 "$3/$1/$2.xpm"
+largepath="$3/$artist/$album-large.png"
+curl -s "$match" > "$largepath"
+convert "$largepath" -resize 64x64 "$3/$artist/$album-64x64.xpm"
+convert "$largepath" -resize 256x256 "$3/$artist/$album-256x256.xpm"
 
-[[ $? == 0 ]] && echo 'All done!' || { echo 'Error fetching or converting..' && return 5 }
+if [[ $? == 0 ]]; then
+    echo 'All done!'
+    exit 0
+else
+    echo 'Error fetching or converting..'
+    exit 5
+fi
