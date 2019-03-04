@@ -1,7 +1,9 @@
 #!/bin/bash
 
 DESKTOP="^3"
-GEOMETRY="118x25" 
+GEOMETRY_VISUALIZER="70x25"
+GEOMETRY_PLAYER="118x25"
+GEOMETRY_ALBUMART="32x20"
 
 VISUALIZER_NAME="cava_window"
 VISUALIZER_COMMAND="cava"
@@ -9,17 +11,27 @@ VISUALIZER_COMMAND="cava"
 PLAYER_NAME="ncmpcpp_window"
 PLAYER_COMMAND="ncmpcpp"
 
+ALBUMART_NAME="albumart_window"
+ALBUMART_COMMAND="while true; do display_current_mpd_albumart.sh && sleep 2; done"
+ALBUMART_COMMAND="tmux -f /home/pinusc/dotfiles/musicptmux.conf attach"
+
 if [[ "$1" -ne "-nk" ]]; then
     pkill ${PLAYER_COMMAND% *}
     pkill ${VISUALIZER_COMMAND% *}
 fi
 
-bspc rule -a URxvt:cava_window -o desktop=$DESKTOP state=pseudo_tiled split_dir=south;
+bspc rule -a URxvt:ncmpcpp_window -o desktop=$DESKTOP state=pseudo_tiled;
 
-urxvt -geometry "$GEOMETRY" -name "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
+urxvt -geometry "$GEOMETRY_PLAYER" -name "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &
 
 sleep 0.1;
 
-bspc rule -a URxvt:ncmpcpp_window -o desktop=$DESKTOP state=pseudo_tiled split_dir=north;
+# bspc rule -a URxvt:cava_window -o desktop=$DESKTOP state=pseudo_tiled split_dir=south;
 
-urxvt -geometry "$GEOMETRY" -name "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &
+# urxvt -geometry "$GEOMETRY_VISUALIZER" -name "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
+
+# sleep 0.1;
+
+bspc rule -a URxvt:$ALBUMART_NAME -o desktop=$DESKTOP state=pseudo_tiled split_dir=south;
+
+urxvt -geometry "$GEOMETRY_PLAYER" -name "$ALBUMART_NAME" -e zsh -c "sleep 1; $ALBUMART_COMMAND" &
