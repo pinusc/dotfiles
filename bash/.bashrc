@@ -30,7 +30,9 @@ green=$(tput setaf 2)
 blue=$(tput setaf 4)
 bold=$(tput bold)
 reset=$(tput sgr0)
-PS1="\[$green$bold\]\h\[$reset\] \[$blue$bold\]\w\[$reset\] \$ "
+[[ $(uname -o) = Android ]] && hoststr="$(getprop net.hostname)" || hoststr='\h'
+PS1="\[$green$bold\]$hoststr\[$reset\] \[$blue$bold\]\w\[$reset\] \$ "
+unset hoststr
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
