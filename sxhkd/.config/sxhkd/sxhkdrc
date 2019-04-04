@@ -139,7 +139,7 @@ super + q
 
 # toggle italian|dvorak keyboard layout
 super + Insert
-  ~/bin/toggle_dvorak.sh
+  ~/bin/util/toggle_dvorak.sh
 
 super + Return
 	urxvt
