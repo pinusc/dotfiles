@@ -8,9 +8,7 @@ URxvt*scrollBar:false
 ! URxvt*font:-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*
 URxvt*font: \
    -gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*,\
-   xft: Inconsolata for Powerline:size=14, \
-   xft: Source Han Sans:size=14, \
-   xft: wuncon Siji:size=10
+   xft: Inconsolata for Powerline:size=14
 
 URxvt*iso14755:true
 URxvt.imLocale:en_US.UTF-8
