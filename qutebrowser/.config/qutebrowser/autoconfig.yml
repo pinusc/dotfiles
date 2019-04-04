@@ -29,11 +29,31 @@ settings:
     global: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
       Gecko) Chrome/58.0.3029.110 Safari/537.36
   content.host_blocking.enabled:
-    global: false
+    global: true
   content.javascript.enabled:
+    '*://*.192.168.1.1/*': true
+    '*://*.arewereadyyet.com/*': true
+    '*://*.github.com/*': true
+    '*://*.isnotspam.com/*': true
+    '*://*.matrix.org/*': true
+    '*://*.namecheap.com/*': true
+    '*://*.netflix.com/*': true
+    '*://*.redd.it/*': true
+    '*://*.reddit.com/*': true
+    '*://*.rss.gstelluto.com/*': true
+    '*://*.searx.me/*': true
+    '*://*.tty.scaleway.com/*': true
+    '*://*.world.openfoodfacts.org/*': true
+    '*://*.www.facebook.com/*': false
+    '*://*.www.namecheap.com/*': true
+    '*://*.www.netflix.com/*': true
+    '*://*.www.reddit.com/*': true
+    '*://*.www.scaleway.com/*': true
+    '*://*.www.signoredelte.com/*': true
     '*://demo.funkwhale.audio/*': true
     '*://gitlab.com/*': true
     '*://mail.gstelluto.com/*': false
+    '*://tty.scaleway.com/*': true
     '*://www.colby.edu/*': true
     '*://www.kayak.it/*': true
     global: false
@@ -41,12 +61,20 @@ settings:
     global: false
   content.webgl:
     global: false
+  fonts.hints:
+    global: bold 10pt monospace
   fonts.monospace:
     global: Gohu GohuFont
   fonts.web.family.fixed:
     global: Gohu GohuFont
+  hints.auto_follow:
+    global: unique-match
+  hints.auto_follow_timeout:
+    global: 1500
   hints.mode:
     global: word
+  tabs.background:
+    global: true
   tabs.position:
     global: left
   tabs.show:
@@ -57,3 +85,13 @@ settings:
     global: true
   tabs.width:
     global: 15%
+  url.searchengines:
+    global:
+      DEFAULT: https://searx.me/?q={}
+      d: https://thefreedictionary.com/{}
+      ddg: https://duckduckgo.com/?q={}
+      enit: https://wordreference.com/enit/{}
+      iten: https://wordrefence.com/iten/{}
+      t: https://freethesaurus.com/{}
+      tre: www.treccani.it/vocabolario/{}/
+      tresin: www.treccani.it/vocabolario/{}_(Sinonimi-e-Contrari)
