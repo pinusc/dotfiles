@@ -145,7 +145,7 @@ super + Return
 	urxvt
 
 super + space
-    ~/bin/launcher
+    ~/bin/dmenu/launcher
     # /usr/bin/lighthouse | sh
 super + {_,shift} + a
     ~/bin/dmenu/passmenu {_,--type}
