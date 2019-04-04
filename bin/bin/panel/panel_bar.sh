@@ -133,25 +133,36 @@ while read -r line ; do
             # bspwm internal state
             wm_infos=""
             IFS=':'
-            case $current_monitor in  # cut line to consider only interested monitor
-                1)
-                    line=${line:0:43}  #only consider 1st monitor 
-                    set -- ${line#?}
-                    ;;
-                2)
-                    line=${line:38}  #only consider 1st monitor 
-                    set -- ${line}
-                    ;;
-            esac
+            auto_mon=1
+            if [[ -n "$auto_mon" ]]; then
+                line=$(echo "$line" | sed 's/^W//; s/^m.*:M/M/; s/M\(.*\):m.*/M\1/')
+                echo "line: $line" >&2
+                set -- $line
+            else
+                case $current_monitor in  # cut line to consider only interested monitor
+                    1)
+                        line=${line:0:43}  #only consider 1st monitor 
+                        echo "line: $line" >&2
+                        set -- ${line#?}
+                        ;;
+                    2)
+                        line=${line:38}  #only consider 1st monitor 
+                        echo "line: $line" >&2
+                        set -- ${line}
+                        ;;
+                esac
+            fi
+
             while [ $# -gt 0 ] ; do
                 item=$1
                 name=${item#?}
+                echo "item: $1" >&2
                 case $item in
                     M*)
-                        # active monitor
                         if [ $num_mon -gt 1 ] ; then
-                            name_cool=$([[ "$name" == 1 ]] && echo "\uf25b" || echo "\uf259")
-                            # wm_infos="$wm_infos %{F$COLOR_ACTIVE_MONITOR_FG}%{B$COLOR_ACTIVE_MONITOR_BG}$PADDING${name_cool}%{B-}%{F-}  "
+                            # active monitor
+                            name_cool=$([[ "$name" != "HDMI-0" ]] && echo "\uf25b" || echo "\uf259")
+                            wm_infos="$wm_infos %{F$COLOR_ACTIVE_MONITOR_FG}%{B$COLOR_ACTIVE_MONITOR_BG}${name_cool}%{B-}%{F-}${PADDING}"
                         fi
                         ;;
                     m*)
