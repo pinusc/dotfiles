@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/bin/colors.sh
+source ~/bin/lib/colors.sh
 
 text=""
 n='

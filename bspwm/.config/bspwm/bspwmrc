@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-source $HOME/bin/colors.sh
+source $HOME/bin/lib/colors.sh
 
 if [[ -n $(xrandr --listproviders | grep NVIDIA-0) ]]; then
     xrandr --setprovideroutputsource modesetting NVIDIA-0
@@ -105,6 +105,7 @@ xsetroot -cursor_name left_ptr
 # # avoid screen tearing
 xautolock -time 15 -locker lock &
 redshift -t 5500:3700 &
+# git annex assistant --autostart
 
 panel &
 # (sleep 1; bspc config -m 1 top_padding 36) &

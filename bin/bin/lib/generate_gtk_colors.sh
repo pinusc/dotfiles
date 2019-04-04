@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/bin/colors.sh
+source ~/bin/lib/colors.sh
 nl=$'\n'
 cat <<EOF > .config/gtk-3.0/gtk.css 
 @define-color theme_base_color $base00;

@@ -6,10 +6,11 @@
 
 #(( $# != 2 )) && echo 'Usage: $0 Artist Album' && return 1
 
-if [[ -z "$3" ]]; then
-    3="."
-fi
-path="$3"
+artist="${1/\//_}"
+album="${2/\//_}"
+[[ -z "$3" ]] && stub="./$artist/$album" || stub="$3"
+target_path="${stub%/*}"
+[[ -d "$target_path" ]] || mkdir -p "$target_path"
 
 if [[ -e "$1/$2.xpm" ]]; then
     echo "Error: File exists: $1/$2.xpm"
@@ -44,18 +45,12 @@ fi
 artist="${1/\//_}"
 album="${2/\//_}"
 
-# make sure this dir exists..
-if [[ ! -d "$3/$artist" ]]; then
-    echo "Creating $artist.."
-    mkdir "$3/$artist"
-fi
-
 # download and convert. heh.
 echo 'Downloading and converting..'
-largepath="$3/$artist/$album-large.png"
+largepath="$stub-large.png"
 curl -s "$match" > "$largepath"
-convert "$largepath" -resize 64x64 "$3/$artist/$album-64x64.xpm"
-convert "$largepath" -resize 256x256 "$3/$artist/$album-256x256.xpm"
+convert "$largepath" -resize 64x64 "$stub-64x64.xpm"
+convert "$largepath" -resize 256x256 "$stub-256x256.xpm"
 
 if [[ $? == 0 ]]; then
     echo 'All done!'

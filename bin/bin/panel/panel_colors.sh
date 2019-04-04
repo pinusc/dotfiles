@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/bin/colors.sh
+source ~/bin/lib/colors.sh
 COLOR_BLUE="#FF$base0D_nohash"
 COLOR_RED="#FF$base08_nohash"
 COLOR_YELLOW="#FF$base0A_nohash"

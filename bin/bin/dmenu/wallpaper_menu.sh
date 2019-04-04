@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ -n "$1" ]]; then
-    echo <<EOF
+    cat <<EOF
 Usage: wallpaper_menu
 
 A rofi/dmenu script to randomize the wallpaper.
@@ -17,13 +17,13 @@ method=$(echo "Unsplash|Directory|Fortune" | rofi -sep '|' -dmenu -p "Which meth
 case "$method" in
     Unsplash)
         query=$(rofi -dmenu -p "Wallpaper query" -a -5)
-        unsplash_wallpaper.sh -bfq "$query"
+        ~/bin/util/wallpaper/unsplash_wallpaper.sh -bfq "$query"
         ;;
     Directory)
-        randomwallpaper.sh
+        ~/bin/util/wallpaper/random_wallpaper.sh
         ;;
     Fortune)
-        fortunewallpaper.sh
+        ~/bin/util/wallpaper/fortune_wallpaper.sh
         ;;
     *)
         exit 1
