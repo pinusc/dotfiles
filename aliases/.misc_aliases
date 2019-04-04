@@ -48,3 +48,25 @@ addalias() {
 [ -e "$HOME/bin/gpg-wrapper" ] && source ~/bin/gpg-wrapper.zsh
 
 alias riot-web="qutebrowser ':open -w https://riot.im/app/#'"
+
+alias https="http --default-scheme=https"
+
+copy_dotfiles() {
+    [[ -z "$1" ]] && echo "You need to provide a ssh hostname!" && return
+    echo "Copying to: $server"
+    server="$1"
+    [[ "${server: -1}" != ":" ]] && server="$1:"
+    rsync -vh ~/dotfiles/{bash,aliases,tmux}/.* "$server"
+}
+
+sync_dotfiles() {
+    copy_dotfiles sofronia
+    copy_dotfiles astolfo
+    copy_dotfiles gurdulu
+}
+
+move_all_output() {
+    sink="$1"
+    inputs=$(pactl list short sink-inputs | cut -f1)
+    echo "$inputs" | xargs -I{} pactl move-sink-input {} $1
+}
