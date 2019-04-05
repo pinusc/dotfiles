@@ -41,3 +41,15 @@ To execute, run `gnu stow` + each of the desired directories. This directory sho
 Run 
     
     $ scp bash/.* aliases/.* servername
+
+5. Crontab
+----------
+For scripts that must run daily (such as tarsnap), just edit the anacron file in `anacron/.config/anacron/etc/anacrontab`. 
+
+For more frequent scripts, we have to use crontab, which sadly can't easily be version controlled.
+
+Here's a dump of crontab at the present time:
+
+    @hourly /usr/sbin/anacron -s -t $HOME/.config/anacron/etc/anacrontab -S $HOME/.config/anacron/spool
+
+Right now, it just runs anacron every hour.
