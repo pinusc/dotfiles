@@ -148,19 +148,19 @@ super + space
     ~/bin/dmenu/launcher
     # /usr/bin/lighthouse | sh
 super + {_,shift} + a
-    ~/bin/dmenu/passmenu {_,--type}
+    ~/bin/dmenu/pass_menu.sh {_,--type}
 super  + v
     ~/bin/dmenu/volume
 super + c
-    ~/bin/dmenu/clipboard
+    ~/bin/dmenu/clipboard_menu.sh
 super + k
-    ~/bin/dmenu/calculator
+    ~/bin/dmenu/calculator_menu.sh
 super + f
-    ~/bin/dmenu/file
+    ~/bin/dmenu/file_menu.sh
 super + m
     clerk
 super + p
-    ~/bin/dmenu/power
+    ~/bin/dmenu/power_menu.sh
 
 super + z
     info-notify
