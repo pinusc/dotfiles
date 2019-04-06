@@ -4,7 +4,7 @@ case $- in # If not running interactively, don't do anything
 esac
 [[ -z "$TMUX" ]] && exec tmux
 
-source $HOME/.sensible.bash
+[ -e $HOME/.sensible.bash ] && source $HOME/.sensible.bash
 
 export EDITOR=vim
 export SUDO_EDITOR=vim
