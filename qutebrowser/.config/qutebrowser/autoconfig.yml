@@ -35,6 +35,7 @@ settings:
     '*://*.arewereadyyet.com/*': true
     '*://*.github.com/*': true
     '*://*.isnotspam.com/*': true
+    '*://*.mail.gstelluto.com/*': true
     '*://*.matrix.org/*': true
     '*://*.namecheap.com/*': true
     '*://*.netflix.com/*': true
@@ -88,6 +89,7 @@ settings:
   url.searchengines:
     global:
       DEFAULT: https://searx.me/?q={}
+      aw: https://wiki.archlinux.org/index.php/{}
       d: https://thefreedictionary.com/{}
       ddg: https://duckduckgo.com/?q={}
       enit: https://wordreference.com/enit/{}
