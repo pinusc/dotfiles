@@ -80,8 +80,9 @@ if [ -e "$BSPWM_TREE" ] ; then
     bspc restore -T "$BSPWM_TREE" -H "$BSPWM_HISTORY" -S "$BSPWM_STACK"
     rm "$BSPWM_TREE" "$BSPWM_HISTORY" "$BSPWM_STACK"
 fi
+sxhkd &
 
-nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +1440+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}"
+nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +1440+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}" &
 compton -bcG & # backhround, draw shadows, not on panel
 #conky -c dotfiles/conkyrc2  # clock
 
@@ -90,13 +91,13 @@ xrdb -merge /home/pinusc/.Xresources &
 xmodmap ~/.Xmodmap
 # clipmenud &
 
-feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper
+feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper &
 # feh --bg-fill /home/pinusc/.wallpaper/theshowmustgoon_eidt.jpg
 # randomwallpaper.sh
 
 # so the pointer appears in the middle of the first monitor
 # xdotool mousemove 680 384 &
-xsetroot -cursor_name left_ptr
+xsetroot -cursor_name left_ptr &
 
 # disable screensaver
 # xset s off & xset -dpms & xset s noblank &
@@ -110,5 +111,4 @@ xset fp+ /usr/share/fonts/X11/gohu &
 bspc config -m 1 top_padding 39 &
 mpd &
 music_player &
-bspc desktop -f \^6
-sxhkd &
+bspc desktop -f \^6 &
