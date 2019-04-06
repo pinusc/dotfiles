@@ -142,7 +142,8 @@ weather() {
 
 # wifi
 network() {
-    interface="$(ip link | grep '(wl|en)p.*s.*:' | grep 'state UP' | awk '{ print $2 }')"
+    interface="$(ip link | grep -E '(wl|en)p.*s.*:' | grep 'state UP' | awk '{ print $2 }')"
+    echo $interface
     network_type="${interface:0:2}"
     check_connection 54.37.204.227
     case $? in
@@ -199,9 +200,9 @@ music() {
             fi
             if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
                 if mpc status | grep -q "paused"; then
-                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
-                else
                     command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                else
+                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
                 fi
             fi
         fi
