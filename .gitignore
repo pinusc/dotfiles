@@ -6,3 +6,4 @@ mpd/.config/mpd/*
 **/ranger/history
 tarsnap/.config/tarsnap/*.key
 anacron/.config/anacron/spool/
+mutt/.mutt/temp/

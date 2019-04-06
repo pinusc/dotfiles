@@ -115,6 +115,7 @@ unset markers              # no ugly plus signs
 
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
 alternative_order text/plain text/enriched text/html
+# set content_type = "text/html; charset=utf-8"
 
 # Pager Key Bindings ---------------------------------
 bind pager g noop
@@ -126,4 +127,11 @@ bind pager G  bottom
 bind pager R  group-reply
 
 # View attachments properly.
+auto_view text/html
 bind attach <return> view-mailcap
+
+# send mail as html with pandoc
+macro compose H "F pandoc -s -f markdown -t html \ny^T^Utext/html; charset=us-ascii\n"
+set wait_key=no
+
+
