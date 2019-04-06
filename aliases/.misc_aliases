@@ -19,6 +19,9 @@ alias :e=em
 alias did="vim +'normal Go' +'r!date' ~/docs/did.txt"
 alias mail="mail -r giuseppe@gstelluto.com"
 >&/dev/null hash neomutt && alias mutt='neomutt'
+alias mailsync="pkill -SIGUSR1 offlineimap"
+
+alias tarsnap="tarsnap --configfile $HOME/.config/tarsnap/tarsnaprc"
 
 mdmake() {
     cp "$HOME/.config/templates/pandoc/Makefile" "."
@@ -37,7 +40,8 @@ alias ll='ls -lh'
 alias la='ll -a'
 
 [ "$SHELL" = /bin/zsh ] && alias -g LL='| less -R'
-alias rgc='rg --color always'
+hash rg &>/dev/null && alias rgc='rg --color always'
+hash fd &>/dev/null && alias fdc='fd --color always'
 
 export _JAVA_AWT_WM_NONREPARENTING=1
 
@@ -45,7 +49,7 @@ addalias() {
     echo "alias $1=\"$2\"" >> ~/.zsh_aliases
 }
 
-[ -e "$HOME/bin/gpg-wrapper" ] && source ~/bin/gpg-wrapper.zsh
+[ -e "$HOME/bin/util/gpg-wrapper.zsh" ] && source ~/bin/util/gpg-wrapper.zsh
 
 alias riot-web="qutebrowser ':open -w https://riot.im/app/#'"
 
