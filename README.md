@@ -1,13 +1,15 @@
 Install notes
 =============
-To execute, run `gnu stow` + each of the desired directories. This directory should be placed directly under $HOME
+To execute, run `gnu stow** + each of the desired directories. This directory should be placed directly under $HOME
 
 1. Fonts 
 --------
-**Fontawesome**, the icon font, is at version 4.7.0; version 5 and above breaks the configuration AND icons are uglier. Just keep it 4.7.0; pacman with ttf-font-awesome has that version (add it to pacman.conf under IgnorePkg), but if hard to downgrade on newer installations, just download the ttf from the website. 
+**Gohufont** and **Nerdfonts Gohufont** are all that's needed. 
 
 2. Deps
 -------
+### General
+- offlineimap
 
 ### Bspwm dependencies
 - xsetroot (cursor on desktop)
@@ -17,6 +19,15 @@ To execute, run `gnu stow` + each of the desired directories. This directory sho
 - compton
 - xautolock
 - redshift
+
+### Panel dependencies
+- bash-fuzzy-clock
+
+### Emacs dependencies
+- Minimap Font (TTF) [github](https://github.com/davestewart/minimap-font) 
+- shellcheck
+- mu (for mu4e)
+- wordnet-cli (Aur), provides *wn*, used by *synosaurus*
 
 ### Vim
 - Deoplete deps:
@@ -30,3 +41,12 @@ To execute, run `gnu stow` + each of the desired directories. This directory sho
     - python-pylint
     - eslint
     - tidy (html)
+
+### zsh
+- AUR/antibody
+- community/
+- fortune
+- cowsay
+
+### sudo visudo
+- Add line "Defaults !lecture,tty_tickets,!fqdn,insults"
