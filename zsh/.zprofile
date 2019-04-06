@@ -1,57 +1,9 @@
 #
 # Executes commands at login pre-zshrc.
 #
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
-#
-# Editors
-#
-
-export EDITOR='nvim'
-export BROWSER='/usr/bin/firefox'
-export VISUAL='nvim'
-export PAGER='less'
-# export TERM="rxvt-unicode-256color"
-
-#
-# Language
-#
-
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
-
-#
-# Paths
-#
-
-# Ensure path arrays do not contain duplicates.
-typeset -gU cdpath fpath mailpath path
-
-# Set the the list of directories that cd searches.
-# cdpath=(
-#   $cdpath
-# )
-
-# Set the list of directories that Zsh searches for programs.
-# path=(
-#   $HOME/bin
-#   /usr/local/heroku/bin
-#   /usr/local/{bin,sbin}
-#   $HOME/.dotfiles
-#   $path
-# )
-
-#
-# Less
-#
-
-# Set the default Less options.
-# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-# Remove -X and -F (exit if the content fits on one screen) to enable it.
-# export LESS='-F -g -i -M -R -S -w -X -z-4'
-
 # Set the Less input preprocessor.
 # Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
 if (( $#commands[(i)lesspipe(|.sh)] )); then
@@ -73,3 +25,7 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 if [[ ! $DISPLAY && XDG_VTNR -eq 1 ]]; then
     exec startx
 fi
+
+
+# start tmux IFF the shell is remote 
+# shell is of course login or .zprofile wouldn't be sourced

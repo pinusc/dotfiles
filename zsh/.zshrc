@@ -33,7 +33,6 @@ spaces=$(printf " %.0s" {1..$(( (COLUMNS - 40) / 2 ))})
 fortune | cowsay | sed "s/^/$spaces/"
 source .zsh_plugins.sh
 source .zsh_aliases
-source .zprofile
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
