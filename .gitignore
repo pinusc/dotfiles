@@ -1,6 +1,11 @@
 nvim/.config/nvim/plugged/
+nvim/.config/nvim/spell/
+nvim/.config/nvim/.netrwhist
 mpd/.config/mpd/*
 !mpd/.config/mpd/mpd.conf
 !mpd/.config/mpd/playlilsts/
 **/ranger/bookmarks
 **/ranger/history
+tarsnap/.config/tarsnap/*.key
+anacron/.config/anacron/spool/
+mutt/.mutt/temp/

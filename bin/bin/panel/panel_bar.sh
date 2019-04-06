@@ -1,6 +1,6 @@
 #! /bin/bash
 . panel_colors.sh light
-. icons.sh
+source icons.sh
 num_mon=$(bspc query -M | wc -l)
 PADDING="  "
 PADDING_SHORT=" "
@@ -133,25 +133,36 @@ while read -r line ; do
             # bspwm internal state
             wm_infos=""
             IFS=':'
-            case $current_monitor in  # cut line to consider only interested monitor
-                1)
-                    line=${line:0:43}  #only consider 1st monitor 
-                    set -- ${line#?}
-                    ;;
-                2)
-                    line=${line:38}  #only consider 1st monitor 
-                    set -- ${line}
-                    ;;
-            esac
+            auto_mon=1
+            if [[ -n "$auto_mon" ]]; then
+                line=$(echo "$line" | sed 's/^W//; s/^m.*:M/M/; s/M\(.*\):m.*/M\1/')
+                echo "line: $line" >&2
+                set -- $line
+            else
+                case $current_monitor in  # cut line to consider only interested monitor
+                    1)
+                        line=${line:0:43}  #only consider 1st monitor 
+                        echo "line: $line" >&2
+                        set -- ${line#?}
+                        ;;
+                    2)
+                        line=${line:38}  #only consider 1st monitor 
+                        echo "line: $line" >&2
+                        set -- ${line}
+                        ;;
+                esac
+            fi
+
             while [ $# -gt 0 ] ; do
                 item=$1
                 name=${item#?}
+                echo "item: $1" >&2
                 case $item in
                     M*)
-                        # active monitor
                         if [ $num_mon -gt 1 ] ; then
-                            name_cool=$([[ "$name" == 1 ]] && echo "\uf25b" || echo "\uf259")
-                            # wm_infos="$wm_infos %{F$COLOR_ACTIVE_MONITOR_FG}%{B$COLOR_ACTIVE_MONITOR_BG}$PADDING${name_cool}%{B-}%{F-}  "
+                            # active monitor
+                            name_cool=$([[ "$name" != "HDMI-0" ]] && echo "\uf25b" || echo "\uf259")
+                            wm_infos="$wm_infos %{F$COLOR_ACTIVE_MONITOR_FG}%{B$COLOR_ACTIVE_MONITOR_BG}${name_cool}%{B-}%{F-}${PADDING}"
                         fi
                         ;;
                     m*)
@@ -204,21 +215,24 @@ while read -r line ; do
                     P*)
                         color_pom=$COLOR_POMODORO_ACTIVE
                         pom_rem=$PADDING${pom_rem#?}
+                        pom_icon=$IC_POMODORO_TICKING
                         ;;
                     p*)
                         color_pom=$COLOR_POMODORO_PAUSE
                         pom_rem=$PADDING${pom_rem#?}
+                        pom_icon=$IC_POMODORO_EMPTY
                         ;;
                     n*)
                         color_pom=$COLOR_POMODORO_INACTIVE
                         pom_rem=${pom_rem#?}
+                        pom_icon="$IC_POMODORO_FULL"
                         ;;
                 esac
             else
                 color_pom=$COLOR_POMODORO_INACTIVE
             fi
 
-            pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}$IC_POMODORO${pom_rem}%{A}%{A}%{F-}"
+            pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}${pom_icon}${pom_rem}%{A}%{A}%{F-}"
             ;;
         R*)
             # music info
@@ -241,7 +255,7 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
         ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"

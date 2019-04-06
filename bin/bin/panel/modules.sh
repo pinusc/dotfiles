@@ -44,8 +44,14 @@ getip() {
 
 mail() {
     count=$(find "$MAILDIR" -type f | grep -cvE ',[^,]*S[^,]*$')
+    count_important=$(find "$MAILDIR_IMPORTANT" -type f | grep -cvE ',[^,]*S[^,]*$')
+    if [ "$count_important" -gt 0 ]; then
+        count_important="$count_important "
+    else
+        count_important=""
+    fi
     if [ "$count" -gt 0 ]; then
-        echo "Mf%{A3:$FETCHMAILCOMMAND:}%{A:$MAILCOMMAND:}$IC_MAIL $count%{A}${A}"
+        echo "Mf%{A3:$FETCHMAILCOMMAND:}%{A:$MAILCOMMAND:}$IC_MAIL $count_important$count%{A}${A}"
     else
         echo "M0%{A3:$FETCHMAILCOMMAND:}%{A:MAILCOMMAND:}$IC_MAIL%{A}%{A}"
     fi
@@ -238,8 +244,12 @@ musicp() {
 }
 
 #pomodoro
-pomodoro() {
-    echo "P$(pomodoro -r -h)"
+pcheck_pomodoro() {
+    echo "P$(pomodoro -r -H)"
+    if [ "$(pomodoro -r)" = p0 ]; then
+        notify-send POMODORO Completed
+        paplay /usr/share/sounds/freedesktop/stereo/complete.oga
+    fi
 }
 
 #battery
@@ -277,13 +287,13 @@ keyboard() {
     if [ "$var" = "disabled" ]; then
         color="r"
     fi
-    echo "K$(setxkbmap -query | awk '/layout:/ {print $2; exit}')"
+    echo "K$(setxkbmap -query | awk '/layout:/ {print $2; exit}' | head -c 2)"
     echo "Kc$color%{A:$dkeyboard:}$IC_KEYBOARD%{A}"
 }
 
 #wallpaper
 wallpaper() {
-    echo "Q%{A:randomwallpaper.sh:}%{A3:fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
+    echo "Q%{A:random_wallpaper.sh:}%{A3:fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
 }
 
 

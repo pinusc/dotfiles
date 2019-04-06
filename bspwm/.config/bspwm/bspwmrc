@@ -1,11 +1,13 @@
 #!/bin/zsh
 
-source $HOME/bin/colors.sh
+source $HOME/bin/lib/colors.sh
 
 if [[ -n $(xrandr --listproviders | grep NVIDIA-0) ]]; then
     xrandr --setprovideroutputsource modesetting NVIDIA-0
 fi
 xrandr --auto
+
+which nvidia-settings && nvidia-settings -l
 
 NMON=$(xrandr --query | grep " connected" | wc -l)
 
@@ -72,7 +74,7 @@ bspc rule -a Firefox follow=on desktop="^6"
 
 bspc rule -a gimp state=floating desktop="^1"
 bspc rule -a vlc follow=on desktop="^2"
-bspc rule -a mpv follow=on desktop="^2"
+bspc rule -a mpv state=floating center=on
 bspc rule -a Anki state=floating center=on
 bspc rule -a "com-chschmid-jdotxt-Jdotxt" state=floating sticky=on
 
@@ -104,6 +106,7 @@ xsetroot -cursor_name left_ptr &
 # # avoid screen tearing
 xautolock -time 15 -locker lock &
 redshift -t 5500:3700 &
+# git annex assistant --autostart
 
 panel &
 # (sleep 1; bspc config -m 1 top_padding 36) &

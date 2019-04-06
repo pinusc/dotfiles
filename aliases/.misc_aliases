@@ -1,0 +1,76 @@
+alias upfont="sudo fc-cache -fv"
+alias cal="cal -m" # Monday it's always the first day of the week here!
+alias tmux="tmux -2"
+alias pingg="ping -a www.google.com"
+
+# Python aliases
+alias v="source venv/bin/activate"
+alias d="deactivate"
+
+alias setclip='xclip -selection c'
+alias getclip='xclip -selection clipboard -o'
+
+alias screensaver_off="xset s off;xset -dpms;xset s noblank"
+
+#fast edit shiortcuts
+[ -f "/usr/bin/nvim" ] && alias vim="/usr/bin/nvim"
+alias :e=em
+
+alias did="vim +'normal Go' +'r!date' ~/docs/did.txt"
+alias mail="mail -r giuseppe@gstelluto.com"
+>&/dev/null hash neomutt && alias mutt='neomutt'
+alias mailsync="pkill -SIGUSR1 offlineimap"
+
+alias tarsnap="tarsnap --configfile $HOME/.config/tarsnap/tarsnaprc"
+
+mdmake() {
+    cp "$HOME/.config/templates/pandoc/Makefile" "."
+    cp "$HOME/.config/templates/pandoc/doc.md" "$1"
+}
+
+
+>&/dev/null hash pinfo && alias info='pinfo'
+>&/dev/null hash exa && {
+    alias ls='exa'   
+    alias lt='exa -T'
+    alias lg='exa --long --git'
+}
+alias l='ls'
+alias ll='ls -lh'
+alias la='ll -a'
+
+[ "$SHELL" = /bin/zsh ] && alias -g LL='| less -R'
+hash rg &>/dev/null && alias rgc='rg --color always'
+hash fd &>/dev/null && alias fdc='fd --color always'
+
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+addalias() {
+    echo "alias $1=\"$2\"" >> ~/.zsh_aliases
+}
+
+[ -e "$HOME/bin/util/gpg-wrapper.zsh" ] && source ~/bin/util/gpg-wrapper.zsh
+
+alias riot-web="qutebrowser ':open -w https://riot.im/app/#'"
+
+alias https="http --default-scheme=https"
+
+copy_dotfiles() {
+    [[ -z "$1" ]] && echo "You need to provide a ssh hostname!" && return
+    echo "Copying to: $server"
+    server="$1"
+    [[ "${server: -1}" != ":" ]] && server="$1:"
+    rsync -vh ~/dotfiles/{bash,aliases,tmux}/.* "$server"
+}
+
+sync_dotfiles() {
+    copy_dotfiles sofronia
+    copy_dotfiles astolfo
+    copy_dotfiles gurdulu
+}
+
+move_all_output() {
+    sink="$1"
+    inputs=$(pactl list short sink-inputs | cut -f1)
+    echo "$inputs" | xargs -I{} pactl move-sink-input {} $1
+}

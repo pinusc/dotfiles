@@ -1,0 +1,162 @@
+#!/bin/zsh
+
+# this script keeps track of pomodoros
+# It saves them POMO_FILE
+# where every row has a letter and a number
+# the letter can be P or p
+# the number is epoch time in seconds
+# P means pomodoro
+# p means pausa
+# so that P1445260919 means a pomodoro started Mon, 19 Oct 2015 13:21:59 GMT
+POMO_FILE="/home/pinusc/.config/pomodoro"
+POMODORO_DURATION=$(( 60 * 25 ))
+PAUSE_DURATION=$(( 60 * 5 ))
+AUTOPAUSE=1
+if [[ ! -s $POMO_FILE ]]; then
+  touch $POMO_FILE
+fi
+
+HELP="Usage: pomodoro [OPTION] [COMMAND]
+Manage pomodoros
+
+With no Command, it shows current pomodoro
+
+Options:
+  -r, --remaining     Instead of showing the elapsed time, print the remaining
+  -H, --human         Print in mm:ss instead of sssss
+  -h, --help              Print this help
+
+These are available commands:
+start\t\tstarts a pomodoro
+stop\t\tstops the current timer
+start-pause\tstarts a pause
+"
+
+while test $# -gt 0
+do
+    case "$1" in
+        --remaining|-r) 
+          opt_rem=1
+          ;;
+        --human|-H) 
+          opt_human=1
+          ;;
+        --help|-h)
+          echo $HELP
+          exit 0
+          ;;
+        --*) 
+          echo "bad option $1"
+          exit 1
+          ;;
+        *) comm=$1
+          ;;
+    esac
+    shift
+done
+
+last=$(tail -n 1 $POMO_FILE)
+if [[ ! $last ]]; then 
+  # file is empty
+  if [[ $comm =~ "start*" ]]; then
+    fnull=1
+  else
+    exit 1
+  fi
+else
+  fnull=0
+fi
+
+now=$(date +%s)
+# format is expressed in epoch time in seconds
+# so number of seconds from jan 1, 1970
+
+if [[ $fnull -ne 1 ]]; then
+  nlast=${last#?}
+  diff=$(( now - nlast ))
+  if [[ $diff -lt 0 ]]; then
+    #echo "Error: time of last pomodoro is in the future"
+    exit 1
+  fi
+  result=0
+fi
+
+# P = pomodoro active
+# p = pause active
+# sp = should pause
+# n = stopped
+current="n"
+case $last in
+  P*)
+    if [[ $diff -lt $POMODORO_DURATION ]]; then
+      current="P"
+    else
+      if [[ $diff -lt $(( POMODORO_DURATION + PAUSE_DURATION )) ]]; then
+        current="sp"
+      fi
+    fi
+  ;;
+  p*)
+    if [[ $diff -lt $PAUSE_DURATION ]]; then
+      current="p"
+    fi
+  ;;
+esac
+
+
+case $comm in
+  stop)
+    # remove last pomodoro or pause
+    if [[ ! $current =~ "sn|n" ]]; then
+      sed -ie '$d' $POMO_FILE
+    fi
+    exit 0
+    ;;
+  start)
+    if [[ ! $current =~ "P" ]]; then
+      echo "P$now" >> $POMO_FILE
+    fi
+    exit 0
+    ;;
+  start-pause)
+    if [[ ! $current =~ "p" ]]; then
+      echo "p$now" >> $POMO_FILE
+    fi
+    exit 0
+    ;;
+esac
+
+case $current in
+  P)
+    result="P$diff"
+    ;;
+  p)
+    result="p$diff"
+    ;;
+  sp)
+    echo "p$(( nlast + POMODORO_DURATION ))" >> $POMO_FILE
+    ;;
+  n)
+   result="n"
+   echo $result
+   exit 0
+   ;;
+esac
+
+rnum=${result#?}
+if [[ $opt_rem ]]; then
+  case $result in
+    p*)
+      rnum=$(( $PAUSE_DURATION - $rnum ))
+      ;;
+    P*)
+      rnum=$(( $POMODORO_DURATION - $rnum ))
+      ;;
+  esac
+fi
+    
+if [[ $opt_human ]]; then
+  rnum=`printf "%02d:%02d" $(( rnum / 60 )) $(( rnum % 60 ))`
+fi
+result="${result:0:1}$rnum"
+echo $result

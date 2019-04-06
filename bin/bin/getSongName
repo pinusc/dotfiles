@@ -1,7 +1,0 @@
-#!/bin/zsh
-SONG_NAME=$(mpc -f "%title%" | head -n1) 
-if [ "${#SONG_NAME}" -eq 0 ]
-then
-    SONG_NAME=$(grep -B 1 -m 1 `mpc | head -n 1` .youtube-mpd | head -n 1) 
-fi
-echo $SONG_NAME

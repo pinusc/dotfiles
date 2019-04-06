@@ -2,7 +2,7 @@
 WM_NAME="dzen2-popup-wmname"
 WIDTH=300                                                                       
 HEIGHT=50                                                                       
-source "$HOME/bin/colors.sh"
+source "$HOME/bin/lib/colors.sh"
 
 # while xprop -name $WM_NAME &> /dev/null 
 # do  

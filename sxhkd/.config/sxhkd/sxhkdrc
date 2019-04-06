@@ -21,6 +21,9 @@ super + b
 super + {s,f}
 	bspc node -t \~{floating,fullscreen}
 
+super + shift + s
+  bspc node -g sticky
+
 #super + {grave,Tab}
 #	bspc {node,desktop} -f last
 
@@ -136,28 +139,28 @@ super + q
 
 # toggle italian|dvorak keyboard layout
 super + Insert
-  ~/bin/toggle_dvorak.sh
+  ~/bin/util/toggle_dvorak.sh
 
 super + Return
 	urxvt
 
 super + space
-    ~/bin/launcher
+    ~/bin/dmenu/launcher
     # /usr/bin/lighthouse | sh
 super + {_,shift} + a
-    ~/bin/dmenu/passmenu {_,--type}
+    ~/bin/dmenu/pass_menu.sh {_,--type}
 super  + v
     ~/bin/dmenu/volume
 super + c
-    ~/bin/dmenu/clipboard
+    ~/bin/dmenu/clipboard_menu.sh
 super + k
-    ~/bin/dmenu/calculator
+    ~/bin/dmenu/calculator_menu.sh
 super + f
-    ~/bin/dmenu/file
+    ~/bin/dmenu/file_menu.sh
 super + m
     clerk
 super + p
-    ~/bin/dmenu/power
+    ~/bin/dmenu/power_menu.sh
 
 super + z
     info-notify
@@ -189,6 +192,13 @@ XF86AudioNext
 
 XF86AudioStop
   mpc stop
+
+Pause
+  mpc toggle
+
+Print
+  cd ~/pics/screenshots && nux move android folder
+  scrot
 
 # make sxhkd and panel reload its configuration files:
 super + Escape

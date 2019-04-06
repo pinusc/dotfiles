@@ -1,0 +1,9 @@
+#pacman
+FRONTEND="yay"
+alias pac="$FRONTEND"
+alias paci="$FRONTEND -S"
+alias pacs="$FRONTEND -Ss"
+alias pacu="$FRONTEND -Syu"
+alias pacrem="$FRONTEND -Rns"
+alias pacq="$FRONTEND -Qq"
+alias pacx=pacrem
