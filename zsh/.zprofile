@@ -26,6 +26,15 @@ if [[ ! $DISPLAY && XDG_VTNR -eq 1 ]]; then
     exec startx
 fi
 
-
 # start tmux IFF the shell is remote 
 # shell is of course login or .zprofile wouldn't be sourced
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  SESSION_TYPE=remote/ssh
+# many other tests omitted
+else
+  case $(ps -o comm= -p $PPID) in
+    sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+  esac
+fi
+
+[[ "$SESSION_TYPE" = "remote/ssh" && -z "$TMUX" ]] && exec tmux
