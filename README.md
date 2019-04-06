@@ -53,3 +53,7 @@ Here's a dump of crontab at the present time:
     @hourly /usr/sbin/anacron -s -t $HOME/.config/anacron/etc/anacrontab -S $HOME/.config/anacron/spool
 
 Right now, it just runs anacron every hour.
+
+6. Modules/
+-----------
+This folder is for programs and scripts I did not write and can't or shouldn't be installed with a package manager. When possible, I use `git submodule` to include them without cluttering my repo; however, if I have to make some changes to the original source code and the repo is small, I'll just add the files in the index and source control them. This has proven to be the easiest version; forking and modifying the source code in another repo is too cumbersome most of the time, and I don't do it  unless necessary.
