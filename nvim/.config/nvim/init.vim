@@ -20,6 +20,8 @@ Plug 'junegunn/fzf.vim'
 " Commenter
 Plug 'tpope/vim-commentary'
 
+Plug 'dhruvasagar/vim-table-mode'
+
 " Code snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -405,6 +407,9 @@ map <leader>v :Vexplore<CR>
 map <leader>u :UndotreeToggle<CR>
 nmap <Leader>' :Files<CR>
 map <leader>/ :nohlsearch<CR>
+nnoremap <C-q> :center 80<cr>hhv0r=0r#A<space><esc>40A=<esc>d80<bar>
+nnoremap <C-h> :.,$!pandoc -f markdown -t html<cr>
+nnoremap <C-p> :.,$!pandoc -f markdown -t html<cr>
 
 function! StartMakeView()
     NeomakeSh! make view
