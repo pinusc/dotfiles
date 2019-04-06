@@ -8,6 +8,10 @@
 # environment variables and startup programs are in /etc/profile.
 # System wide aliases and functions are in /etc/bashrc.
 
+# sourced by remote interactive login shells
+# i.e. when you ssh into a machine
+# NOT sourced on local interactive shells
+
 append () {
     # First remove the directory
     local IFS=':'
@@ -31,3 +35,7 @@ if [ -d "$HOME/bin" ] ; then
 fi
 
 unset append
+
+# safe to start tmux, won't result in a loop
+# because only run on remote interactive login shells
+[[ -z "$TMUX" ]] && exec tmux
