@@ -13,7 +13,7 @@ PLAYER_COMMAND="ncmpcpp"
 
 ALBUMART_NAME="albumart_window"
 ALBUMART_COMMAND="while true; do display_current_mpd_albumart.sh && sleep 2; done"
-ALBUMART_COMMAND="tmux -f /home/pinusc/dotfiles/musicptmux.conf attach"
+ALBUMART_COMMAND="tmux -f $HOME/.tmux.music.conf attach"
 
 if [[ "$1" -ne "-nk" ]]; then
     pkill ${PLAYER_COMMAND% *}
