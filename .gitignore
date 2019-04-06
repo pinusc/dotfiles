@@ -1,4 +1,6 @@
 nvim/.config/nvim/plugged/
+nvim/.config/nvim/spell/
+nvim/.config/nvim/.netrwhist
 mpd/.config/mpd/*
 !mpd/.config/mpd/mpd.conf
 !mpd/.config/mpd/playlilsts/
