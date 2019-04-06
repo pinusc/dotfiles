@@ -18,18 +18,21 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     typescript
      sql
      yaml
      html
      javascript
      python
      shell-scripts
+     ansible ; for jinja2
      (clojure :variables
               clojure-enable-fancify-symbols t)
 
      emacs-lisp
      scheme
      git
+     version-control
      markdown
      org
      latex
@@ -49,6 +52,7 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      (spell-checking :variables
+                     spell-checking-enable-by-default nil
                      enable-flyspell-auto-completion t
                      spell-checking-enable-auto-dictionary t)
      (auto-completion :variables
@@ -66,6 +70,7 @@ values."
      pandoc
      pandoc-mode
      yasnippet-snippets
+     zeal-at-point
      evil-numbers
      evil-cleverparens
      base16-theme
@@ -77,6 +82,9 @@ values."
      smooth-scrolling
      synosaurus
      wordsmith-mode
+     olivetti
+     imenu-list
+     fountain-mode
      writeroom-mode
      writegood-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -258,7 +266,7 @@ values."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
-   dotspacemacs-folding-method 'origami
+   dotspacemacs-folding-method 'evil
 
    evil-insert-state-cursor '((bar . 2) "yellow")
    ))
@@ -300,9 +308,15 @@ you should place your code here."
 
   (define-key global-map (kbd "C-+") 'text-scale-increase)
   (define-key global-map (kbd "C--") 'text-scale-decrease)
+  (define-key global-map (kbd "C-i") 'evil-jump-forward) 
 
   (defface proportional
-    '((t :family "EB Garamond" :height 1.3))
+    '((t :family "CMU Serif" :height 1.3))
+    "Just sets a proportional font"
+    :group 'basic-faces)
+
+  (defface typewriter
+    '((t :family "CMU Typewriter Text" :height 1.3))
     "Just sets a proportional font"
     :group 'basic-faces)
 
@@ -310,14 +324,24 @@ you should place your code here."
     (interactive)
     (buffer-face-toggle 'proportional))
 
+  (defun toggle-typewriter ()
+    (interactive)
+    (buffer-face-toggle 'typewriter))
+
   (evil-leader/set-key
-    "t P" 'toggle-proportional)
+    "t T" 'toggle-typewriter) 
+
+  (evil-leader/set-key
+    "t P" 'toggle-proportional) 
 
   (evil-leader/set-key
     "x w t" 'synosaurus-lookup)
 
   (evil-leader/set-key
     "x w T" 'synosaurus-choose-and-replace)
+
+  (evil-leader/set-key
+    "h h" 'zeal-at-point)
 
   (defun set-proportional-face ()
     (interactive)
@@ -330,6 +354,13 @@ you should place your code here."
   (setq powerline-default-separator 'contour)
 
   (setq latex-enable-auto-fill nil)
+
+  (setq ispell-program-name "hunspell")
+  ;; ispell-set-spellchecker-params has to be called
+  ;; before ispell-hunspell-add-multi-dic will work
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "american,italiano")
+  (setq ispell-dictionary "en_US") 
 
   ;; ERQ
   (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
@@ -386,14 +417,13 @@ you should place your code here."
         '(("gstelluto.org-html"
           :base-directory "~/projects/org-gstelluto.com/org"
           :recursive t
-          :publishing-directory "/tmp/gstell/html"
+          :publishing-directory "/ssh:pinusc@gstelluto.com:/var/www/gstelluto.com/"
           :publishing-function org-html-publish-to-html
           :email "giuseppe@gstelluto.com"
           :html-postamble t
           :html-postamble-format (("en" "<p class=\"author\">Author: %a (%e)</p>
                                     <p class=\"date\">Date: %d</p>
                                     <p class=\"creator\">%c</p>"))
-          :date t
           :with-toc nil
           :makeindex t
           :html-doctype "html5"
@@ -402,13 +432,13 @@ you should place your code here."
           :section-numbers nil
           :html-preamble t
           :html-head-include-default-style nil
-          :html-head "<link rel=stylesheet href=/tmp/gstell/res/tufte.css />")
+          :html-head "<link rel=stylesheet href=/res/style.css />")
           ("gstelluto.org-res"
            :publishing-function org-publish-attachment
            :base-directory "~/projects/org-gstelluto.com/res/"
-           :publishing-directory "/tmp/gstell/res"
+           :publishing-directory "/ssh:pinusc@gstelluto.com:/var/www/gstelluto.com/res"
            :base-extension "css")
-          ("gstelluto" :components ("gstelluto.org-html" "gstelluto.org-res")))) 
+          ("gstelluto" :components ("gstelluto.org-html" "gstelluto.org-res"))))
   (defadvice org-archive-subtree (around my-org-archive-subtree activate)
     (let ((org-archive-location
            (if (save-excursion (org-back-to-heading)
@@ -509,10 +539,15 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#101215" "#ee3366" "#aaee66" "#ddee77" "#4477ee" "#6655ee" "#4477ee" "#aaee66"])
+ '(ansi-term-color-vector
+   [unspecified "#101215" "#ee3366" "#aaee66" "#ddee77" "#4477ee" "#6655ee" "#4477ee" "#aaee66"] t)
  '(custom-safe-themes
    (quote
-    ("8be07a2c1b3a7300860c7a65c0ad148be6d127671be04d3d2120f1ac541ac103" "7bef2d39bac784626f1635bd83693fae091f04ccac6b362e0405abf16a32230c" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "50ff65ab3c92ce4758cc6cd10ebb3d6150a0e2da15b751d7fbee3d68bba35a94" "eae831de756bb480240479794e85f1da0789c6f2f7746e5cc999370bbc8d9c8a" "16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" "4feee83c4fbbe8b827650d0f9af4ba7da903a5d117d849a3ccee88262805f40d" "45a8b89e995faa5c69aa79920acff5d7cb14978fbf140cdd53621b09d782edcf" "6daa09c8c2c68de3ff1b83694115231faa7e650fdbb668bc76275f0f2ce2a437" default)))
+    ("a2c86b47323b625bd83d36b98fff3534ea79e234866a7d9c2255d17b55e8346f" "09eeab340cb2c07d89c083f57bd9113fd5054d60089802d76e88a50ca770bf55" "ded87400e3f01670ad87cd8a268cca04fc3a8139450922827bafacae70816181" "80abb6253edcdda4eb8f9a4686676ba65c4fe37f3885a530ce1130d82be27b26" "e7ea9a96df1837ba34cbb95bae31b8cedd00c490f395284c0169481040cd4aa9" "c614d2423075491e6b7f38a4b7ea1c68f31764b9b815e35c9741e9490119efc0" "8be07a2c1b3a7300860c7a65c0ad148be6d127671be04d3d2120f1ac541ac103" "7bef2d39bac784626f1635bd83693fae091f04ccac6b362e0405abf16a32230c" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "50ff65ab3c92ce4758cc6cd10ebb3d6150a0e2da15b751d7fbee3d68bba35a94" "eae831de756bb480240479794e85f1da0789c6f2f7746e5cc999370bbc8d9c8a" "16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" "4feee83c4fbbe8b827650d0f9af4ba7da903a5d117d849a3ccee88262805f40d" "45a8b89e995faa5c69aa79920acff5d7cb14978fbf140cdd53621b09d782edcf" "6daa09c8c2c68de3ff1b83694115231faa7e650fdbb668bc76275f0f2ce2a437" default)))
  '(evil-want-Y-yank-to-eol t)
+ '(flycheck-flake8rc ".flake8")
  '(minimap-always-recenter t)
  '(minimap-dedicated-window t)
  '(minimap-hide-fringes t)
@@ -541,17 +576,19 @@ you should place your code here."
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (yasnippet-snippets company-quickhelp langtool synosaurus org-pdfview smooth-scrolling minimap pandoc-mode pandoc wordsmith-mode toml-mode racer flycheck-rust disaster company-emacs-eclim eclim company-c-headers company-auctex cmake-mode clang-format cargo rust-mode auctex-latexmk auctex origami insert-shebang fish-mode company-shell helm-dictionary erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks sql-indent evil-cleverparens yaml-mode zoutline swiper web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data lispyville ivy parinfer base16-gruvbox-dark-medium-theme writeroom-mode visual-fill-column writegood-mode geiser mu4e-maildirs-extension mu4e-alert ht ac-ispell flyspell-popup spray engine-mode spotify helm-spotify-plus multi base16-theme pdf-tools tablist yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc helm-company helm-c-yasnippet fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck cython-mode company-tern dash-functional tern company-statistics company-anaconda company clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider sesman queue clojure-mode auto-yasnippet auto-dictionary auto-complete anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode xkcd smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub with-editor ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
+    (company-ansible transient gherkin-mode ansible git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl zeal-at-point jinja2-mode tide typescript-mode mingus olivetti imenu-list fountain-mode yasnippet-snippets company-quickhelp langtool synosaurus org-pdfview smooth-scrolling minimap pandoc-mode pandoc wordsmith-mode toml-mode racer flycheck-rust disaster company-emacs-eclim eclim company-c-headers company-auctex cmake-mode clang-format cargo rust-mode auctex-latexmk auctex origami insert-shebang fish-mode company-shell helm-dictionary erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks sql-indent evil-cleverparens yaml-mode zoutline swiper web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data lispyville ivy parinfer base16-gruvbox-dark-medium-theme writeroom-mode visual-fill-column writegood-mode geiser mu4e-maildirs-extension mu4e-alert ht ac-ispell flyspell-popup spray engine-mode spotify helm-spotify-plus multi base16-theme pdf-tools tablist yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc helm-company helm-c-yasnippet fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck cython-mode company-tern dash-functional tern company-statistics company-anaconda company clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider sesman queue clojure-mode auto-yasnippet auto-dictionary auto-complete anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode xkcd smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub with-editor ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
  '(send-mail-function nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Gohu GohuFont" :foundry "Gohu" :slant normal :weight normal :height 126 :width normal))))
  '(font-lock-comment-face ((t (:foreground "#877d69" :slant italic))))
  '(minimap-active-region-background ((t (:background "gray7"))))
  '(minimap-font-face ((t (:height 30 :family "minimap"))))
  '(org-column ((t (:background "gray8"))))
+ '(org-verbatim ((t (:inherit org-code))))
  '(outline-4 ((t (:inherit font-lock-type-face))))
  '(outline-5 ((t (:inherit font-lock-constant-face))))
  '(outline-6 ((t (:inherit font-lock-builtin-face))))
