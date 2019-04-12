@@ -37,4 +37,10 @@ else
   esac
 fi
 
-[[ "$SESSION_TYPE" = "remote/ssh" && -z "$TMUX" ]] && exec tmux
+if [[ "$SESSION_TYPE" = "remote/ssh" && -z "$TMUX" ]]; then 
+    if tmux ls; then
+        exec tmux attach
+    else
+        exec tmux new
+    fi
+fi
