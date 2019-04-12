@@ -26,42 +26,42 @@ settings:
   content.headers.do_not_track:
     global: true
   content.headers.user_agent:
-    global: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
-      Gecko) Chrome/58.0.3029.110 Safari/537.36
+    global: null
   content.host_blocking.enabled:
     global: true
   content.javascript.enabled:
     '*://*.192.168.1.1/*': true
     '*://*.arewereadyyet.com/*': true
     '*://*.github.com/*': true
+    '*://*.githubassets.com/*': true
     '*://*.isnotspam.com/*': true
     '*://*.mail.gstelluto.com/*': true
     '*://*.matrix.org/*': true
     '*://*.namecheap.com/*': true
     '*://*.netflix.com/*': true
-    '*://*.redd.it/*': true
     '*://*.reddit.com/*': true
     '*://*.rss.gstelluto.com/*': true
     '*://*.searx.me/*': true
-    '*://*.tty.scaleway.com/*': true
     '*://*.world.openfoodfacts.org/*': true
-    '*://*.www.facebook.com/*': false
     '*://*.www.namecheap.com/*': true
     '*://*.www.netflix.com/*': true
     '*://*.www.reddit.com/*': true
     '*://*.www.scaleway.com/*': true
-    '*://*.www.signoredelte.com/*': true
-    '*://demo.funkwhale.audio/*': true
     '*://gitlab.com/*': true
     '*://mail.gstelluto.com/*': false
     '*://tty.scaleway.com/*': true
     '*://www.colby.edu/*': true
-    '*://www.kayak.it/*': true
     global: false
   content.pdfjs:
     global: false
   content.webgl:
     global: false
+  editor.command:
+    global:
+    - urxvt
+    - -e
+    - nvim
+    - '{file}'
   fonts.hints:
     global: bold 10pt monospace
   fonts.monospace:
@@ -94,6 +94,7 @@ settings:
       ddg: https://duckduckgo.com/?q={}
       enit: https://wordreference.com/enit/{}
       iten: https://wordrefence.com/iten/{}
+      ostm: https://www.openstreetmaip.org/search?query={}
       t: https://freethesaurus.com/{}
       tre: www.treccani.it/vocabolario/{}/
       tresin: www.treccani.it/vocabolario/{}_(Sinonimi-e-Contrari)
