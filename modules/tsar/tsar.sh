@@ -20,8 +20,8 @@ set -u
 ###############################################################################
 # Configuration:
 # If you are using multiple keys or other specific options, you can specify them here:
-TARSNAP_R="tarsnap --configfile $HOME/.config/tarsnap/tarsnaprc -v --list-archives --keyfile $HOME/.config/tarsnap/read.key" # for getting archive list
-TARSNAP_D="tarsnap --configfile $HOME/.config/tarsnap/tarsnaprc -d --keyfile --keyfile $HOME/.config/tarsnap/delete.key" # for deleting, archive names will be appended here
+TARSNAP_R="tarsnap -v --list-archives --keyfile /root/tarsnap.read.key" # for getting archive list
+TARSNAP_D="tarsnap -d --keyfile /root/tarsnap.key" # for deleting, archive names will be appended here
 
 # Number of daily, weekly and monthly backups to keep:
 DAILY=30
