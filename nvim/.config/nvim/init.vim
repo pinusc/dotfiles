@@ -64,6 +64,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 
 Plug 'klen/python-mode', { 'for': 'python' }
+Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 
 Plug 'mattn/emmet-vim'
 
@@ -133,6 +134,7 @@ autocmd BufEnter * let &titlestring = expand("%:t")
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
 highlight Comment cterm=italic
+set fillchars=fold:\ 
 " }}}
 
 " {{{ Filetype specific
@@ -158,6 +160,7 @@ autocmd Filetype java set makeprg=javac\ %
 autocmd Filetype c set makeprg=make
 autocmd Filetype c set foldmethod=syntax
 autocmd Filetype help,startify :IndentLinesToggle
+autocmd Filetype python setlocal foldmethod=expr
 
 let g:pencil#conceallevel = 0
 " Prose {{{
@@ -166,9 +169,9 @@ function! Prose()
   let g:pencil#wrapModeDefault = 'soft'
   let g:pencil#conceallevel = 0
   let g:lexical#thesaurus = ['~/.config/nvim/thesaurus/mthesaur.txt',]
-  let g:lexical#dictionary_key = '<leader>d'
+  let g:lexical#dictionary_key = '<c-d>'
   let g:lexical#dictionary = ['/usr/share/dict/words',]
-  nnoremap <leader>t :OnlineThesaurusCurrentWord<CR>
+  nnoremap <c-t> :OnlineThesaurusCurrentWord<CR>
   call pencil#init()
   call lexical#init()
   call litecorrect#init()
@@ -264,10 +267,10 @@ let g:pymode_doc = 1
 let g:pymode_doc_key = 'k'
 
 "linting
-let g:pymode_lint = 1
+let g:pymode_lint = 0
 let g:pymode_lint_checker = "pyflakes,pep8"
 " auto check on save
-let g:pymode_lint_write = 1
+let g:pymode_lint_write = 0
 
 " support virtualenv
 let g:pymode_virtualenv = 1
@@ -283,7 +286,7 @@ let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 " don't autofold code
-let g:pymode_folding = 1 
+let g:pymode_folding = 0
 " }}} 
 
 " {{{ Startify
@@ -399,14 +402,16 @@ map <f2> :NERDTreeToggle<cr>
 let mapleader = "\<Space>"
 map <leader>w :w<CR>
 map <leader>q :q<CR>
+map <leader>qa :qa<CR>
 map <leader>Q :q!<CR>
 map <leader>x :x<CR>
-map <leader>e :Explore<CR>
-map <leader>s :Sexplore<CR>
-map <leader>v :Vexplore<CR>
+map <leader><tab> :e #<cr>
+map <leader>e :Explore<cr><cr>
+map <leader>s :Sexplore<cr><cr>
+map <leader>v :Vexplore<cr><cr>
 map <leader>u :UndotreeToggle<CR>
-nmap <Leader>' :Files<CR>
-map <leader>/ :nohlsearch<CR>
+map <leader>h :nohlsearch<CR>
+map <leader>ji :call cursor(0, 1)<cr>:call search("import")<cr>
 nnoremap <C-q> :center 80<cr>hhv0r=0r#A<space><esc>40A=<esc>d80<bar>
 nnoremap <C-h> :.,$!pandoc -f markdown -t html<cr>
 nnoremap <C-p> :.,$!pandoc -f markdown -t html<cr>
@@ -422,8 +427,49 @@ command! StartMakeView call StartMakeView()
 
 " fzf mappings
 nmap ; :Buffers<CR>
-nmap <Leader>t :Files<CR>
-nmap <Leader>r :Tags<CR>
+nmap <leader>; :History<CR>
+nmap <Leader>f :Files<CR>
+nmap <Leader>' :Files<CR>
+nmap <Leader>t :BTags<CR>
+nmap <Leader>T :Tags<CR>
+map <leader>/ :Rg<CR>
+
+" sessions
+let g:session_dir = $HOME . "/.config/nvim/sessions/"
+function! FindProjectName()
+  let s:name = getcwd()
+  if !isdirectory(".git")
+    let s:name = substitute(finddir(".git", ".;"), "/.git", "", "")
+  end
+  if s:name != ""
+    let s:name = matchstr(s:name, ".*", strridx(s:name, "/") + 1)
+  end
+  return s:name
+endfunction
+
+" Sessions only restored if we start Vim without args.
+function! RestoreSession(name)
+  if a:name != ""
+      echo g:session_dir . a:name
+    if filereadable(g:session_dir . a:name)
+      echo "baz"
+      execute 'source ' . g:session_dir . a:name
+    end
+  end
+endfunction
+
+" Sessions only saved if we start Vim without args.
+function! SaveSession(name)
+  if a:name != ""
+    execute 'mksession! ' . g:session_dir . a:name
+  end
+endfunction
+
+" Restore and save sessions.
+if argc() == 0
+  autocmd VimEnter * call RestoreSession(FindProjectName())
+  autocmd VimLeave * call SaveSession(FindProjectName())
+end
 
 " }}}
 
@@ -431,19 +477,11 @@ nmap <Leader>r :Tags<CR>
 
 set laststatus=2
 set statusline=
-set statusline+=%#User1#\ %l
-set statusline+=\ %*
-set statusline+=\ ‹‹
-set statusline+=\ %f\ %*
-set statusline+=\ ››
+" set statusline+=\ %*
+set statusline+=\ %f
 set statusline+=\ %m
-set statusline+=%#User2#\ %F
 set statusline+=%=
 " set statusline+=\ %{LinterStatus()}
-set statusline+=\ ‹‹
-set statusline+=\ %{strftime('%R',getftime(expand('%')))}
-set statusline+=\ ::
-set statusline+=\ %n
-set statusline+=\ ››\ %*
+set statusline+=\ [%l:%c\ %p%%]
 
 " }}}
