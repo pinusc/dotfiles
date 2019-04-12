@@ -75,7 +75,13 @@ weight=$(echo "$weight" | tr , .)
 
 #================================= LOG WEIGHT ==================================
 
-echo -e "$date\t$weight" >> "$LOG_FILE"
+if [[ -n "$weight" ]]; then
+    echo -e "$date\t$weight" >> "$LOG_FILE"
+    sorted=$(sort "$LOG_FILE") 
+    echo "$sorted" > "$LOG_FILE"  
+    # in case last date was in the past and before more recent dates
+fi
+
 
 #================================== GNUPLOT ====================================
 
