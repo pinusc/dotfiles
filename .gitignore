@@ -9,3 +9,4 @@ mpd/.config/mpd/*
 tarsnap/.config/tarsnap/*.key
 anacron/.config/anacron/spool/
 mutt/.mutt/temp/
+qutebrowser/bookmarks/urls
