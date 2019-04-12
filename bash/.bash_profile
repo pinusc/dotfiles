@@ -38,4 +38,10 @@ unset append
 
 # safe to start tmux, won't result in a loop
 # because only run on remote interactive login shells
-[[ -z "$TMUX" ]] && exec tmux
+if [[ -z "$TMUX" ]]; then
+    if tmux ls; then
+        exec tmux attach
+    else
+        exec tmux new
+    fi
+fi
