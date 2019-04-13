@@ -1,5 +1,8 @@
 source /usr/share/doc/mutt/samples/colors.linux
 color status black green
+color index magenta default "~N"
+color index blue default "~T"
+color index red default "~D"
 
 set folder           = ~/mail                # mailbox location
 set alias_file       = ~/.mutt/alias         # where to store aliases
@@ -17,6 +20,7 @@ set signature        = ~/.mutt/sig           # my signature file
 set sendmail="/usr/bin/sendmail"
 set from="Giuseppe Stelluto <giuseppe@gstelluto.com>"
 set edit_headers=yes
+set record="~/mail/giuseppe@gstelluto.com/Sent"
 
 # Basic Options --------------------------------------
 set wait_key = no        # shut up, mutt
@@ -31,6 +35,9 @@ unset mark_old           # read/new is good enough for me
 set beep_new             # bell on new mails
 set pipe_decode          # strip headers and eval mimes when piping
 set thorough_search      # strip headers and eval mimes before searching<Paste>
+unset confirmappend
+# set maildir_trash
+
 
 # Sidebar Patch --------------------------------------
 set sidebar_divider_char   = '  │'
@@ -63,21 +70,18 @@ alternates giuseppe@gstelluto.com giuseppe.stelluto@gmail.com gstell@protonmail.
 mailboxes +giuseppe@gstelluto.com \
           +giuseppe@gstelluto.com/INBOX \
           +giuseppe@gstelluto.com/Sent \
-          +giuseppe@gstelluto.com/Drafts \
           +giuseppe@gstelluto.com/Archive \
           +giuseppe@gstelluto.com/Trash \
+          +logins@gstelluto.com \
+          +logins@gstelluto.com/INBOX \
+          +logins@gstelluto.com/Archive \
+          +logins@gstelluto.com/Trash \
           +giuseppe.stelluto@gmail.com \
           +giuseppe.stelluto@gmail.com/INBOX \
           +giuseppe.stelluto@gmail.com/Primary \
           +giuseppe.stelluto@gmail.com/[Gmail].Archive \
           +giuseppe.stelluto@gmail.com/[Gmail].Drafts \
           "+giuseppe.stelluto@gmail.com/[Gmail].Sent Mail" \
-          +logins@gstelluto.com \
-          +logins@gstelluto.com/INBOX \
-          +logins@gstelluto.com/Sent \
-          +logins@gstelluto.com/Drafts \
-          +logins@gstelluto.com/Archive \
-          +logins@gstelluto.com/Trash \
           +gstelluto@uwcchina.org \
           +gstelluto@uwcchina.org/INBOX \
           +gstelluto@uwcchina.org/Archive \
@@ -86,13 +90,20 @@ mailboxes +giuseppe@gstelluto.com \
           +gstelluto@uwcchina.org/Archives.Sent \
           "+gstelluto@uwcchina.org/Archives.Sent Items" \
 
+# by default, deleted mail will go in ~/mail/trash
+folder-hook . set trash = +trash
+# but for these accounts, it will go in the correct trash folder
+folder-hook +giuseppe@gstelluto.com* set trash = +giuseppe@gstelluto.com/Trash
+folder-hook +logins@gstelluto.com* set trash = +logins@gstelluto.com/Trash
+folder-hook +giuseppe.stelluto@gmail.com* set trash = "+giuseppe.stelluto@gmail.com/[Gmail].Trash"
+
 # Other special folders.
 set mbox      = "+giuseppe@gstelluto.com/Trash"
 set postponed      = "+giuseppe@gstelluto.com/Drafts"
 
 
 # Index View Options ---------------------------------
-set date_format = "%m/%d"
+set date_format = "%d/%m"
 set index_format = "[%Z]  %D  %-20.20F  %s"
 set sort = threads                         # like gmail
 set sort_aux = reverse-last-date-received  # like gmail
@@ -104,6 +115,10 @@ set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 bind index,pager <down>   sidebar-next
 bind index,pager <up>     sidebar-prev
 bind index,pager <right>  sidebar-open
+
+bind index,pager J sidebar-next
+bind index,pager K sidebar-prev
+bind index,pager L sidebar-open
 
 # Pager View Options ---------------------------------
 set pager_index_lines = 10 # number of index lines to show
@@ -124,6 +139,13 @@ bind pager j  next-line
 bind pager gg top
 bind pager G  bottom
 
+# I shadowed J and K
+# bind pager gk noop
+# bind pager gj noop
+bind index g noop
+bind index gj next-entry
+bind index gk previous-entry
+
 bind pager R  group-reply
 
 # View attachments properly.
@@ -133,5 +155,4 @@ bind attach <return> view-mailcap
 # send mail as html with pandoc
 macro compose H "F pandoc -s -f markdown -t html \ny^T^Utext/html; charset=us-ascii\n"
 set wait_key=no
-
 

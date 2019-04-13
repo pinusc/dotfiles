@@ -4,7 +4,7 @@
 
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
+START_HOURS_RANGE=14-16
 # period  delay  job-identifier  command
 @daily  20 tarsnap-backup /home/pinusc/.config/tarsnap/tarsnap-backup.sh
 @daily  25 tarsnap-rotate /home/pinusc/bin/modules/tsar.sh

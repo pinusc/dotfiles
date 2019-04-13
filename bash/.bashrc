@@ -2,7 +2,6 @@ case $- in # If not running interactively, don't do anything
     *i*) ;;
     *) return;;
 esac
-[[ -z "$TMUX" ]] && exec tmux
 
 [ -e $HOME/.sensible.bash ] && source $HOME/.sensible.bash
 

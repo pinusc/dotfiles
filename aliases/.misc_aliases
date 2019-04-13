@@ -57,8 +57,8 @@ alias https="http --default-scheme=https"
 
 copy_dotfiles() {
     [[ -z "$1" ]] && echo "You need to provide a ssh hostname!" && return
-    echo "Copying to: $server"
     server="$1"
+    echo "Copying to: $server"
     [[ "${server: -1}" != ":" ]] && server="$1:"
     rsync -vh ~/dotfiles/{bash,aliases,tmux}/.* "$server"
 }
@@ -67,6 +67,7 @@ sync_dotfiles() {
     copy_dotfiles sofronia
     copy_dotfiles astolfo
     copy_dotfiles gurdulu
+    copy_dotfiles hong.io
 }
 
 move_all_output() {
