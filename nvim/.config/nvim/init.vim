@@ -242,6 +242,7 @@ if !exists ('*GetClojureFold')
 endif
 
 autocmd FileType clojure call TurnOnClojureFolding()
+autocmd FileType clojure IndentLinesDisable
 " }}} Clojure
 
 " }}}
