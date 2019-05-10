@@ -401,11 +401,16 @@ map <F5> :!java %:r
 imap jk <Esc>
 map <f2> :NERDTreeToggle<cr>
 let mapleader = "\<Space>"
+
+" file bindings
 map <leader>w :w<CR>
+map <leader>W :Gw<CR>
 map <leader>q :q<CR>
 map <leader>qa :qa<CR>
 map <leader>Q :q!<CR>
 map <leader>x :x<CR>
+
+" find bindings
 map <leader><tab> :e #<cr>
 map <leader>e :Explore<cr><cr>
 map <leader>s :Sexplore<cr><cr>
@@ -413,9 +418,20 @@ map <leader>v :Vexplore<cr><cr>
 map <leader>u :UndotreeToggle<CR>
 map <leader>h :nohlsearch<CR>
 map <leader>ji :call cursor(0, 1)<cr>:call search("import")<cr>
+
+" git bindings
+map <leader>gs :Gstatus<cr>
+map <leader>gl :Glog --<cr>
+map <leader>gL :Glog<cr>
+map <leader>gc :Gcommit<cr>
+map <leader>gr :Grebase<cr>
+
+" other bindings
 nnoremap <C-q> :center 80<cr>hhv0r=0r#A<space><esc>40A=<esc>d80<bar>
 nnoremap <C-h> :.,$!pandoc -f markdown -t html<cr>
 nnoremap <C-p> :.,$!pandoc -f markdown -t html<cr>
+vnoremap <C-h> :'<,'>$!pandoc -f markdown -t html<cr>
+vnoremap <C-p> :'<,'>$!pandoc -f markdown -t html<cr>
 
 function! StartMakeView()
     NeomakeSh! make view
@@ -479,10 +495,10 @@ end
 set laststatus=2
 set statusline=
 " set statusline+=\ %*
-set statusline+=\ %f
-set statusline+=\ %m
+set statusline+=\ %f%(\ %h%)%(\ %m%)
 set statusline+=%=
 " set statusline+=\ %{LinterStatus()}
 set statusline+=\ [%l:%c\ %p%%]
+set statusline+=\ %{FugitiveHead()}
 
 " }}}
