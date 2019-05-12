@@ -8,11 +8,11 @@ settings:
   bindings.commands:
     global:
       normal:
-        ',M': hint links spawn mpv {hint-url}
         ',m': spawn mpv {url}
         ',r': spawn --userscript ~/.local/share/qutebrowser/userscripts/readability
+        ;m: hint links spawn mpv {hint-url}
         A: spawn --userscript ~/.local/share/qutebrowser/userscripts/password_fill
-        x: set-cmd-text -s :open site:{url:host}
+        xs: set-cmd-text -s :open site:{url:host}
   content.autoplay:
     global: false
   content.canvas_reading:
@@ -26,6 +26,7 @@ settings:
   content.host_blocking.enabled:
     global: true
   content.javascript.enabled:
+    '*://*.127.0.0.1/*': true
     '*://*.192.168.1.1/*': true
     '*://*.arewereadyyet.com/*': true
     '*://*.github.com/*': true
@@ -49,9 +50,13 @@ settings:
     '*://pi.hole/*': true
     '*://tty.scaleway.com/*': true
     '*://www.colby.edu/*': true
+    '*://www.humblebundle.com/*': false
+    '*://www.openstreetmap.org/*': true
     global: false
   content.pdfjs:
     global: false
+  content.plugins:
+    global: true
   content.user_stylesheets:
     global: null
   content.webgl:
@@ -62,12 +67,32 @@ settings:
     - -e
     - nvim
     - '{file}'
+  fonts.completion.category:
+    global: 14pt monospace
   fonts.completion.entry:
+    global: 14pt monospace
+  fonts.debug_console:
+    global: 14pt monospace
+  fonts.downloads:
     global: 14pt monospace
   fonts.hints:
     global: 14pt monospace
+  fonts.keyhint:
+    global: 14pt monospace
+  fonts.messages.error:
+    global: 14pt monospace
+  fonts.messages.info:
+    global: 14pt monospace
+  fonts.messages.warning:
+    global: 14pt monospace
   fonts.monospace:
     global: Gohu GohuFont
+  fonts.prompts:
+    global: 14pt monospace
+  fonts.statusbar:
+    global: 14pt monospace
+  fonts.tabs:
+    global: 14pt monospace
   fonts.web.family.fixed:
     global: Gohu GohuFont
   hints.auto_follow:
@@ -77,15 +102,23 @@ settings:
   hints.mode:
     global: word
   session.lazy_restore:
-    global: true
+    global: false
   tabs.background:
     global: true
+  tabs.new_position.related:
+    global: first
+  tabs.padding:
+    global:
+      bottom: 1
+      left: 5
+      right: 5
+      top: 1
   tabs.position:
     global: left
   tabs.show:
     global: multiple
   tabs.title.format:
-    global: '{tree}{audio}{collapsed}{index}: {title}'
+    global: '{tree}{audio}{collapsed}{index}: {current_title}'
   tabs.tree_tabs:
     global: true
   tabs.width:
@@ -97,7 +130,7 @@ settings:
       d: https://thefreedictionary.com/{}
       enit: https://wordreference.com/enit/{}
       iten: https://wordrefence.com/iten/{}
-      ostm: https://www.openstreetmaip.org/search?query={}
+      ostm: https://www.openstreetmap.org/search?query={}
       sx: https://searx.me/?q={}
       t: https://freethesaurus.com/{}
       tre: www.treccani.it/vocabolario/{}/
