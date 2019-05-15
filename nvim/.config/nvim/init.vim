@@ -134,7 +134,6 @@ autocmd BufEnter * let &titlestring = expand("%:t")
 
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
-highlight Comment cterm=italic
 set fillchars=fold:\ 
 " }}}
 
