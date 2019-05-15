@@ -143,14 +143,6 @@ augroup vimrc
     au bufwinenter setlocal foldmethod=manual
 augroup end
 
-augroup vimrc_autocmds
-    autocmd!
-    " highlight characters past column 80
-    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
-    autocmd FileType python match Excess /\%80v.*/
-    autocmd FileType python set nowrap
-augroup END
-
 augroup vimrc
     au BufReadPre * setlocal foldmethod=indent
     au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=marker | endif
