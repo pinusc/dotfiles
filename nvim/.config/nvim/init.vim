@@ -126,6 +126,7 @@ syntax enable
 set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
 set shiftwidth=4
 set expandtab
+set colorcolumn=81
 
 set title
 set titleold=urxvt
