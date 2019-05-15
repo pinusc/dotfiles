@@ -1,3 +1,4 @@
+scriptencoding utf-8
 " {{{ Plugins
 call plug#begin('~/.config/nvim/plugged')
 
@@ -130,7 +131,10 @@ set colorcolumn=81
 
 set title
 set titleold=urxvt
-autocmd BufEnter * let &titlestring = expand("%:t")
+augroup title
+    au!
+    autocmd BufEnter * let &titlestring = expand("%:t")
+augroup end
 
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
@@ -148,11 +152,11 @@ augroup vimrc
     au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=marker | endif
 augroup END
 
-autocmd Filetype java set makeprg=javac\ %
-autocmd Filetype c set makeprg=make
-autocmd Filetype c set foldmethod=syntax
-autocmd Filetype help,startify :IndentLinesToggle
-autocmd Filetype python setlocal foldmethod=expr
+augroup make
+    au!
+    autocmd Filetype java set makeprg=javac\ %
+    autocmd Filetype c set makeprg=make
+augroup END
 
 let g:pencil#conceallevel = 0
 " Prose {{{
@@ -187,7 +191,10 @@ function! Prose()
 endfunction
 
 " automatically initialize buffer by file type
-autocmd FileType markdown,mkd,text,rst call Prose()
+augroup prose
+    au!
+    autocmd FileType markdown,mkd,text,rst call Prose()
+augroup END
 
 " invoke manually by command for other file types
 command! -nargs=0 Prose call Prose()
@@ -197,33 +204,33 @@ command! -nargs=0 Prose call Prose()
 "  Automagic Clojure folding on defn's and defmacro's
 if !exists ('*GetClojureFold')
     function GetClojureFold()
-        if getline(v:lnum) =~ '^\s*(defn.*\s'
-            return ">1"
-        elseif getline(v:lnum) =~ '^\s*(defmacro.*\s'
-            return ">1"
-        elseif getline(v:lnum) =~ '^\s*(defmethod.*\s'
-            return ">1"
-        elseif getline(v:lnum) =~ '^\s*$'
+        if getline(v:lnum) =~? '^\s*(defn.*\s'
+            return '>1'
+        elseif getline(v:lnum) =~? '^\s*(defmacro.*\s'
+            return '>1'
+        elseif getline(v:lnum) =~? '^\s*(defmethod.*\s'
+            return '>1'
+        elseif getline(v:lnum) =~? '^\s*$'
             let my_cljnum = v:lnum
-            let my_cljmax = line("$")
+            let my_cljmax = line('$')
 
             while (1)
                 let my_cljnum = my_cljnum + 1
                 if my_cljnum > my_cljmax
-                    return "<1"
+                    return '<1'
                 endif
 
                 let my_cljdata = getline(my_cljnum)
 
                 " If we match an empty line, stop folding
-                if my_cljdata =~ '^$'
-                    return "<1"
+                if my_cljdata =~? '^$'
+                    return '<1'
                 else
-                    return "="
+                    return '='
                 endif
             endwhile
         else
-            return "="
+            return '='
         endif
     endfunction
 
@@ -233,9 +240,18 @@ if !exists ('*GetClojureFold')
     endfunction
 endif
 
-autocmd FileType clojure call TurnOnClojureFolding()
-autocmd FileType clojure IndentLinesDisable
 " }}} Clojure
+
+augroup fold
+    au!
+    autocmd Filetype c set foldmethod=syntax
+    autocmd Filetype python setlocal foldmethod=expr
+    autocmd Filetype help,startify,clojure :IndentLinesDisable
+    autocmd FileType clojure call TurnOnClojureFolding()
+    autocmd FileType clojure IndentLinesDisable
+augroup END
+    
+
 
 " }}}
 
@@ -261,7 +277,6 @@ let g:pymode_doc_key = 'k'
 
 "linting
 let g:pymode_lint = 0
-let g:pymode_lint_checker = "pyflakes,pep8"
 " auto check on save
 let g:pymode_lint_write = 0
 
@@ -310,8 +325,11 @@ let g:startify_custom_header = s:filter_header(startify#fortune#cowsay())
 
 "autocmd FileType html,css imap <tab> <plug>(emmet-expand-abbr)
 let g:user_emmet_install_global = 0
-autocmd FileType html,css,scss EmmetInstall
-autocmd FileType html,css,scss imap <buffer> <TAB> <plug>(emmet-expand-abbr)
+augroup Emmet
+    au!
+    autocmd FileType html,css,scss EmmetInstall
+    autocmd FileType html,css,scss imap <buffer> <TAB> <plug>(emmet-expand-abbr)
+augroup END
 
 let g:NERDCustonDelimiters = {
             \ 'python': {'right': '# '}}
@@ -319,9 +337,9 @@ let g:NERDCustonDelimiters = {
 call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
 
 let g:deoplete#enable_at_startup = 1
-let g:UltiSnipsExpandTrigger="<C-e>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsExpandTrigger='<C-e>'
+let g:UltiSnipsJumpForwardTrigger='<tab>'
+let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
 
 inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><s-tab> pumvisible() ? "\<C-p>" : "\<TAB>"
@@ -415,8 +433,6 @@ map <leader>ji :call cursor(0, 1)<cr>:call search("import")<cr>
 
 " git bindings
 map <leader>gs :Gstatus<cr>
-map <leader>gl :Glog --<cr>
-map <leader>gL :Glog<cr>
 map <leader>gc :Gcommit<cr>
 map <leader>gr :Grebase<cr>
 
@@ -429,7 +445,10 @@ vnoremap <C-p> :'<,'>$!pandoc -f markdown -t html<cr>
 
 function! StartMakeView()
     NeomakeSh! make view
-    autocmd CursorHold,CursorHoldI,BufWritePost <buffer> :NeomakeSh! make
+    augroup makeview
+        au!
+        autocmd CursorHold,CursorHoldI,BufWritePost <buffer> :NeomakeSh! make
+    augroup END
     redraw!
 endfunction
 
@@ -438,34 +457,77 @@ command! StartMakeView call StartMakeView()
 
 " fzf mappings
 let g:fzf_command_prefix = 'Fzf'
+
+command! -bang -nargs=* FzfRg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+
 nmap ; :FzfBuffers<CR>
 nmap <leader>; :FzfHistory<CR>
-nmap <Leader>f :FzfFiles<CR>
+nmap <Leader>f :FzfGFiles<CR>
+nmap <Leader>F :FzfFiles<CR>
 nmap <Leader>' :FzfFiles<CR>
 nmap <Leader>t :FzfBTags<CR>
 nmap <Leader>T :FzfTags<CR>
-map <leader>/ :FzfRg<CR>
-autocmd FileType fzf tmap <buffer> <esc> <c-g>
+map <leader>/ :FzfRg!<CR>
+map <leader>gl :FzfCommits<CR>
+augroup fzf-bind
+    au!
+    autocmd FileType fzf tmap <buffer> <esc> <c-g>
+augroup END
+
+function! s:neigh_sink(file)
+    if filereadable(a:file)
+        execut 'e' . a:file
+    endif
+    if isdirectory(a:file)
+          let command = 'find ' . a:file . ' -maxdepth 1'
+
+          call fzf#run({
+                \ 'source': command,
+                \ 'sink':  function('s:neigh_sink'),
+                \ 'options': '-m -x +s',
+                \ 'down':  '40%' })
+    endif
+endfunction
+
+function! s:fzf_neighbouring_files()
+  let current_file =expand('%')
+  let cwd = fnamemodify(current_file, ':p:h')
+  " let command = 'cat <(find ' . cwd . ' -maxdepth 1) <(echo ..)'
+  let command = 'echo ..; find ' . cwd . ' -maxdepth 1'
+
+  call fzf#run({
+        \ 'source': command,
+        \ 'sink':  function('s:neigh_sink'),
+        \ 'options': '-m -x +s',
+        \ 'down':  '40%' })
+endfunction
+
+command! FZFNeigh call s:fzf_neighbouring_files()
 
 " sessions
-let g:session_dir = $HOME . "/.config/nvim/sessions/"
+let g:session_dir = $HOME . '/.config/nvim/sessions/'
 function! FindProjectName()
   let s:name = getcwd()
-  if !isdirectory(".git")
-    let s:name = substitute(finddir(".git", ".;"), "/.git", "", "")
+  if !isdirectory('.git')
+    let s:name = substitute(finddir('.git', '.;'), '/.git', '', '')
   end
-  if s:name != ""
-    let s:name = matchstr(s:name, ".*", strridx(s:name, "/") + 1)
+  if s:name !=? '' 
+    let s:name = matchstr(s:name, '.*', strridx(s:name, '/') + 1)
   end
   return s:name
 endfunction
 
 " Sessions only restored if we start Vim without args.
 function! RestoreSession(name)
-  if a:name != ""
+  if a:name !=? '' 
       echo g:session_dir . a:name
     if filereadable(g:session_dir . a:name)
-      echo "baz"
+      echo 'baz'
       execute 'source ' . g:session_dir . a:name
     end
   end
@@ -473,15 +535,17 @@ endfunction
 
 " Sessions only saved if we start Vim without args.
 function! SaveSession(name)
-  if a:name != ""
+  if a:name !=? '' 
     execute 'mksession! ' . g:session_dir . a:name
   end
 endfunction
 
 " Restore and save sessions.
 if argc() == 0
-  autocmd VimEnter * call RestoreSession(FindProjectName())
-  autocmd VimLeave * call SaveSession(FindProjectName())
+    augroup session
+        autocmd VimEnter * call RestoreSession(FindProjectName())
+        autocmd VimLeave * call SaveSession(FindProjectName())
+    augroup END
 end
 
 " }}}
