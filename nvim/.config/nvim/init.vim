@@ -397,10 +397,11 @@ let mapleader = "\<Space>"
 " file bindings
 map <leader>w :w<CR>
 map <leader>W :Gw<CR>
-map <leader>q :q<CR>
-map <leader>qa :qa<CR>
+map <leader>qq :q<CR>
+map <leader>qa :q<CR>
 map <leader>Q :q!<CR>
 map <leader>x :x<CR>
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
 " find bindings
 map <leader><tab> :e #<cr>
