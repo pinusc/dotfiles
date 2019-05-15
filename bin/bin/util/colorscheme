@@ -1,6 +1,7 @@
 #!/bin/bash
 [ -z $1 ] && exit
 
+THEME_SAVE=".local/share/colors"
 BASE16_SHELL="$HOME/.config/base16-shell"
 colorpath="$BASE16_SHELL/scripts"
 script="$colorpath/base16-$1.sh"
@@ -13,10 +14,13 @@ echo -e "if !exists('g:colors_name') || g:colors_name != 'base16-$theme'\n  colo
 [ -e "$HOME/.base16_theme" ] && rm "$HOME/.base16_theme"
 
 ln -fs "$script" "$HOME/.base16_theme"
+colors.sh --print > "$THEME_SAVE"  # colors.sh needs .base16_theme
+
 # eval "$script"
 generate_xresources.sh
 [ -e /tmp/emacs1000/server ] && emacsclient -s /tmp/emacs1000/server -e "(load-theme '${script_name} t)"
 { killall panel; panel & } 2>/dev/null
+pgrep qutebrowser &>/dev/null && qutebrowser ':config-source'
 # exit() {
 #     pkill panel; panel &
 # }
