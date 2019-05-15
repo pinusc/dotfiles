@@ -88,6 +88,10 @@ filetype plugin indent on
 set ignorecase
 set smartcase
 
+" command completion
+set wildmode=longest,list,full
+set wildmenu
+
 set t_Co=16
 set background=dark
 colorscheme term
