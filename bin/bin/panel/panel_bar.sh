@@ -112,7 +112,7 @@ while read -r line ; do
                     statuscolor=$COLOR_ERROR
                     ;;
             esac
-            network="$PADDING%{F$COLOR_NETWORK}${net_type} %{F-}%{F$statuscolor}${status}${other}%{F-}"
+            network="$PADDING%{F$COLOR_NETWORK}${net_type}$PADDING_SHORT%{F-}%{F$statuscolor}${status}${other}%{F-}"
             ;;
         Q*)
             wallpaper="$PADDING%{F$COLOR_KEYBOARD}${line#?}%{F-}"
