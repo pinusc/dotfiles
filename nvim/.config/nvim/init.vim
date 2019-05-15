@@ -443,13 +443,15 @@ command! StartMakeView call StartMakeView()
 
 
 " fzf mappings
-nmap ; :Buffers<CR>
-nmap <leader>; :History<CR>
-nmap <Leader>f :Files<CR>
-nmap <Leader>' :Files<CR>
-nmap <Leader>t :BTags<CR>
-nmap <Leader>T :Tags<CR>
-map <leader>/ :Rg<CR>
+let g:fzf_command_prefix = 'Fzf'
+nmap ; :FzfBuffers<CR>
+nmap <leader>; :FzfHistory<CR>
+nmap <Leader>f :FzfFiles<CR>
+nmap <Leader>' :FzfFiles<CR>
+nmap <Leader>t :FzfBTags<CR>
+nmap <Leader>T :FzfTags<CR>
+map <leader>/ :FzfRg<CR>
+autocmd FileType fzf tmap <buffer> <esc> <c-g>
 
 " sessions
 let g:session_dir = $HOME . "/.config/nvim/sessions/"
