@@ -6,7 +6,9 @@ setopt AUTO_CD
 HISTFILE=~/.zsh_history
 HISTSIZE=5000
 SAVEHIST=10000
-setopt appendhistory inc_append_history share_history
+setopt appendhistory inc_append_history share_history 
+setopt hist_find_no_dups hist_ignore_dups
+setopt hist_ignore_space
 bindkey -v
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
