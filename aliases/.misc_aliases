@@ -55,6 +55,10 @@ alias riot-web="qutebrowser ':open -w https://riot.im/app/#'"
 
 alias https="http --default-scheme=https"
 
+read_all_mail() {
+    find "$MAIL" -type f | grep -vE ',[^,]*S[^,]*$' | xargs -I{} bash -c 'mv {} $(echo {} | sed "s/new/cur/; s/2,$/2,S/")'
+}
+
 copy_dotfiles() {
     [[ -z "$1" ]] && echo "You need to provide a ssh hostname!" && return
     server="$1"
