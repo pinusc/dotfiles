@@ -1,20 +1,22 @@
 #!/bin/zsh
-lock="/home/pinusc/.config/lock.png"
-lockDim="256x256"
-scrot -d 0 /tmp/screen.png
-# convert /tmp/screenshot.png -blur 0x5 /tmp/screenshotblur.png &> /tmp/log1
-convert /tmp/screen.png -scale 5% -scale 2000% /tmp/screen.png
-# convert /tmp/screen.png -blur 0x5 /tmp/screen.png
-geom=$(xrandr | fgrep '*' | sed -n 's/\s*\([0-9]*x[0-9]*\).*/\1/p' | sed -n 's/x/ /p')
-echo "$geom" | read X Y
-echo $lockDim | sed -n 's/x/ /p' | read x y
-x=$(( X/2 - x/2 ))
-y=$(( Y/2 - y/2 ))
-convert /tmp/screen.png /etc/lock.png -geometry "+$x+$y" -composite -matte /tmp/screen.png
 
-# pkill panel
-i3lock -u -e -i /tmp/screen.png
-# panel &
+source "$HOME/bin/lib/colors.sh"
+i3lock -e -B=20 -k --indicator \
+    --bshlcolor="${base0A:1}ff" \
+    --keyhlcolor="${base0E:1}ff" \
+    --insidecolor="${base00:1}aa" \
+    --insidevercolor="${base0C:1}88" \
+    --insidewrongcolor="${base08:1}88" \
+    --ringcolor="${base0D:1}ff" \
+    --ringvercolor="${base0C:1}00" \
+    --ringwrongcolor="00000000" \
+    --timecolor="${base05:1}dd" \
+    --datecolor="${base05:1}bb"\
+    --verifcolor="${base0C:1}ff" \
+    --noinputtext="" \
+    --veriftext="" \
+    --wrongtext=""
+
 # trap "killall conky" EXIT
 # conky -c dotfiles/conkyrc2 &> /dev/null &
 
