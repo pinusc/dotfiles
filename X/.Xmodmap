@@ -15,3 +15,8 @@ add        mod4 = Super_L Super_R
 keycode          78 = Caps_Lock
 clear lock
 keysym 0x2d = minus underscore endash endash emdash emdash
+keycode 38 = a A NoSymbol NoSymbol 0xe0 0xe0
+keycode 26 = e E NoSymbol NoSymbol 0xe8 0xe9
+keycode 31 = i I NoSymbol NoSymbol 0xec 0xec
+keycode 32 = o O NoSymbol NoSymbol 0xf2 0xf2
+keycode 30 = u U NoSymbol NoSymbol 0xf9 0xf9
