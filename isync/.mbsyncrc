@@ -1,0 +1,263 @@
+IMAPAccount colby
+# Address to connect to
+Host imap.gmail.com
+User gstell23@colby.edu
+PassCmd "pass school/colby.edu"
+# To store the password in an encrypted file use PassCmd instead of Pass
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+#
+# Use SSL
+SSLType IMAPS
+# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+#CertificateFile ~/.cert/imap.gmail.com.pem
+#CertificateFile ~/.cert/Equifax_Secure_CA.pem
+
+IMAPStore colby-remote
+Account colby
+
+MaildirStore colby-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/mail/colby/
+Inbox ~/mail/colby/inbox
+
+Channel colby-default
+Master :colby-remote:
+Slave :colby-local:
+# Exclude everything under the internal [Gmail] folder, except the interesting folders
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/All Mail"
+Patterns "INBOX"
+# Or include everything
+#Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Slave
+
+Channel colby-sent
+Master :colby-remote:"[Gmail]/Sent Mail"
+Slave :colby-local:"sent"
+Create Slave
+
+Channel colby-all
+Master :colby-remote:"[Gmail]/All Mail"
+Slave :colby-local:"all"
+Create Slave
+
+Channel colby-archive
+Master :colby-remote:"Archived Mail"
+Slave :colby-local:"archive"
+Create Slave
+
+Channel colby-intl
+Master :colby-remote:"International"
+Slave :colby-local:"intl"
+Create Slave
+
+Channel colby-intl
+Master :colby-remote:"Classes"
+Slave :colby-local:"classes"
+Create Slave
+
+Channel colby-trash
+Master :colby-remote:"[Gmail]/Trash"
+Slave :colby-local:"trash"
+Create Slave
+
+Channel colby-spam
+Master :colby-remote:"[Gmail]/Spam"
+Slave :colby-local:"spam"
+Create Slave
+
+Channel colby-drafts
+Master :colby-remote:"[Gmail]/Drafts"
+Slave :colby-local:"drafts"
+Create Both
+
+Group colby
+Channel colby-sent
+Channel colby-all
+Channel colby-drafts
+Channel colby-spam
+Channel colby-trash
+
+# Save the synchronization state files in the relevant directory
+SyncState *
+
+IMAPAccount gmail
+# Address to connect to
+Host imap.gmail.com
+User giuseppe.stelluto
+PassCmd "pass email/google.com@giuseppe.stelluto"
+# To store the password in an encrypted file use PassCmd instead of Pass
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+#
+# Use SSL
+SSLType IMAPS
+# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+#CertificateFile ~/.cert/imap.gmail.com.pem
+#CertificateFile ~/.cert/Equifax_Secure_CA.pem
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/mail/gmail/
+Inbox ~/mail/gmail/inbox
+
+Channel gmail-default
+Master :gmail-remote:
+Slave :gmail-local:
+# Exclude everything under the internal [Gmail] folder, except the interesting folders
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/All Mail"
+Patterns "INBOX"
+# Or include everything
+#Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Slave
+
+Channel gmail-sent
+Master :gmail-remote:"[Gmail]/Sent Mail"
+Slave :gmail-local:"sent"
+Create Slave
+
+Channel gmail-all
+Master :gmail-remote:"[Gmail]/All Mail"
+Slave :gmail-local:"all"
+Create Slave
+
+Channel gmail-trash
+Master :gmail-remote:"[Gmail]/Trash"
+Slave :gmail-local:"trash"
+Create Slave
+
+Channel gmail-spam
+Master :gmail-remote:"[Gmail]/Spam"
+Slave :gmail-local:"spam"
+Create Slave
+
+Group gmail
+Channel gmail-sent
+Channel gmail-all
+Channel gmail-drafts
+Channel gmail-spam
+Channel gmail-trash
+
+# Save the synchronization state files in the relevant directory
+SyncState *
+
+IMAPAccount gstelluto
+# Address to connect to
+Host mail.gstelluto.com
+User pinusc
+PassCmd "pass servers/sofronia/pinusc"
+# To store the password in an encrypted file use PassCmd instead of Pass
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+#
+# Use SSL
+SSLType IMAPS
+# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore gstelluto-remote
+Account gstelluto
+
+MaildirStore gstelluto-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/mail/gstelluto/
+Inbox ~/mail/gstelluto/inbox
+
+Channel gstelluto-default
+Master :gstelluto-remote:
+Slave :gstelluto-local:
+Patterns "INBOX"
+Create Slave
+
+Channel gstelluto-sent
+Master :gstelluto-remote:"Sent"
+Slave :gstelluto-local:"sent"
+Create Slave
+
+Channel gstelluto-all
+Master :gstelluto-remote:"Junk E-mail"
+Slave :gstelluto-local:"spam"
+Create Slave
+
+Channel gstelluto-trash
+Master :gstelluto-remote:"Trash"
+Slave :gstelluto-local:"trash"
+Create Slave
+
+Channel gstelluto-spam
+Master :gstelluto-remote:"Archive"
+Slave :gstelluto-local:"archive"
+Create Slave
+
+Channel gstelluto-drafts
+Master :gstelluto-remote:"Drafts"
+Slave :gstelluto-local:"drafts"
+Create Both
+
+
+Group gstelluto
+Channel gstelluto-sent
+Channel gstelluto-all
+Channel gstelluto-drafts
+Channel gstelluto-spam
+Channel gstelluto-trash
+
+# Save the synchronization state files in the relevant directory
+SyncState *
+
+IMAPAccount logins
+# Address to connect to
+Host mail.gstelluto.com
+User logins
+PassCmd "pass servers/sofronia/logins"
+SSLType IMAPS
+
+IMAPStore logins-remote
+Account logins
+
+MaildirStore logins-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/mail/logins/
+Inbox ~/mail/logins/inbox
+
+Channel logins-default
+Master :logins-remote:
+Slave :logins-local:
+Patterns "INBOX"
+Create Slave
+
+Channel logins-sent
+Master :logins-remote:"Sent"
+Slave :logins-local:"sent"
+Create Slave
+
+Channel logins-all
+Master :logins-remote:"Junk E-mail"
+Slave :logins-local:"spam"
+Create Slave
+
+Channel logins-trash
+Master :logins-remote:"Trash"
+Slave :logins-local:"trash"
+Create Slave
+
+Channel logins-spam
+Master :logins-remote:"Archive"
+Slave :logins-local:"archive"
+Create Slave
+
+Group logins
+Channel logins-sent
+Channel logins-all
+Channel logins-spam
+Channel logins-trash
+
+SyncState *
