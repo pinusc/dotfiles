@@ -14,6 +14,12 @@ super + {_,shift} + w
 super + t
 	bspc desktop -l next
 
+super + ctrl + alt + p
+	bspc node -t \~pseudo_tiled
+
+super + shift + t
+	bspc node -t \~pseudo_tiled
+
 #equalize area
 super + b
 	bspc node @/ -B 
@@ -105,11 +111,6 @@ super + alt + {_,shift} + {grave,1-9,0}
 super + shift + {o,p}
 	bspc desktop -R {270,90}
 
-super + ctrl + alt + p
-	bspc node -t \~pseudo_tiled
-super + shift + t
-	bspc node -t \~pseudo_tiled
-
 
 super + ctrl + {Left,Down,Up,Right}
 	bspc node -p {\~west,\~south,\~north,\~east}
@@ -127,11 +128,12 @@ super + {_,shift} + u
     ~/.config/bspwm/misc/toggle {hide,show}
     
 # wm independent hotkeys
-
+super + alt + w; o
+  bin/util/open_weechat_ssh_url.sh
 
 #lock 
-super + shift + Delete
-  bin/lock
+{super + shift + Delete,XF86ScreenSaver}
+  bin/util/lock
 
 #un/hide conky
 super + q
@@ -141,8 +143,14 @@ super + q
 super + Insert
   ~/bin/util/toggle_dvorak.sh
 
+shift + Shift_R
+  ~/bin/util/toggle_dvorak.sh
+
 super + Return
 	urxvt
+
+super + {ctrl,shift} + Return
+    ~/bin/util/termquaker.sh --keep
 
 super + space
     ~/bin/dmenu/launcher
@@ -180,6 +188,9 @@ XF86MonBrightness{Up,Down}
 XF86Audio{Raise,Lower}Volume
   #amixer -q set Master 5%{+,-}
   change_volume.sh {increase, decrease} 5
+
+XF86AudioMute
+  pamixer -t
 
 XF86AudioPlay
   mpc toggle
