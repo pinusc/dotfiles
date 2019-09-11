@@ -12,7 +12,7 @@ init() {
     source api_keys.sh
     source modules.sh
     source settings.sh
-    bspc config -m "^1" top_padding $(( PANEL_HEIGHT + PANEL_GAP + 1))
+    bspc config -m "$MAIN_MONITOR" top_padding $(( PANEL_HEIGHT + PANEL_GAP + 1))
     . panel_colors.sh light
     CLOCKFILE=$(mktemp /tmp/clockfile.XXXX)
     PANEL_FIFO=$(mktemp -u /tmp/panel_fifo.XXXX)
@@ -44,15 +44,15 @@ loop() {
         [[ -n ${has_battery+x} ]] && battery &
         [[ -n ${has_pulse+x} ]] && pulse_volume &
         pcheck_pomodoro &
-        [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
-        clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
         if (( i == 0 )); then
            wallpaper &
         fi
         if (( i % 10 == 0 )); then
             network &
+            [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
         fi
         if (( i % 60 == 0 )); then
+            clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
             calendar &
             mail &
         fi
@@ -72,7 +72,7 @@ main() {
     init
     loop
     PANEL_WM_NAME="bar_wmname"
-    . panel_bar.sh 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP}+${PANEL_GAP}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
+    . panel_bar.sh 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP_X}+${PANEL_GAP_Y}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
     # Depending on the font/platform used, add -o -4 or so to shuift the text up
     # Not necessary with FontAwesome.ttf (4.7.0) and Gohu GohuFont ttf (through AUR)
 

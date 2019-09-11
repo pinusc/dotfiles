@@ -4,9 +4,21 @@ export TMPDIR=$(mktemp -d)
 dim=$(xrandr | awk '/.*primary/ { print $4; exit }')
 dimx=${dim%x*}
 export PANEL_GAP=$(bspc config window_gap)
+if [[ $(hostname -s) = mandricardo ]]; then
+    export MAIN_MONITOR="LVDS1"
+else
+    export MAIN_MONITOR="HDMI1"
+fi
+monitor_pos=$(xrandr --listactivemonitors | grep '^ 0' | \
+    cut -d' ' -f4 | cut -d+ -f2)
+
+export PANEL_GAP_X=$(( monitor_pos + PANEL_GAP ))
+export PANEL_GAP_Y=$PANEL_GAP
+
+echo "$PANEL_GAP_X"
 export PANEL_WIDTH=$(( dimx - 2 * PANEL_GAP))
 FONT_SIZE=11
-export PANEL_HEIGHT=$(( FONT_SIZE * 4 ))
+export PANEL_HEIGHT=$(( FONT_SIZE * 35 / 10 ))
 export PANEL_FONT_FAMILY="Gohu GohuFont:size=$FONT_SIZE"
 export ICON_FONT="GohuFont Nerd Font:size=$FONT_SIZE"
 export dzencommand_music="$HOME/bin/panel/dzen2/scripts/mpdzen"
