@@ -11,6 +11,7 @@ Plug 'zchee/deoplete-jedi'
 Plug 'carlitux/deoplete-ternjs'
 Plug 'clojure-vim/async-clj-omni'
 Plug 'Shougo/neco-syntax'
+Plug 'artur-shaik/vim-javacomplete2'
 " for global config
 Plug 'editorconfig/editorconfig-vim'
 
@@ -21,8 +22,6 @@ Plug 'junegunn/fzf.vim'
 " Commenter
 Plug 'tpope/vim-commentary'
 
-Plug 'dhruvasagar/vim-table-mode'
-
 " Code snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -32,6 +31,10 @@ Plug 'guns/vim-clojure-static', {'for': 'clojure'}
 Plug 'tpope/vim-fireplace', {'for': 'clojure'}
 " Bundle 'kien/rainbow_parentheses.vim'
 Plug 'tpope/vim-leiningen', {'for': 'clojure'}
+
+Plug 'jceb/vim-orgmode'
+Plug 'vim-scripts/utl.vim' " Universal Text Linking
+Plug 'dhruvasagar/vim-table-mode'
 
 """ Prose
 Plug 'junegunn/goyo.vim'
@@ -160,6 +163,11 @@ augroup make
     au!
     autocmd Filetype java set makeprg=javac\ %
     autocmd Filetype c set makeprg=make
+augroup END
+
+augroup complete
+    au!
+    autocmd FileType java setlocal omnifunc=javacomplete#Complete
 augroup END
 
 let g:pencil#conceallevel = 0
