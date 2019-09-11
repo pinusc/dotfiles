@@ -1,5 +1,6 @@
 export EDITOR='nvim'
 export VISUAL='nvim'
+export MAIL="$HOME/mail"
 export PAGER='less'
 export BROWSER='/usr/bin/qutebrowser'
 # export TERM="rxvt-unicode-256color"
