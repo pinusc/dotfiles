@@ -87,7 +87,7 @@ bspc desktop -f \^6 &
 
 #=============================== VIDEO SETTINGS ================================
 
-nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +1440+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}" &
+# nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +1440+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}" &
 compton -bcG & # backhround, draw shadows, not on panel
 
 #==================================== XORG =====================================
@@ -109,6 +109,6 @@ redshift -t 5500:3700 &
 # clipmenud &
 sxhkd &
 panel &
-bspc config -m 1 top_padding 39 &
+# bspc config -m 1 top_padding 39 &
 mpd &
 music_player &
