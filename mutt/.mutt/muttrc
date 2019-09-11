@@ -4,6 +4,9 @@ color index magenta default "~N"
 color index blue default "~T"
 color index red default "~D"
 
+set query_command = "khard email --parsable" 
+macro index,pager A "<pipe-message>khard add-email<return>" "add the sender email address to khard"
+
 set folder           = ~/mail                # mailbox location
 set alias_file       = ~/.mutt/alias         # where to store aliases
 set header_cache     = ~/.mutt/cache/headers # where to store headers
@@ -18,9 +21,21 @@ set signature        = ~/.mutt/sig           # my signature file
 # set header_cache=~/.cache/mutt
 
 set sendmail="/usr/bin/sendmail"
-set from="Giuseppe Stelluto <giuseppe@gstelluto.com>"
+set realname="Giuseppe Stelluto"
+
+set from="giuseppe@gstelluto.com"
+
+folder-hook . set from="giuseppe@gstelluto.com"
+folder-hook . set copy=no
+folder-hook . set record="+gstelluto/sent"
+
+# folder-hook +colby* set from="gstell23@colby.edu"
+folder-hook +colby* set from="giuseppe.stelluto@colby.edu"
+folder-hook +colby* set copy=no
+folder-hook . set copy=no
+
+
 set edit_headers=yes
-set record="~/mail/giuseppe@gstelluto.com/Sent"
 
 # Basic Options --------------------------------------
 set wait_key = no        # shut up, mutt
@@ -61,46 +76,42 @@ hdr_order from: to: cc: date: subject:  # and in this order
 # Account Settings -----------------------------------
 
 # Default inbox.
-set spoolfile = "+giuseppe@gstelluto.com/INBOX"
+set spoolfile = "+colby/inbox"
 
 # Alternate email addresses.
-alternates giuseppe@gstelluto.com giuseppe.stelluto@gmail.com gstell@protonmail.com gstelluto@uwcchina.org logins@gstelluto.com
+alternates giuseppe@gstelluto.com giuseppe.stelluto@gmail.com gstell@protonmail.com gstelluto@uwcchina.org logins@gstelluto.com gstell23@colby.edu giuseppe.stelluto@colby.edu
 
-# Mailboxes to show in the sidebar.
-mailboxes +giuseppe@gstelluto.com \
-          +giuseppe@gstelluto.com/INBOX \
-          +giuseppe@gstelluto.com/Sent \
-          +giuseppe@gstelluto.com/Archive \
-          +giuseppe@gstelluto.com/Trash \
-          +logins@gstelluto.com \
-          +logins@gstelluto.com/INBOX \
-          +logins@gstelluto.com/Archive \
-          +logins@gstelluto.com/Trash \
-          +giuseppe.stelluto@gmail.com \
-          +giuseppe.stelluto@gmail.com/INBOX \
-          +giuseppe.stelluto@gmail.com/Primary \
-          +giuseppe.stelluto@gmail.com/[Gmail].Archive \
-          +giuseppe.stelluto@gmail.com/[Gmail].Drafts \
-          "+giuseppe.stelluto@gmail.com/[Gmail].Sent Mail" \
-          +gstelluto@uwcchina.org \
-          +gstelluto@uwcchina.org/INBOX \
-          +gstelluto@uwcchina.org/Archive \
-          +gstelluto@uwcchina.org/Archives \
-          +gstelluto@uwcchina.org/Archives.2017 \
-          +gstelluto@uwcchina.org/Archives.Sent \
-          "+gstelluto@uwcchina.org/Archives.Sent Items" \
+mailboxes +colby \
+          +colby/inbox \
+          +colby/classes \
+          +colby/intl \
+          +colby/sent \
+          +colby/spam \
+          +gstelluto \
+          +gstelluto/inbox \
+          +gstelluto/sent \
+          +gstelluto/spam \
+          +logins \
+          +logins/inbox \
+          +logins/sent \
+          +logins/spam \
+          +gmail \
+          +gmail/inbox \
+          +gmail/sent \
+          +gmail/spam \
 
 # by default, deleted mail will go in ~/mail/trash
 folder-hook . set trash = +trash
 # but for these accounts, it will go in the correct trash folder
-folder-hook +giuseppe@gstelluto.com* set trash = +giuseppe@gstelluto.com/Trash
-folder-hook +logins@gstelluto.com* set trash = +logins@gstelluto.com/Trash
-folder-hook +giuseppe.stelluto@gmail.com* set trash = "+giuseppe.stelluto@gmail.com/[Gmail].Trash"
+folder-hook +gstelluto* set trash = +gstelluto/trash
+folder-hook +logins* set trash = +gstelluto/trash
+folder-hook +colby* set trash = +gstelluto/trash
+folder-hook +gmail* set trash = +gstelluto/trash
 
-# Other special folders.
-set mbox      = "+giuseppe@gstelluto.com/Trash"
-set postponed      = "+giuseppe@gstelluto.com/Drafts"
-
+set postponed = "+drafts"
+folder-hook +gstelluto* set postponed = "+gstelluto/drafts"
+folder-hook +logins* set postponed = "+gstelluto/drafts"
+folder-hook +colby* set postponed = "+colby/drafts"
 
 # Index View Options ---------------------------------
 set date_format = "%d/%m"

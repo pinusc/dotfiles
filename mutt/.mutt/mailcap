@@ -1,2 +1,3 @@
-text/html; qutebrowser %s &; test=test -n "$DISPLAY"; needsterminal;
+text/html; qutebrowser %s; needsterminal; nametemplate=%s.html
 text/html; cat %s | pipe2w3m.sh; copiousoutput;
+application/pdf; evince %s;
