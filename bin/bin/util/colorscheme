@@ -18,6 +18,7 @@ colors.sh --print > "$THEME_SAVE"  # colors.sh needs .base16_theme
 
 # eval "$script"
 generate_xresources.sh
+generate_conkyrc.sh
 [ -e /tmp/emacs1000/server ] && emacsclient -s /tmp/emacs1000/server -e "(load-theme '${script_name} t)"
 { killall panel; panel & } 2>/dev/null
 pgrep qutebrowser &>/dev/null && qutebrowser ':config-source'

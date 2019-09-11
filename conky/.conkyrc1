@@ -38,7 +38,7 @@ conky.config = {
     draw_outline = false,
     draw_shades = false,
     use_xft = true,
-    font = 'Gohu gohufont:size=14',
+    font = 'Gohu gohufont:size=11',
     gap_x = 10,
     gap_y = 52,
     minimum_height = 966,
@@ -65,7 +65,7 @@ conky.config = {
 
 conky.text = [[
 #${scroll 32 $nodename - $sysname $kernel on $machine | }
-pinusc${color 8b9dc3}@pensiero-profondo${color}
+pinusc${color 8b9dc3}@$nodename_short${color}
 $hr
 ${color 8b9dc3}Uptime:
     $color $uptime
