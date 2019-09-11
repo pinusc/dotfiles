@@ -2,6 +2,7 @@
 
 font="Source Code Pro for Powerline-12"
 font="-gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*"
+font="Gohu Gohufont:size=14"
 x=$(xdotool getmouselocation | egrep -oh "[0-9]+" | head -n 1)
 #w=$(( $x < 1366 ? 1360 : 1440 ))
 #h=$(( $x < 1366 ? 768 : 900 ))
