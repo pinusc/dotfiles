@@ -79,3 +79,26 @@ move_all_output() {
     inputs=$(pactl list short sink-inputs | cut -f1)
     echo "$inputs" | xargs -I{} pactl move-sink-input {} $1
 }
+
+fan(){
+    echo "level $1" | sudo tee /proc/acpi/ibm/fan
+}
+
+alias gamma_vga="xgamma -ggamma 0.58 -bgamma 0.7 -rgamma 0.58"
+
+# for mnemonics/completion
+alias xgamma_vga=gamma_vga
+
+alias gamma_laptop="xgamma -rgamma 0.78 -bgamma 0.65 -ggamma 0.72"
+
+tldr() {
+    curl -s "cheat.sh/$(echo -n "$*" | jq -sRr @uri)"
+}
+
+tcl_tv() {
+    xrandr --newmode "1366x768"x0.0   69.30  1366 1404 1426 1436  768 771 777 803 -hsync -vsync
+    xrandr --addmode HDMI2 "1366x768"x0.0
+    xrandr --output HDMI2 --left-of LVDS1 --mode "1366x768"x0.0 --gamma 1 --output LVDS1 --primary
+    killall panel; panel &
+    ~/bin/util/wallpaper/random_wallpaper.sh
+}
