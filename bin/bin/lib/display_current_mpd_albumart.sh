@@ -26,17 +26,20 @@ do_display() {
         if [[ -e "${album_path}/cover.jpg" ]]; then
             cp "$album_path/cover.jpg" "$fname"
         else
+            echo "$artist" 
+            echo "$album"
+            echo "$stub"
             ~/bin/panel/dzen2/scripts/cover_fetcher "$artist" "$album" "$stub" &> /dev/null
         fi
 
-        if [[ ! -e "$fname" ]]; then
-            curl -L "https://source.unsplash.com/random/500x500/" >"$fname" 2>/dev/null
-        fi
+        # if [[ ! -e "$fname" ]]; then
+        #     curl -L "https://source.unsplash.com/random/500x500/" >"$fname" 2>/dev/null
+        # fi
     fi
 
     img-display.sh "$fname"
 }
-do_display &>/dev/null
+do_display 
 
 if [[ "$1" = "-c" ]]; then
     while true; do
