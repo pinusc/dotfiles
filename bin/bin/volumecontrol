@@ -1,0 +1,11 @@
+#!/bin/bash
+
+AMOUNT=5
+
+if [[ "$1" == up ]]; then
+    ponymix increase "$AMOUNT"
+elif [[ "$1" == down ]]; then
+    ponymix decrease "$AMOUNT"
+else
+    echo "Invalid argument: $1"
+fi
