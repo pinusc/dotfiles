@@ -66,5 +66,4 @@ rofi.color-normal: base00, base05, base00, base01, base05
 rofi.color-active: base00, base05, base00, base01, base05
 rofi.color-urgent: base00, base05, base00, base01, base05
 rofi.monitor: -4
-rofi.matching: fuzzy
 rofi.font: Source Code Pro 11
