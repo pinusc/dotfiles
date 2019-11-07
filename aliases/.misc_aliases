@@ -16,6 +16,13 @@ alias screensaver_off="xset s off;xset -dpms;xset s noblank"
 [ -f "/usr/bin/nvim" ] && alias vim="/usr/bin/nvim"
 alias :e=em
 
+#systemctl aliases
+alias sysa="sudo systemctl start"
+alias syso="sudo systemctl stop"
+alias syss="sudo systemctl status"
+alias joxe="sudo journalctl -xe"
+alias joxeu="sudo journalctl -xe --unit"
+
 alias did="vim +'normal Go' +'r!date' ~/docs/did.txt"
 alias mail="mail -r giuseppe@gstelluto.com"
 >&/dev/null hash neomutt && alias mutt='neomutt'
