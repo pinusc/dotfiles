@@ -1,0 +1,6 @@
+[Unit]
+Description=Tarsnap Backup for docs
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/tarsnap/tarsnap-backup.sh
