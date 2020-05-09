@@ -136,18 +136,18 @@ while read -r line ; do
             auto_mon=1
             if [[ -n "$auto_mon" ]]; then
                 line=$(echo "$line" | sed 's/^W//; s/^m.*:M/M/; s/M\(.*\):m.*/M\1/')
-                echo "line: $line" >&2
+                # echo "line: $line" >&2
                 set -- $line
             else
                 case $current_monitor in  # cut line to consider only interested monitor
                     1)
                         line=${line:0:43}  #only consider 1st monitor 
-                        echo "line: $line" >&2
+                        # echo "line: $line" >&2
                         set -- ${line#?}
                         ;;
                     2)
                         line=${line:38}  #only consider 1st monitor 
-                        echo "line: $line" >&2
+                        # echo "line: $line" >&2
                         set -- ${line}
                         ;;
                 esac
@@ -156,7 +156,7 @@ while read -r line ; do
             while [ $# -gt 0 ] ; do
                 item=$1
                 name=${item#?}
-                echo "item: $1" >&2
+                # echo "item: $1" >&2
                 case $item in
                     M*)
                         if [ $num_mon -gt 1 ] ; then
@@ -255,7 +255,8 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
+            # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
         ;;
         2)
             echo -e "%{l}${wm_infos}%{c}${music}%{r}${ip}"

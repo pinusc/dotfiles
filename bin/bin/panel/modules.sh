@@ -15,7 +15,7 @@ clock() {
         clcommand=bash-fuzzy-clock
     fi
     cloutput=$($clcommand)
-    echo "C%{A:echo $clother > $1:}$IC_CLOCK$cloutput%{A}";
+    echo "C%{A:echo $clother > $1:}$IC_CLOCK $cloutput%{A}";
 }
 
 calendar() {
@@ -42,9 +42,10 @@ getip() {
     sleep 10
 }
 
-mail() {
-    count=$(find "$MAILDIR" -type f | grep -cvE ',[^,]*S[^,]*$')
-    count_important=$(find "$MAILDIR_IMPORTANT" -type f | grep -cvE ',[^,]*S[^,]*$')
+mailinfo() {
+    # count=$(find "$MAILDIR" -type f | grep -cvE ',[^,]*S[^,]*$')
+    count=$(find "$MAILDIR" -type d -name 'new' | xargs -I{} find {} -type f | wc -l)
+    count_important=$(find "$MAILDIR_IMPORTANT" -type d -name 'new' | xargs -I{} find {} -type f | wc -l)
     if [ "$count_important" -gt 0 ]; then
         count_important="$count_important "
     else
@@ -101,6 +102,7 @@ weather() {
     # So when printf is given a decimal number using a point, it gives error and fucks up
     # Setting LC_NUMERIC to C ensures this never happens
     LC_NUMERIC="C"
+    [[ "$temp" = null ]] && return 1
     temperature=$(printf "%.1f" "$temp")
     icon=""
     color=""  # depending on temperature, can be blue, yellow or red
@@ -149,7 +151,6 @@ weather() {
 # wifi
 network() {
     interface="$(ip link | grep -E '(wl|en)p.*s.*:' | grep 'state UP' | awk '{ print $2 }')"
-    echo $interface
     network_type="${interface:0:2}"
     check_connection 54.37.204.227
     case $? in
@@ -255,7 +256,8 @@ pcheck_pomodoro() {
 #battery
 battery() {
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
-    bcharge=$(acpi | sed "s/[^,]\\+\?, //" | sed "s/%.\\+//" | sed "s/%//")
+    raw_charge=$(acpi | sed "s/[^,]\\+\?, //; s/%.\\+//; s/%//")
+    bcharge=$(( (raw_charge - BATTERY_ZERO) * 100 / (100 - BATTERY_ZERO) ))
     if [[ -z $power ]]; then
         return 1
     elif [[ $power = "on" ]]; then

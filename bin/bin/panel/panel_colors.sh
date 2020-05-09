@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/bin/lib/colors.sh
+source "$HOME"/bin/lib/colors.sh
 COLOR_BLUE="#FF$base0D_nohash"
 COLOR_RED="#FF$base08_nohash"
 COLOR_YELLOW="#FF$base0A_nohash"
@@ -54,7 +54,7 @@ COLOR_POMODORO_ACTIVE="$COLOR_RED"
 COLOR_POMODORO_PAUSE="$COLOR_GREEN"
 COLOR_POMODORO_INACTIVE="$COLOR_RED"
 
-COLOR_CLOCK="$COLOR_POMODORO_PAUSE"
+COLOR_CLOCK="$COLOR_GREEN"
 COLOR_DATE="#FF$base0A_nohash"
 COLOR_BATTERY_FULL="#FF$base0B_nohash"
 COLOR_BATTERY_MEDIUM="#FF$base0A_nohash"

@@ -15,7 +15,6 @@ monitor_pos=$(xrandr --listactivemonitors | grep '^ 0' | \
 export PANEL_GAP_X=$(( monitor_pos + PANEL_GAP ))
 export PANEL_GAP_Y=$PANEL_GAP
 
-echo "$PANEL_GAP_X"
 export PANEL_WIDTH=$(( dimx - 2 * PANEL_GAP))
 FONT_SIZE=11
 export PANEL_HEIGHT=$(( FONT_SIZE * 35 / 10 ))
@@ -25,6 +24,7 @@ export dzencommand_music="$HOME/bin/panel/dzen2/scripts/mpdzen"
 export dzencommand_calendar="zsh $HOME/bin/panel/dzen2/calendar"
 export dkeyboard="$HOME/bin/dkeyboard"
 export MAILDIR="$HOME/mail"
-export MAILDIR_IMPORTANT="$HOME/mail/giuseppe@gstelluto.com"
+export MAILDIR_IMPORTANT="$HOME/mail/colby"
 export MAILCOMMAND='emacsclient -nqc --socket-name=/tmp/emacs1000/server -e "(mu4e)"'
 export FETCHMAILCOMMAND='systemctl --user kill --signal=SIGUSR1 offlineimap'
+export BATTERY_ZERO='7'

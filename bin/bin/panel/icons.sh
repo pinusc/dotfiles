@@ -7,6 +7,7 @@ export IC_NOCONNECTION="\\uf05e"
 export IC_LOCK="\\uf023"
 export IC_UNLOCK="\\uf09c"
 
+export IC_CLOCK="\\uf64f"
 export IC_CALENDAR="\\uf073"
 export IC_VOLUME_MAX="\\uf028"
 export IC_VOLUME_MEDIUM="\\uf027"

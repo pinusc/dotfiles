@@ -1,4 +1,5 @@
 #! /bin/bash
+env > /tmp/envuser
 
 if [ "$(pgrep -cx panel)" -gt 1 ] ; then
     echo "The panel is already running." 
@@ -12,6 +13,7 @@ init() {
     source api_keys.sh
     source modules.sh
     source settings.sh
+    echo $(( PANEL_HEIGHT + PANEL_GAP + 1))
     bspc config -m "$MAIN_MONITOR" top_padding $(( PANEL_HEIGHT + PANEL_GAP + 1))
     . panel_colors.sh light
     CLOCKFILE=$(mktemp /tmp/clockfile.XXXX)
@@ -40,10 +42,12 @@ loop() {
     i=0
     while true; do
         keyboard &
-        [[ -n ${has_music+x} ]] && music &
-        [[ -n ${has_battery+x} ]] && battery &
-        [[ -n ${has_pulse+x} ]] && pulse_volume &
         pcheck_pomodoro &
+        if (( i % 3 == 0 )); then
+            [[ -n ${has_music+x} ]] && music &
+            [[ -n ${has_battery+x} ]] && battery &
+            [[ -n ${has_pulse+x} ]] && pulse_volume &
+        fi
         if (( i == 0 )); then
            wallpaper &
         fi
@@ -54,7 +58,7 @@ loop() {
         if (( i % 60 == 0 )); then
             clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
             calendar &
-            mail &
+            mailinfo &
         fi
         if (( i % 400 == 0 )); then
             test "$has_api_keys" && pollution &
@@ -72,7 +76,9 @@ main() {
     init
     loop
     PANEL_WM_NAME="bar_wmname"
-    . panel_bar.sh 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP_X}+${PANEL_GAP_Y}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
+    rm /tmp/log.txt
+    . panel_bar.sh 1 < "$PANEL_FIFO" | tee /tmp/log.txt | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP_X}+${PANEL_GAP_Y}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
+    # . panel_bar.sh 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP_X}+${PANEL_GAP_Y}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
     # Depending on the font/platform used, add -o -4 or so to shuift the text up
     # Not necessary with FontAwesome.ttf (4.7.0) and Gohu GohuFont ttf (through AUR)
 

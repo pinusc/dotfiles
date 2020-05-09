@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+WMNAME="urxvt-quaked"
+xid="/tmp/quaked.xid"
+pid=$(xdo pid -N "$WMNAME")
+pid=$(xdotool search --classname "$WMNAME" getwindowpid)
+
+if [ -z "$pid" ]; then
+    urxvt -name "$WMNAME" -g 130x48 &
+    exit 0
+fi
+
+id=$(xdotool search --classname "$WMNAME")
+
+state="$(xprop -id "$id" | awk -F: '/window state/{print $2;}' \
+    | tr -d ' ' | tr '[:upper:]' '[:lower:]')" 
+
+if [ "$state" = "normal" ]; then
+    xdotool search --classname "$WMNAME" windowunmap
+else
+    xdotool search --classname "$WMNAME" windowmap
+fi
