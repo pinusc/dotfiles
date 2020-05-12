@@ -2,6 +2,7 @@ alias upfont="sudo fc-cache -fv"
 alias cal="cal -m" # Monday it's always the first day of the week here!
 alias tmux="tmux -2"
 alias pingg="ping -a www.google.com"
+alias rsync="rsync --info=progress2"
 
 # Python aliases
 alias v="source venv/bin/activate"
@@ -11,15 +12,35 @@ alias setclip='xclip -selection c'
 alias getclip='xclip -selection clipboard -o'
 
 alias screensaver_off="xset s off;xset -dpms;xset s noblank"
+moviemode() {
+    xset s off
+    xset -dpms
+    xset s noblank
+    killall xautolock
+    systemctl --user stop mbsync.service
+    systemctl --user stop mbsync.timer
+    killall redshift
+}
 
 #fast edit shiortcuts
 [ -f "/usr/bin/nvim" ] && alias vim="/usr/bin/nvim"
 alias :e=em
+alias bc="bc -l"
 
 #systemctl aliases
 alias sysa="sudo systemctl start"
 alias syso="sudo systemctl stop"
 alias syss="sudo systemctl status"
+alias sysr="sudo systemctl restart"
+alias syse="sudo systemctl enable --now"
+
+alias usysa="systemctl --user start"
+alias usyso="systemctl --user stop"
+alias usyss="systemctl --user status"
+alias usysr="systemctl --user restart"
+alias usyse="systemctl --user enable --now"
+alias usys="systemctl --user"
+
 alias joxe="sudo journalctl -xe"
 alias joxeu="sudo journalctl -xe --unit"
 
@@ -71,12 +92,13 @@ copy_dotfiles() {
     server="$1"
     echo "Copying to: $server"
     [[ "${server: -1}" != ":" ]] && server="$1:"
-    rsync -vh ~/dotfiles/{bash,aliases,tmux}/.* "$server"
+    rsync -vh ~/dot/{bash,aliases,tmux}/.* "$server"
 }
 
 sync_dotfiles() {
     copy_dotfiles sofronia
     copy_dotfiles astolfo
+    copy_dotfiles weechat
     copy_dotfiles gurdulu
     copy_dotfiles hong.io
 }
@@ -98,6 +120,8 @@ alias xgamma_vga=gamma_vga
 
 alias gamma_laptop="xgamma -rgamma 0.78 -bgamma 0.65 -ggamma 0.72"
 
+alias cp_torrent="rsync -r --info=progress2 'astolfo.gstelluto.com:/var/lib/transmission-daemon/downloads/*' /data/movies"
+
 tldr() {
     curl -s "cheat.sh/$(echo -n "$*" | jq -sRr @uri)"
 }
@@ -109,3 +133,11 @@ tcl_tv() {
     killall panel; panel &
     ~/bin/util/wallpaper/random_wallpaper.sh
 }
+
+weechat="mosh weechat"
+
+alias c="source ~/bin/college/c"
+alias ccd="source ~/bin/college/ccd"
+alias syl="~/bin/college/syllabus"
+
+alias dmenu="rofi -dmenu"
