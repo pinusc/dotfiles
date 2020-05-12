@@ -8,6 +8,7 @@ URxvt*scrollBar:false
 !URxvt*font:-gohu-*-medium-*-*-*-11-*-*-*-*-*-*-*
  URxvt*font: \
     -gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*, \
+    xft: GohuFont Nerd Font:size=14, \
     xft: Source Code Pro:style=Italic:size=14, \
     xft: Symbola:size=11:antialias=false
 
