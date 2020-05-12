@@ -13,7 +13,7 @@ set -o vi
 umask 022
 
 
->&/dev/null hash fortune && fortune
+>/dev/null hash fortune && fortune
 
 bind -m vi-insert \C-l:clear-screen
 
@@ -29,8 +29,18 @@ green=$(tput setaf 2)
 blue=$(tput setaf 4)
 bold=$(tput bold)
 reset=$(tput sgr0)
-[[ $(uname -o) = Android ]] && hoststr="$(getprop net.hostname)" || hoststr='\h'
-PS1="\[$green$bold\]$hoststr\[$reset\] \[$blue$bold\]\w\[$reset\] \$ "
+
+if [[ -n "$TMUX" ]]; then
+    info='\u'
+else
+    if [[ $(uname -o) = Android ]]; then 
+        hoststr="$(getprop net.hostname)"
+    else
+        hoststr='\h'
+    fi
+    info="$hoststr"
+fi
+PS1="\[$green$bold\]$info\[$reset\] \[$blue$bold\]\w\[$reset\] \$ "
 unset hoststr
 
 # enable color support of ls and also add handy aliases
@@ -52,6 +62,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias ..='cd ..'
 
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
