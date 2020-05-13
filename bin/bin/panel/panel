@@ -41,35 +41,35 @@ loop() {
     } >/dev/null 2>&1
     i=0
     while true; do
-        keyboard &
-        pcheck_pomodoro &
+        keyboard 
+        # pcheck_pomodoro 
         if (( i % 3 == 0 )); then
-            [[ -n ${has_music+x} ]] && music &
-            [[ -n ${has_battery+x} ]] && battery &
-            [[ -n ${has_pulse+x} ]] && pulse_volume &
+            [[ -n ${has_music+x} ]] && music 
+            [[ -n ${has_battery+x} ]] && battery 
+            [[ -n ${has_pulse+x} ]] && pulse_volume 
         fi
         if (( i == 0 )); then
-           wallpaper &
+           wallpaper 
         fi
         if (( i % 10 == 0 )); then
-            network &
-            [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
+            network 
+            [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" 
         fi
         if (( i % 60 == 0 )); then
-            clock "$CLOCKFILE" & # Has to stay in 1s cycle for interactivity
-            calendar &
-            mailinfo &
+            clock "$CLOCKFILE" # Has to stay in 1s cycle for interactivity
+            calendar 
+            mailinfo 
         fi
         if (( i % 400 == 0 )); then
-            test "$has_api_keys" && pollution &
-            test "$has_api_keys" && weather &
+            test "$has_api_keys" && pollution 
+            test "$has_api_keys" && weather 
         fi
         i=$((i+1))
         # Just in case $i gets enormously large and causes problems. 
         # The value in brackets should be a multiple of the other cycles' values
         (( i >= 1600 )) && i=0
         sleep 1
-    done > "$PANEL_FIFO" &
+    done | tee "$PANEL_FIFO" &
 }
 
 main() {
