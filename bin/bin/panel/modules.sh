@@ -19,8 +19,8 @@ clock() {
 }
 
 calendar() {
-    url_comm="firefox calendar.google.com"
-    echo "D%{A:$dzencommand_calendar:}%{A3:$url_comm:}$IC_CALENDAR $(date +'%a %b %d')%{A}%{A}"
+    # echo "D%{A:$dzencommand_calendar:}$IC_CALENDAR $(date +'%a %b %d')%{A}"
+    echo "D$IC_CALENDAR $(date +'%a %b %d')"
 }
 
 pulse_volume() {
@@ -52,7 +52,7 @@ mailinfo() {
         count_important=""
     fi
     if [ "$count" -gt 0 ]; then
-        echo "Mf%{A3:$FETCHMAILCOMMAND:}%{A:$MAILCOMMAND:}$IC_MAIL $count_important$count%{A}${A}"
+        echo "Mf%{A3:$FETCHMAILCOMMAND:}%{A:$MAILCOMMAND:}$IC_MAIL $count_important$count%{A}%{A}"
     else
         echo "M0%{A3:$FETCHMAILCOMMAND:}%{A:MAILCOMMAND:}$IC_MAIL%{A}%{A}"
     fi
@@ -180,9 +180,8 @@ network() {
 music() {
     {
         if command -v mpris && [[ -n $(mpris --list ) ]]; then
-            echo "mpris"
-            player=$(mpris --list | awk -F '.' '{ print $4; }')
-            meta="$(mpris $player meta)"
+            player=$(mpris --list | awk -F '.' '{ print $4; }' | grep -v chromium | head -n 1)
+            meta="$(mpris "$player" meta)"
             readarray -t metarray <<< "$meta"
             for l in "${!metarray[@]}"; do
                 # lines are of the form mpris:$propname=$prop
@@ -194,11 +193,11 @@ music() {
                 eval "${propname}=\"${value}\""
             done
             if [[ $(mpris "$player" get player/status) = "Paused" ]]; then
-                command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player play:}$IC_MUSIC_PLAY%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
+                music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player play:}$IC_MUSIC_PLAY%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
             else
-                command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player pause:}$IC_MUSIC_PAUSE%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
+                music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player pause:}$IC_MUSIC_PAUSE%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
             fi
-            [[ "$player" = spotify ]] && command="${command} $IC_SPOTIFY"
+            [[ "$player" = spotify ]] && music_command="${command} $IC_SPOTIFY"
 
         elif command -v mpc; then
             title=$(mpc -f "%title%" | head -n1)
@@ -207,19 +206,19 @@ music() {
             fi
             if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
                 if mpc status | grep -q "paused"; then
-                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                    music_command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
                 else
-                    command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                    music_command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
                 fi
             fi
         fi
     } > /dev/null 2>&1
 
-    if [[ -n "$title" ]] && [[ -n "$command" ]]; then
+    if [[ -n "$title" ]] && [[ -n "$music_command" ]]; then
         if [ "${#title}" -gt 25 ]; then
             title="${title:0:25}..."
         fi
-        echo "R$command  %{A:$dzencommand_music:}$title%{A} "
+        echo "R$music_command  %{A:$dzencommand_music:}$title%{A} "
     fi
 }
 
@@ -300,7 +299,6 @@ wallpaper() {
 
 
 gpg_info () {
-    echo GPGINFO
     # If $1 is passed, it gets called as command after locking the agent.
     # This is useful e.g. for resetting gnome-keyring (with gnome-keyring-daemon -r -d)
     # if it contains the password
@@ -309,11 +307,11 @@ gpg_info () {
     # lists a bunch of information after the key grips. CACHED state is 1 or -
     # and it immediately precedes PROTECTION, which is either P, C or -
     # So if there's a 1 right before a [PC-], we know at least one key is unlocked
-    command="gpg-connect-agent 'reloadagent' /bye; $1"
-    if gpg-connect-agent 'keyinfo --list' /bye | grep -q -E "1 [PC-]"; then
+    gpg_command="gpg-connect-agent 'reloadagent' /bye; $1"
+    if gpg-connect-agent 'keyinfo --list' /bye 2>/dev/null | grep -q -E "1 [PC-]"; then
         icon="$IC_UNLOCK"
     else
         icon="$IC_LOCK"
     fi
-    echo "g%{A:$command:}$icon%{A}"
+    echo "g%{A:$gpg_command:}$icon%{A}"
 }
