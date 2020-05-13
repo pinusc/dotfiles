@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+WIDFILE="/tmp/quake-tabbed.wid"
+wid=$(<"$WIDFILE")
+urxvt -embed "$wid" &

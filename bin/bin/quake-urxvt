@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 
-WMNAME="urxvt-quaked"
-xid="/tmp/quaked.xid"
-pid=$(xdo pid -N "$WMNAME")
-pid=$(xdotool search --classname "$WMNAME" getwindowpid)
+WMNAME="quake-tab"
+WIDFILE="/tmp/quake-tabbed.wid"
+wid=$(xdotool search --classname "$WMNAME")
 
-if [ -z "$pid" ]; then
-    urxvt -name "$WMNAME" -g 130x48 &
+if [[ -z "$wid" ]]; then
+    wid=$(tabbed -n "$WMNAME" -d -g 900x600 )
+    echo "$wid" > "$WIDFILE"
+    quake-urxvt-newtab
     exit 0
 fi
 
-id=$(xdotool search --classname "$WMNAME")
-
-state="$(xprop -id "$id" | awk -F: '/window state/{print $2;}' \
+state="$(xprop -id "$wid" | awk -F: '/window state/{print $2;}' \
     | tr -d ' ' | tr '[:upper:]' '[:lower:]')" 
 
 if [ "$state" = "normal" ]; then
