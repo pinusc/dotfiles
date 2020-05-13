@@ -2,6 +2,7 @@ export EDITOR='nvim'
 export VISUAL='nvim'
 export MAIL="$HOME/mail"
 export PAGER='less'
+export PDF_VIEWER='zathura'
 export BROWSER='/usr/bin/qutebrowser'
 # export TERM="rxvt-unicode-256color"
 # export LESS='-F -g -i -M -R -S -w -X -z-4'
@@ -28,5 +29,9 @@ path=(
 )
 
 export GOPATH="$HOME/.local/share/go"
+export COOKIECUTTER_CONFIG="$XDG_CONFIG_HOME/cookiecutter"
 
 export BUP_DIR="$XDG_DATA_HOME/bup"
+
+export GPODDER_HOME="$HOME/.gpodder/"
+export GPODDER_DOWNLOAD_DIR="$HOME/music/podcasts"

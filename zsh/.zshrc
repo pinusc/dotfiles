@@ -4,11 +4,12 @@ fpath=(~/.completions $fpath)
 setopt AUTO_CD
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.zsh_history
-HISTSIZE=5000
-SAVEHIST=10000
-setopt appendhistory inc_append_history share_history 
-setopt hist_find_no_dups hist_ignore_dups
+HISTSIZE=10000
+SAVEHIST=20000
+setopt share_history
+setopt hist_find_no_dups hist_ignore_dups hist_ignore_all_dups
 setopt hist_ignore_space
+setopt hist_reduce_blanks
 bindkey -v
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall

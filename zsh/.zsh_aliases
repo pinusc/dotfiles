@@ -1,1 +1,3 @@
-source ~/.alias_*
+for file in ~/.alias_*; do
+    source "$file"
+done

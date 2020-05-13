@@ -24,8 +24,8 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 # export PATH="/usr/local/heroku/bin:$HOME/.dotfiles:$PATH"
 if [[ ! $DISPLAY && XDG_VTNR -eq 1 ]]; then
     # logverbose is useful for detecting Modelines
-    # exec startx -logverbose 20
-    exec startx
+    exec startx -logverbose 20
+    # exec startx
 fi
 
 # start tmux IFF the shell is remote 
@@ -46,3 +46,4 @@ if [[ "$SESSION_TYPE" = "remote/ssh" && -z "$TMUX" ]]; then
         exec tmux new
     fi
 fi
+
