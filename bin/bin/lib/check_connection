@@ -1,30 +1,59 @@
 #!/bin/bash
 
-# returns:
-# 0 if connected (ssl to $1 works)
-# 64 if no connection to $1 but dns lookup worked
-# 65 if dns dnsookup failed but there is connection to dns server
-# 66 if no dns server but conenction to gateway works
-# 1 if not at all connected
-test="$1"
-gateway="$2"
-nameserver="$3"
-[ -n "$test" ] || test=google.com
+# pass arguments through environment variables; 
+# for return codes check comments at end of file
+
+address="$ADDRESS"
+htmlgrep="$HTMLGREP"
+gateway="$GATEWAY"
+nameserver="$DNSSERVER"
+defaultip="1.1.1.1"
+[ -n "$address" ] || address=google.com
 [ -n "$gateway" ] || gateway=$(ip route | awk '/default via/{ print $3; }')
 [ -n "$nameserver" ] || nameserver=$(</etc/resolv.conf awk '/nameserver/{ print $2; exit }')
-checkssl=$(
-    netcat -zw1 "$test" 443 && echo | openssl s_client -connect "$test:443" 2>&1 | awk '
-handshake && $1 == "Verification" { if ($2=="OK") exit; exit 1 }
-$1 $2 == "SSLhandshake" { handshake = 1 }';
-)
-if $checkssl; then
+# checkssl=$(
+#     netcat -zw1 "$address" 443 && echo | openssl s_client -connect "$address:443" 2>&1 | awk '
+# handshake && $1 == "Verification" { if ($2=="OK") exit; exit 1 }
+# $1 $2 == "SSLhandshake" { handshake = 1 }';
+# )
+check_address() {
+    resp="$(curl -m 1 "$address" 2>/dev/null)"
+    ret="$?"
+    if [[ "$ret" == 0 ]]; then
+        echo "$resp" | grep "$htmlgrep" 
+        return "$?"
+    else
+        return 2
+    fi
+}
+check_address &>/dev/null
+check="$?"
+if [[ "$check" == 0 ]]; then
+    # all good
     exit 0
-elif host "$test"; then
-    exit 64
-elif nc -zw1 "$nameserver"; then
-    exit 65
-elif nc -zw1 "$gateway"; then
-    exit 66
-else
-    exit 1
+elif [[ "$check" == 1 ]]; then
+    # nogrep
+    exit 63 
+elif [[ "$check" == 2 ]]; then
+    # can't get HTML
+    if ! host "$address" &>/dev/null; then
+        # can't resolve
+        if [ -n "$nameserver" ] && ping -c1 -W1 "$nameserver" &>/dev/null; then
+            # nameserver ONLINE but no resolv
+            exit 65
+        fi
+        if ping -c1 -W1 "$defaultip" &>/dev/null; then
+            # can ping another but can't get html
+            exit 67
+        elif [ -n "$gateway" ] && ping -c1 -W1 "$gateway" &>/dev/null; then
+            # can ping gateway but not external internet
+            exit 66
+        else
+            # not connected at all
+            exit 1
+        fi
+    else
+        # DNS OK but can't get HTML
+        exit 64
+    fi
 fi
