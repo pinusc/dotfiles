@@ -213,7 +213,7 @@ network() {
 # music controls
 music() {
     {
-        if command -v mpris && [[ -n $(mpris --list ) ]]; then
+        if command -v mpris && [[ -n $(mpris --list | grep -v chromium) ]]; then
             player=$(mpris --list | awk -F '.' '{ print $4; }' | grep -v chromium | head -n 1)
             if [[ -n "$player" ]]; then
                 meta="$(mpris "$player" meta)"
@@ -236,7 +236,7 @@ music() {
             fi
         fi
 
-        if command -v mpc && [[ -z "$music_command" ]]; then
+        if command -v mpc; then
             title=$(mpc -f "%title%" | head -n1)
             if [[ -z "$title" ]]; then
                 title=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
