@@ -152,27 +152,61 @@ weather() {
 network() {
     interface="$(ip link | grep -E '(wl|en)p.*s.*:' | grep 'state UP' | awk '{ print $2 }')"
     network_type="${interface:0:2}"
-    check_connection 54.37.204.227
-    case $? in
-        0) state=u
-           ic_state=$IC_CONNECTED
-           ;;
-        *) state=d
-           ic_state=$IC_NOCONNECTION
-           ;;
-    esac
     case $network_type in
         wl)
             link=$(iw "$interface" link)
             ic_type=$IC_WIFI
             ssid=$(echo "$link" | grep 'SSID' | sed 's/SSID: //' | sed 's/\t//')
-            signal=$(echo "$link" | grep 'signal' | sed 's/signal: //' | sed 's/ dBm//' | sed 's/\t//')
-            other=" ${ssid}, ${signal}"
+            signal=$(echo "$link" | grep 'signal' | sed 's/signal: //; s/ dBm//; s/\t//')
+            other=" ${ssid} ${signal}"
         ;;
         en)
             ic_type=$IC_ETHERNET
         ;;
+        *)
+            ic_state="$IC_NOCONNECTION"
+            state=d
+        ;;
     esac
+    if [[ -z "$ic_state" ]]; then
+        ADDRESS=perdu.com HTMLGREP="Vous Etes Perdu" check_connection
+        case $? in
+            0) 
+                state=u
+                ic_state=$IC_CONNECTED
+                ;;
+            63) 
+                state=d
+                other="${other} !HTML"
+                ic_state=$IC_NOCONNECTION
+                ;;
+            64) 
+                state=d
+                other="${other} !DNS OK"
+                ic_state=$IC_NOCONNECTION
+                ;;
+            65) 
+                state=d
+                other="${other} !NO DNSLOOKUP-DNSSERV OK"
+                ic_state=$IC_NOCONNECTION
+                ;;
+            66) 
+                state=d
+                other="${other} !GATEWAY OK"
+                ic_state=$IC_NOCONNECTION
+                ;;
+            67) 
+                state=d
+                other="${other} !PING OK"
+                ic_state=$IC_NOCONNECTION
+                ;;
+            *) 
+                state=d
+                other="${other}-NO CONN"
+                ic_state=$IC_NOCONNECTION
+                ;;
+        esac
+    fi
     echo "L$state$ic_type|$ic_state|$other"
 }
 
