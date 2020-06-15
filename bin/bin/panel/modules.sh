@@ -181,25 +181,28 @@ music() {
     {
         if command -v mpris && [[ -n $(mpris --list ) ]]; then
             player=$(mpris --list | awk -F '.' '{ print $4; }' | grep -v chromium | head -n 1)
-            meta="$(mpris "$player" meta)"
-            readarray -t metarray <<< "$meta"
-            for l in "${!metarray[@]}"; do
-                # lines are of the form mpris:$propname=$prop
-                p="${metarray[$l]#*:}"  # gets the line and strips "mpris:"
-                propname="${p%=*}"
-                # for some reason sometimes artist is artist[]
-                propname=$(echo "$propname" | tr -dc "[:alnum:]") # remove special characters
-                value="${p#*=}"
-                eval "${propname}=\"${value}\""
-            done
-            if [[ $(mpris "$player" get player/status) = "Paused" ]]; then
-                music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player play:}$IC_MUSIC_PLAY%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
-            else
-                music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player pause:}$IC_MUSIC_PAUSE%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
+            if [[ -n "$player" ]]; then
+                meta="$(mpris "$player" meta)"
+                readarray -t metarray <<< "$meta"
+                for l in "${!metarray[@]}"; do
+                    # lines are of the form mpris:$propname=$prop
+                    p="${metarray[$l]#*:}"  # gets the line and strips "mpris:"
+                    propname="${p%=*}"
+                    # for some reason sometimes artist is artist[]
+                    propname=$(echo "$propname" | tr -dc "[:alnum:]") # remove special characters
+                    value="${p#*=}"
+                    eval "${propname}=\"${value}\""
+                done
+                if [[ $(mpris "$player" get player/status) = "Paused" ]]; then
+                    music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player play:}$IC_MUSIC_PLAY%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
+                else
+                    music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player pause:}$IC_MUSIC_PAUSE%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
+                fi
+                [[ "$player" = spotify ]] && music_command="${command} $IC_SPOTIFY"
             fi
-            [[ "$player" = spotify ]] && music_command="${command} $IC_SPOTIFY"
+        fi
 
-        elif command -v mpc; then
+        if command -v mpc && [[ -z "$music_command" ]]; then
             title=$(mpc -f "%title%" | head -n1)
             if [[ -z "$title" ]]; then
                 title=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
