@@ -283,10 +283,16 @@ musicp() {
 #pomodoro
 pcheck_pomodoro() {
     echo "P$(pomodoro -r -H)"
-    if [ "$(pomodoro -r)" = p0 ]; then
-        notify-send POMODORO Completed
-        paplay /usr/share/sounds/freedesktop/stereo/complete.oga
+    ## failsafe in case we miss 0
+    local pom_remaining
+    # pom_last can not be local
+    pom_remaining="$(pomodoro -r)"
+    pom_remaining="${pom_remaining#?}"
+    if [[ "$pom_remaining" -eq 0 || "$pom_remaining" -gt "$pom_last" ]]; then
+        notify-send POMODORO Completed &
+        # paplay /usr/share/sounds/freedesktop/stereo/complete.oga &
     fi
+    pom_last="$pom_remaining"
 }
 
 #battery
