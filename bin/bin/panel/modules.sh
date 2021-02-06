@@ -19,8 +19,7 @@ clock() {
 }
 
 calendar() {
-    # echo "D%{A:$dzencommand_calendar:}$IC_CALENDAR $(date +'%a %b %d')%{A}"
-    echo "D$IC_CALENDAR $(date +'%a %b %d')"
+    echo "D%{A:$dzencommand_calendar:}$IC_CALENDAR $(date +'%a %b %d')%{A}"
 }
 
 pulse_volume() {
