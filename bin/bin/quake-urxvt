@@ -1,21 +1,51 @@
 #!/usr/bin/env bash
 
-WMNAME="quake-tab"
-WIDFILE="/tmp/quake-tabbed.wid"
+IFS='' read -r -d '' helpstring <<EOF
+quake-rxvt: manage quaked windows
+USAGE: quake-rxvt [WMNAME CREATE_COMMAND]
+
+Args:
+    WMNAME              The X WMNAME of the window to manage
+    CREATE_COMMAND      The command to run to create a window with class WMNAME, taking a WIDFILE as \$1
+
+Defaults to creating urxvt windows.
+
+EOF
+
+if [[ -n "$1" ]]; then
+    if [[ "$1" == --help || "$1" == -h ]]; then
+        echo "$helpstring"
+        exit 0
+    fi
+    WMNAME="$1"
+fi
+if [[ -n "$2" ]]; then
+    CREATE_COMMAND="$2"
+fi
+[[ -z "$WMNAME" ]] && WMNAME="quake-tab"
+WIDFILE="/tmp/quake-tabbed-$WMNAME.wid"
+echo "$WIDFILE"
 wid=$(xdotool search --classname "$WMNAME")
 
+GEOMETRY=1366x768
+
+
 if [[ -z "$wid" ]]; then
-    wid=$(tabbed -n "$WMNAME" -d -g 900x600 )
+    wid=$(tabbed -n "$WMNAME" -d -g "$GEOMETRY" )
     echo "$wid" > "$WIDFILE"
-    quake-urxvt-newtab
+    "$CREATE_COMMAND" "$WIDFILE"
     exit 0
 fi
 
 state="$(xprop -id "$wid" | awk -F: '/window state/{print $2;}' \
     | tr -d ' ' | tr '[:upper:]' '[:lower:]')" 
 
+echo $state
+
 if [ "$state" = "normal" ]; then
     xdotool search --classname "$WMNAME" windowunmap
+elif [ "$state" = iconic ]; then
+    bspc node "$wid" -d focused
 else
     xdotool search --classname "$WMNAME" windowmap
 fi
