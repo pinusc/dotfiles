@@ -353,9 +353,14 @@ pcheck_pomodoro() {
 
 #battery
 battery() {
+    local power
+    local raw_charge 
+    local bcharge
+    local power
     power=$(acpi -a | sed -r 's/.+(on|off).+/\1/')
     raw_charge=$(acpi | sed "s/[^,]\\+\?, //; s/%.\\+//; s/%//")
     bcharge=$(( (raw_charge - BATTERY_ZERO) * 100 / (100 - BATTERY_ZERO) ))
+    local bcolor=""
     if [[ -z $power ]]; then
         return 1
     elif [[ $power = "on" ]]; then
@@ -379,6 +384,24 @@ battery() {
     fi
     echo "B$bcolor$bicon $bcharge%"
 }
+
+phonebattery() {
+    local bcharge
+    local bicon
+    bcharge=$(ssh sacripante termux-battery-status | jq .percentage)
+    [[ -z "$bcharge" ]] && return 1
+    if [[ $bcharge -ge 70 ]]; then
+        bcolor="f"
+    elif [[ $bcharge -ge 15 ]]; then
+        bcolor="m"
+    else
+        bcolor="e"
+    fi
+    bicon="$IC_PHONE"
+    echo "b$bcolor$bicon $bcharge%"
+}
+
+
 
 #keyboard
 keyboard() {
