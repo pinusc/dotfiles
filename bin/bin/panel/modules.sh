@@ -437,3 +437,9 @@ gpg_info () {
     fi
     echo "g%{A:$gpg_command:}$icon%{A}"
 }
+
+cputemp() {
+    icon="$IC_TEMP"
+    temp=$(sensors coretemp-isa-0000 -u | grep temp1_input | cut -d' ' -f4 | cut -d. -f1)
+    echo "T$IC_TEMP ${temp}°C"
+}

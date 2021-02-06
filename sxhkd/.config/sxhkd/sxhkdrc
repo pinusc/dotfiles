@@ -147,10 +147,18 @@ shift + Shift_R
   ~/bin/util/toggle_dvorak.sh
 
 super + Return
-	urxvt
+  urxvt
+
+super + apostrophe
+        ~/bin/quake/quake-urxvt "quake-weechat" "quake-weechat-create"
 
 super + {ctrl,shift} + Return
-    ~/bin/util/termquaker.sh --keep
+        ~/bin/quake/quake-urxvt
+
+super + semicolon
+        ~/bin/quake/quake-urxvt
+super + shift + semicolon
+        ~/bin/quake/quake-urxvt-newtab
 
 super + space
     ~/bin/dmenu/launcher
