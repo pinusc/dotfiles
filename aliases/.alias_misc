@@ -1,7 +1,10 @@
+
+# leave one line blank for compatibility
+#vim ft=sh
 alias upfont="sudo fc-cache -fv"
 alias cal="cal -m" # Monday it's always the first day of the week here!
 alias tmux="tmux -2"
-alias pingg="ping -a www.google.com"
+alias pingg="ping -a perdu.com"
 alias rsync="rsync --info=progress2"
 
 # Python aliases
@@ -48,8 +51,10 @@ alias did="vim +'normal Go' +'r!date' ~/docs/did.txt"
 alias mail="mail -r giuseppe@gstelluto.com"
 >&/dev/null hash neomutt && alias mutt='neomutt'
 alias mailsync="pkill -SIGUSR1 offlineimap"
+alias vp="zathura --fork"
+alias zathura="zathura --fork"
 
-alias tarsnap="tarsnap --configfile $HOME/.config/tarsnap/tarsnaprc"
+alias tarsnap="tarsnap --configfile ~/.config/tarsnap/tarsnaprc"
 
 mdmake() {
     cp "$HOME/.config/templates/pandoc/Makefile" "."
@@ -57,19 +62,32 @@ mdmake() {
 }
 
 
->&/dev/null hash pinfo && alias info='pinfo'
->&/dev/null hash exa && {
+if hash pinfo >&/dev/null; then
+    alias info='pinfo'
+fi
+if hash exa >&/dev/null; then
     alias ls='exa'   
     alias lt='exa -T'
     alias lg='exa --long --git'
-}
+fi
+
 alias l='ls'
 alias ll='ls -lh'
 alias la='ll -a'
+alias lt='ls -al --tree'
 
-[ "$SHELL" = /bin/zsh ] && alias -g LL='| less -R'
-hash rg &>/dev/null && alias rgc='rg --color always'
-hash fd &>/dev/null && alias fdc='fd --color always'
+if [ "$SHELL" = /bin/zsh ]; then 
+    alias -g LL='| bat'
+    alias -g LLH='--help | bat'
+    alias -g LLC='--color=always | bat'
+    alias -g NNNSEL='$(nnn -p -)'
+fi
+if hash rg &>/dev/null;then 
+    alias rgc='rg --color always'
+fi
+if hash fd &>/dev/null;then 
+    alias fdc='fd --color always'
+fi
 
 export _JAVA_AWT_WM_NONREPARENTING=1
 
@@ -84,29 +102,36 @@ alias riot-web="qutebrowser ':open -w https://riot.im/app/#'"
 alias https="http --default-scheme=https"
 
 read_all_mail() {
-    find "$MAIL" -type f | grep -vE ',[^,]*S[^,]*$' | xargs -I{} bash -c 'mv {} $(echo {} | sed "s/new/cur/; s/2,$/2,S/")'
+    find "$MAIL" -type f | grep -vE ',[^,]*S[^,]*$' | xargs -I{} sh -c 'mv {} $(echo {} | sed "s/new/cur/; s/2,$/2,S/")'
 }
 
 copy_dotfiles() {
     [[ -z "$1" ]] && echo "You need to provide a ssh hostname!" && return
     server="$1"
     echo "Copying to: $server"
-    [[ "${server: -1}" != ":" ]] && server="$1:"
-    rsync -vh ~/dot/{bash,aliases,tmux}/.* "$server"
+    if [[ "$(ssh "$server" 'echo $SHELL')" =~ 'zsh' ]]; then
+        \rsync --timeout 3 -vh ~/dot/zsh/.* "$server:"
+    else
+        \rsync --timeout 3 -vh ~/dot/bash/.* "$server:"
+    fi
+    cat ~/dot/aliases/.* | ssh -o 'ConnectTimeout=3' "$server" "tee ~/.aliases" >/dev/null
+    \rsync --timeout 3 -vh ~/dot/tmux/.tmux.conf "$server:"
 }
 
 sync_dotfiles() {
-    copy_dotfiles sofronia
-    copy_dotfiles astolfo
-    copy_dotfiles weechat
-    copy_dotfiles gurdulu
-    copy_dotfiles hong.io
+    copy_dotfiles thalia
+    copy_dotfiles athena
+    copy_dotfiles diana
+    copy_dotfiles argo
+    copy_dotfiles pandora
+    copy_dotfiles sacripante
+    copy_dotfiles persephone
 }
 
 move_all_output() {
     sink="$1"
     inputs=$(pactl list short sink-inputs | cut -f1)
-    echo "$inputs" | xargs -I{} pactl move-sink-input {} $1
+    echo "$inputs" | xargs -I{} pactl move-sink-input {} "$sink"
 }
 
 fan(){
@@ -138,6 +163,86 @@ weechat="mosh weechat"
 
 alias c="source ~/bin/college/c"
 alias ccd="source ~/bin/college/ccd"
+alias m="source ~/bin/college/m"
+alias mcd="source ~/bin/college/ccd --moodle"
 alias syl="~/bin/college/syllabus"
 
 alias dmenu="rofi -dmenu"
+
+alias ksac="kdeconnect-cli -n sacripante"
+
+# e() {
+# eval $* &! 
+# exit
+# }
+
+alias pastebin="nc termbin.com 9999"
+
+alias rm='echo "This is not the command you are looking for."; false'
+alias rrm='trash-put'
+
+ssps() {
+    read -r -d '' awkcommand <<'    EOF'
+    { 
+        sub(".+pid=", "", $7); 
+        sub(",.+", "", $7); 
+        pout=""; 
+        if(length($7) > 0) {
+            pscomm="ps --no-headers -o pid,command -q "$7; 
+            pscomm | getline pout; 
+            close(pscomm); 
+            sub("[0-9]+", "&\t", pout); 
+        }
+        print $1 " " $5 "\t" pout; 
+    }
+    EOF
+    awkcommand=$(echo "$awkcommand" | sed -r 's!^\s{4}!!')
+    sudo ss -tlnupH "$1" | awk "$awkcommand" | sed 's/  */ /g;' | cut -c -70 | column -s$'\t' -t
+}
+alias pgrep="pgrep -a -f"
+
+# [[ "$SHELL" =~ /bin/zsh ]] && alias "lxc list"="sudo lxc list -c ns4"
+# alias "lxclist"="sudo lxc list -c ns4"
+# alias lxc="sudo lxc"
+lxcsh () {
+	local oldname="$(tmux display-message -p '#W')"
+	tmux rename-window "$1"
+        local command="${2-sh}"
+	sudo lxc "exec" "$1" -- "$command"
+	tmux rename-window "$oldname"
+}
+
+send2ebook () {
+    scp "$1" diana:/home/ftpinusc/ftpbook
+}
+
+alias N='sudo -E nnn -dH'
+[ "$SHELL" = /bin/zsh ] && alias -g NPICK='$(nnn -p -)'
+# autocd for nnn
+n ()
+{
+    # Block nesting of nnn in subshells
+    if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+        echo "nnn is already running"
+        return
+    fi
+
+    # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # To cd on quit only on ^G, remove the "export" as in:
+    #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    # NOTE: NNN_TMPFILE is fixed, should not be modified
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    nnn "$@"
+
+    if [ -f "$NNN_TMPFILE" ]; then
+            . "$NNN_TMPFILE"
+            rm -f "$NNN_TMPFILE" > /dev/null
+    fi
+}

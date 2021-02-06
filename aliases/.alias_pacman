@@ -1,3 +1,6 @@
+
+# leave one line blank for compatibility
+#vim ft=sh
 #pacman
 FRONTEND="yay"
 alias pac="$FRONTEND"

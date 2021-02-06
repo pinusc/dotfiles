@@ -1,5 +1,9 @@
+
+# leave one line blank for compatibility
+#vim ft=sh
 # Power aliases
 alias shd="systemctl poweroff"
 alias rbt="systemctl reboot"
 alias sus="lock & systemctl suspend"
 alias hyb="lock & systemctl hibernate"
+

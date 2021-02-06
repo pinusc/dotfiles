@@ -3,27 +3,30 @@ case $- in # If not running interactively, don't do anything
     *) return;;
 esac
 
-[ -e $HOME/.sensible.bash ] && source $HOME/.sensible.bash
-
-export EDITOR=vim
-export SUDO_EDITOR=vim
-
-set +h
+set -h
 set -o vi
 umask 022
 
+[ -e "$HOME/.sensible.bash" ] && source "$HOME/.sensible.bash"
+[ -e "$HOME/.bashrc.local" ] && source "$HOME/.bashrc.local"
 
->/dev/null hash fortune && fortune
+export SHELL=bash
+if hash vim; then
+    export EDITOR=vim
+    export SUDO_EDITOR=vim
+else
+    export EDITOR=vi
+    export SUDO_EDITOR=vi
+fi
 
-bind -m vi-insert \C-l:clear-screen
+hash fortune &>/dev/null && fortune
+
+bind -m vi-insert "\\C-l:clear-screen"
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
-
-sudo-active() [[ ! $(trap "" XFSZ
-                     LC_ALL=C sudo -n true 2>&1) = *"password is required" ]]
 
 green=$(tput setaf 2)
 blue=$(tput setaf 4)
@@ -40,12 +43,20 @@ else
     fi
     info="$hoststr"
 fi
-PS1="\[$green$bold\]$info\[$reset\] \[$blue$bold\]\w\[$reset\] \$ "
+if [[ -n "$color_prompt" ]]; then
+    PS1="\[$green$bold\]$info\[$reset\] \[$blue$bold\]\w\[$reset\] \$ "
+else
+    PS1="$info \w \$ "
+fi
 unset hoststr
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    if [[ -r ~/.dircolors ]]; then
+        eval "$(dircolors -b ~/.dircolors)" 
+    else
+        eval "$(dircolors -b)"
+    fi
     alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
@@ -71,6 +82,7 @@ alias ..='cd ..'
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+source ".alias"*
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -84,3 +96,15 @@ if ! shopt -oq posix; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+mman() {
+    env \
+    LESS_TERMCAP_mb="$(printf "\e[1;31m")" \
+    LESS_TERMCAP_md="$(printf "\e[1;31m")" \
+    LESS_TERMCAP_me="$(printf "\e[0m")" \
+    LESS_TERMCAP_se="$(printf "\e[0m")" \
+    LESS_TERMCAP_so="$(printf "\e[1;44;33m")" \
+    LESS_TERMCAP_ue="$(printf "\e[0m")" \
+    LESS_TERMCAP_us="$(printf "\e[1;32m")" \
+    man "${@}"
+}

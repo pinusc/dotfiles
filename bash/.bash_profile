@@ -36,6 +36,7 @@ fi
 
 unset append
 
+declare TMUX
 # safe to start tmux, won't result in a loop
 # because only run on remote interactive login shells
 if [[ -z "$TMUX" ]]; then
@@ -44,4 +45,15 @@ if [[ -z "$TMUX" ]]; then
     else
         exec tmux new
     fi
+fi
+
+MOTD="/etc/motd"
+ISSUE="/etc/issue"
+
+if [[ ! -z "$TMUX" ]]; then
+  if [[ -f "$MOTD" ]]; then
+    cat "$MOTD"
+  elif [[ -f "$ISSUE" ]]; then
+    cat "$ISSUE"
+  fi
 fi

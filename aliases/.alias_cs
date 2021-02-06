@@ -1,3 +1,5 @@
+
+#vim ft=sh
 # prints the names of all files which do not start with a commented header
 # i.e. their first line does not start with /**
 cs_find_uncommented () {

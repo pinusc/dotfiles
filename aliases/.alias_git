@@ -1,4 +1,6 @@
+
 # git aliases
+#vim ft=sh
 alias gan="git annex"
 alias gans="git annex sync"
 alias gag="git annex get"

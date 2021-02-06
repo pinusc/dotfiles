@@ -1,3 +1,6 @@
+
+# leave one line blank for compatibility
+#vim ft=sh
 alias preztorc=":e ~/.zpreztorc"
 alias aliasrc=":e ~/.zsh_aliases"
 alias zshrc=":e ~/.zshrc"

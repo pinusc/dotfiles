@@ -1,3 +1,6 @@
+
+# leave one line blank for compatibility
+#vim ft=sh
 #apt as pacman
 alias paci="apt install"
 alias pacs="apt search"
