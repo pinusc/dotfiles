@@ -44,12 +44,12 @@ getip() {
 
 mailinfo() {
     # count=$(find "$MAILDIR" -type f | grep -cvE ',[^,]*S[^,]*$')
-    count=$(find "$MAILDIR" -type d -name 'new' | xargs -I{} find {} -type f | wc -l)
+    count=$(find "$MAILDIR" -type d -path '*inbox/new' | xargs -I{} find {} -type f | wc -l)
     count_important=$(find "$MAILDIR_IMPORTANT" -type d -name 'new' | xargs -I{} find {} -type f | wc -l)
     if [ "$count_important" -gt 0 ]; then
         count_important="$count_important "
     else
-        count_important=""
+        count_important="0 "
     fi
     if [ "$count" -gt 0 ]; then
         echo "Mf%{A3:$FETCHMAILCOMMAND:}%{A:$MAILCOMMAND:}$IC_MAIL $count_important$count%{A}%{A}"
