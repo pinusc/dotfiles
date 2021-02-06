@@ -23,6 +23,7 @@ if [[ -n "$2" ]]; then
     CREATE_COMMAND="$2"
 fi
 [[ -z "$WMNAME" ]] && WMNAME="quake-tab"
+[[ -z "$CREATE_COMMAND" ]] && CREATE_COMMAND="quake-urxvt-newtab"
 WIDFILE="/tmp/quake-tabbed-$WMNAME.wid"
 echo "$WIDFILE"
 wid=$(xdotool search --classname "$WMNAME")
