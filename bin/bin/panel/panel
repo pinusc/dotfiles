@@ -17,6 +17,10 @@ init() {
     bspc config -m "$MAIN_MONITOR" top_padding $(( PANEL_HEIGHT + PANEL_GAP + 1))
     . panel_colors.sh light
     CLOCKFILE=$(mktemp /tmp/clockfile.XXXX)
+    if command -v zscroll; then
+        ZSCROLLFILE=$(mktemp -u "/tmp/$USER/zscroll.XXXX")
+        touch "$ZSCROLLFILE"
+    fi
     PANEL_FIFO=$(mktemp -u /tmp/panel_fifo.XXXX)
     mkfifo "$PANEL_FIFO"
     bspc subscribe > "$PANEL_FIFO" &
@@ -35,41 +39,56 @@ loop() {
     {
         acpi -b | grep -q "Battery" && has_battery=1
         command -v ponymix && has_pulse=1
+        command -v sensors && has_temp=1
         command -v gpg-connect-agent && has_gpg=1
         (command -v mpc || command -v mpris) && has_music=1
+        command -v zscroll && has_zscroll=1
         has_api_keys="$HAS_API"
     } >/dev/null 2>&1
+    echo "$ZSCROLLFILE"
     i=0
-    while true; do
-        keyboard 
-        # pcheck_pomodoro 
-        if (( i % 3 == 0 )); then
-            [[ -n ${has_music+x} ]] && music 
-            [[ -n ${has_battery+x} ]] && battery 
-            [[ -n ${has_pulse+x} ]] && pulse_volume 
-        fi
-        if (( i == 0 )); then
-           wallpaper 
-        fi
-        if (( i % 10 == 0 )); then
-            network 
-            [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" 
-        fi
-        if (( i % 60 == 0 )); then
+    {
+        # do once
+        [[ -n ${has_zscroll+x} ]] && music_zscroll_watch "$ZSCROLLFILE" 2 &
+        while true; do
+            keyboard &
+            pcheck_pomodoro # do not use &, needs local state
             clock "$CLOCKFILE" # Has to stay in 1s cycle for interactivity
-            calendar 
-            mailinfo 
-        fi
-        if (( i % 400 == 0 )); then
-            test "$has_api_keys" && pollution 
-            test "$has_api_keys" && weather 
-        fi
-        i=$((i+1))
-        # Just in case $i gets enormously large and causes problems. 
-        # The value in brackets should be a multiple of the other cycles' values
-        (( i >= 1600 )) && i=0
-        sleep 1
-    done | tee "$PANEL_FIFO" &
+            if (( i % 3 == 0 )); then
+                if [[ -n ${has_music+x} ]]; then
+                    if [[ -n ${has_zscroll+x} ]]; then
+                        music --lib > "$ZSCROLLFILE" &
+                    else
+                        music &
+                    fi
+                fi
+                [[ -n ${has_battery+x} ]] && battery &
+                [[ -n ${has_pulse+x} ]] && pulse_volume &
+                [[ -n ${has_temp+x} ]] && cputemp &
+            fi
+            if (( i == 0 )); then
+                wallpaper &
+            fi
+            if (( i % 10 == 0 )); then
+                network &
+                [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
+            fi
+            if (( i % 60 == 0 )); then
+                phonebattery &
+                calendar &
+                mailinfo &
+            fi
+            if (( i % 400 == 0 )); then
+                test "$has_api_keys" && pollution &
+                test "$has_api_keys" && weather &
+            fi
+            i=$((i+1))
+            # Just in case $i gets enormously large and causes problems. 
+            # The value in brackets should be a multiple of the other cycles' values
+            (( i >= 1600 )) && i=0
+            sleep 1
+        done 
+    } | tee "$PANEL_FIFO" &
 }
 
 main() {

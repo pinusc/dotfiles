@@ -214,14 +214,30 @@ network() {
     echo "L$state$ic_type|$ic_state|$other"
 }
 
+# some music services (mopidy-youtube) can't properly parse some titles
+# also some titles just SUCK
+# so we normalize them
+music_normalize_title () {
+    local arr
+    read -r -a arr < <(echo "$1")
+    arr=( "${arr[@],,}" )
+    capitalized="${arr[*]^}"
+    trim=$(echo "$capitalized" | sed "s/&#39/'/g")
+    trim=$(echo "$trim" | sed "s/[Oo]fficial//; s/[Vv]ideo//")
+    trim=$(echo "$trim" | sed "s/( *)//; s/\[ *\]//; s/^ *//; s/ *$//")
+    grep "|" <(echo "$trim") && trim=$(echo "$trim" | grep -o '.*|' | head -c -2)
+    echo "$trim"
+}
+
 # music controls
 music() {
     {
         if command -v mpris && [[ -n $(mpris --list | grep -v chromium) ]]; then
-            player=$(mpris --list | awk -F '.' '{ print $4; }' | grep -v chromium | head -n 1)
+            player=$(mpris --list | awk -F '.' '{ print $4; }' | grep -E 'mopidy|mpv|sporify' | head -n 1)
             if [[ -n "$player" ]]; then
                 meta="$(mpris "$player" meta)"
                 readarray -t metarray <<< "$meta"
+                # TODO remove incredibly unsafe code
                 for l in "${!metarray[@]}"; do
                     # lines are of the form mpris:$propname=$prop
                     p="${metarray[$l]#*:}"  # gets the line and strips "mpris:"
@@ -233,14 +249,13 @@ music() {
                 done
                 if [[ $(mpris "$player" get player/status) = "Paused" ]]; then
                     music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player play:}$IC_MUSIC_PLAY%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
-                else
+                elif [[ $(mpris "$player" get player/status) = "Playing" ]]; then
                     music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player pause:}$IC_MUSIC_PAUSE%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
                 fi
                 [[ "$player" = spotify ]] && music_command="${command} $IC_SPOTIFY"
             fi
         fi
-
-        if command -v mpc; then
+        if command -v mpc && [[ -z "$music_command" ]]; then
             title=$(mpc -f "%title%" | head -n1)
             if [[ -z "$title" ]]; then
                 title=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
@@ -255,12 +270,49 @@ music() {
         fi
     } > /dev/null 2>&1
 
+    title="$(music_normalize_title "$title")"
+
+    # not outputting for bar, but for zscroll
+    if [[ "$1" = "--lib" ]]; then
+        if [[ -n "$title" ]] && [[ -n "$music_command" ]]; then
+            echo "R$music_command  %{A:$dzencommand_music:}"
+            echo "$title"
+            echo "%{A}"
+        fi
+        return
+    fi
+
     if [[ -n "$title" ]] && [[ -n "$music_command" ]]; then
         if [ "${#title}" -gt 25 ]; then
             title="${title:0:25}..."
         fi
         echo "R$music_command  %{A:$dzencommand_music:}$title%{A} "
     fi
+}
+
+
+# USAGE: music_zscroll_watch ZSCROLLFILE SLEEP
+music_zscroll_watch() {
+    local file="$1"
+    local update="$2"
+    local raw
+    local oldraw
+    local zscroll_pid
+    local before
+    local title
+    local after
+    while true; do
+        raw="$(< "$file")"
+        [[ -z "$raw" || "$raw" = "$oldraw" ]] && sleep 1 && continue
+        before="$(echo "$raw" | sed '1q;d')"
+        title="$(echo "$raw" | sed '2q;d')"
+        after="$(echo "$raw" | sed '3q;d')"
+        [[ -n "$zscroll_pid" ]] && kill "$zscroll_pid"
+        zscroll -l 25 -b "$before" -a "$after" "$title" &
+        zscroll_pid=$!
+        oldraw="$raw"
+        sleep "$update"
+    done
 }
 
 songScroll() {
