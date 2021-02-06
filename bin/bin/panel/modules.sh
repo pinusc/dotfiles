@@ -344,9 +344,9 @@ pcheck_pomodoro() {
     # pom_last can not be local
     pom_remaining="$(pomodoro -r)"
     pom_remaining="${pom_remaining#?}"
-    if [[ "$pom_remaining" -eq 0 || "$pom_remaining" -gt "$pom_last" ]]; then
+    if [[ -n "$pom_last" && ("$pom_remaining" -gt "$pom_last") ]]; then
         notify-send POMODORO Completed &
-        # paplay /usr/share/sounds/freedesktop/stereo/complete.oga &
+        paplay /usr/share/sounds/freedesktop/stereo/complete.oga &
     fi
     pom_last="$pom_remaining"
 }
