@@ -221,7 +221,12 @@ Print
 
 # make sxhkd and panel reload its configuration files:
 super + Escape
-       pkill -USR1 -x sxhkd; pkill panel; panel &
+       pkill -USR1 -x sxhkd; \
+       killall panel; \
+       panel 2>&1 >/dev/null &
+
+super + shift + Escape
+    xrandr --auto
 
 ctrl + F1
 	google-chrome-stable
