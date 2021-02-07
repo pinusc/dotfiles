@@ -1,0 +1,7 @@
+[Unit]
+Description=Mopidy music server
+
+[Service]
+ExecStart=/usr/bin/mopidy --config %h/.config/mopidy/mopidy.conf
+WorkingDirectory=%h
+

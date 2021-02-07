@@ -1,0 +1,10 @@
+[Unit]
+Description=Moodle Daily Downloader
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=moodle.service
+
+[Install]
+WantedBy=timers.target

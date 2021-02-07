@@ -1,0 +1,10 @@
+[Unit]
+Description=AutoSSH service for %i
+After=network.target
+
+[Service]
+Environment="AUTOSSH_GATETIME=0"
+ExecStart=%h/bin/autossh-portmapper.sh %i
+
+[Install]
+WantedBy=multi-user.target

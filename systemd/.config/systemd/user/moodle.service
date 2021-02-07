@@ -1,0 +1,7 @@
+[Unit]
+Description=Automatic Moodle Donwloader
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/moodle-dl
+WorkingDirectory=%h/docs/college/moodle/

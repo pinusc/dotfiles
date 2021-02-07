@@ -1,0 +1,11 @@
+[Unit]
+Description=Weechat Notifier system
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/bin/util/run_weenotify.sh
+; Restart=always
+
+[Install]
+WantedBy=multi-user.target
