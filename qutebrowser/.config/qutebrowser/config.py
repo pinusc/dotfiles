@@ -3,6 +3,7 @@
 #   qute://help/configuring.html
 #   qute://help/settings.html
 import os
+import redirect
 
 config.load_autoconfig()
 
@@ -18,83 +19,99 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
+import sys, os
+# sys.path.append(os.path.join(sys.path[0], 'jblock'))
+# config.source("jblock/jblock/integrations/qutebrowser.py")
+
 if os.path.exists('/home/pinusc/.local/share/colors'):
+    colors = {}
     with open('/home/pinusc/.local/share/colors') as f:
-        source = f.read()
-        exec(source)
+        for line in f:
+            name, color = line.split('=')
+            color = color.strip().strip('"')
+            colors[name] = color
 
-    c.colors.completion.fg = base05
-    c.colors.completion.odd.bg = base00
-    c.colors.completion.even.bg = base00
-    c.colors.completion.category.fg = base0A
-    c.colors.completion.category.bg = base00
-    c.colors.completion.category.border.top = base00
-    c.colors.completion.category.border.bottom = base00
-    c.colors.completion.item.selected.fg = base01
-    c.colors.completion.item.selected.bg = base0A
-    c.colors.completion.item.selected.border.top = base0A
-    c.colors.completion.item.selected.border.bottom = base0A
-    c.colors.completion.match.fg = base0B
-    c.colors.completion.scrollbar.fg = base05
-    c.colors.completion.scrollbar.bg = base00
-    c.colors.downloads.bar.bg = base00
-    c.colors.downloads.start.fg = base00
-    c.colors.downloads.start.bg = base0D
-    c.colors.downloads.stop.fg = base00
-    c.colors.downloads.stop.bg = base0C
-    c.colors.downloads.error.fg = base08
-    c.colors.hints.fg = base00
-    c.colors.hints.bg = base0A
-    c.colors.hints.match.fg = base05
-    c.colors.keyhint.fg = base05
-    c.colors.keyhint.suffix.fg = base05
-    c.colors.keyhint.bg = base00
-    c.colors.messages.error.fg = base00
-    c.colors.messages.error.bg = base08
-    c.colors.messages.error.border = base08
-    c.colors.messages.warning.fg = base00
-    c.colors.messages.warning.bg = base0E
-    c.colors.messages.warning.border = base0E
-    c.colors.messages.info.fg = base05
-    c.colors.messages.info.bg = base00
-    c.colors.messages.info.border = base00
-    c.colors.prompts.fg = base05
-    c.colors.prompts.border = base00
-    c.colors.prompts.bg = base00
-    c.colors.prompts.selected.bg = base0A
-    c.colors.statusbar.normal.fg = base0B
-    c.colors.statusbar.normal.bg = base00
-    c.colors.statusbar.insert.fg = base00
-    c.colors.statusbar.insert.bg = base0D
-    c.colors.statusbar.passthrough.fg = base00
-    c.colors.statusbar.passthrough.bg = base0C
-    c.colors.statusbar.private.fg = base00
-    c.colors.statusbar.private.bg = base03
-    c.colors.statusbar.command.fg = base05
-    c.colors.statusbar.command.bg = base00
-    c.colors.statusbar.command.private.fg = base05
-    c.colors.statusbar.command.private.bg = base00
-    c.colors.statusbar.caret.fg = base00
-    c.colors.statusbar.caret.bg = base0E
-    c.colors.statusbar.caret.selection.fg = base00
-    c.colors.statusbar.caret.selection.bg = base0D
-    c.colors.statusbar.progress.bg = base0D
-    c.colors.statusbar.url.fg = base05
-    c.colors.statusbar.url.error.fg = base08
-    c.colors.statusbar.url.hover.fg = base05
-    c.colors.statusbar.url.success.http.fg = base0C
-    c.colors.statusbar.url.success.https.fg = base0B
-    c.colors.statusbar.url.warn.fg = base0E
-    c.colors.tabs.bar.bg = base00
-    c.colors.tabs.indicator.start = base0D
-    c.colors.tabs.indicator.stop = base0C
-    c.colors.tabs.indicator.error = base08
-    c.colors.tabs.odd.fg = base05
-    c.colors.tabs.odd.bg = base00
-    c.colors.tabs.even.fg = base05
-    c.colors.tabs.even.bg = base00
-    c.colors.tabs.selected.odd.fg = base05
-    c.colors.tabs.selected.odd.bg = base02
-    c.colors.tabs.selected.even.fg = base05
-    c.colors.tabs.selected.even.bg = base02
+    c.colors.completion.fg = colors['base05']
+    c.colors.completion.odd.bg = colors['base00']
+    c.colors.completion.even.bg = colors['base00']
+    c.colors.completion.category.fg = colors['base0A']
+    c.colors.completion.category.bg = colors['base00']
+    c.colors.completion.category.border.top = colors['base00']
+    c.colors.completion.category.border.bottom = colors['base00']
+    c.colors.completion.item.selected.fg = colors['base01']
+    c.colors.completion.item.selected.bg = colors['base0A']
+    c.colors.completion.item.selected.border.top = colors['base0A']
+    c.colors.completion.item.selected.border.bottom = colors['base0A']
+    c.colors.completion.match.fg = colors['base0B']
+    c.colors.completion.scrollbar.fg = colors['base05']
+    c.colors.completion.scrollbar.bg = colors['base00']
+    c.colors.downloads.bar.bg = colors['base00']
+    c.colors.downloads.start.fg = colors['base00']
+    c.colors.downloads.start.bg = colors['base0D']
+    c.colors.downloads.stop.fg = colors['base00']
+    c.colors.downloads.stop.bg = colors['base0C']
+    c.colors.downloads.error.fg = colors['base08']
+    c.colors.hints.fg = colors['base00']
+    c.colors.hints.bg = colors['base0A']
+    c.colors.hints.match.fg = colors['base05']
+    c.colors.keyhint.fg = colors['base05']
+    c.colors.keyhint.suffix.fg = colors['base05']
+    c.colors.keyhint.bg = colors['base00']
+    c.colors.messages.error.fg = colors['base00']
+    c.colors.messages.error.bg = colors['base08']
+    c.colors.messages.error.border = colors['base08']
+    c.colors.messages.warning.fg = colors['base00']
+    c.colors.messages.warning.bg = colors['base0E']
+    c.colors.messages.warning.border = colors['base0E']
+    c.colors.messages.info.fg = colors['base05']
+    c.colors.messages.info.bg = colors['base00']
+    c.colors.messages.info.border = colors['base00']
+    c.colors.prompts.fg = colors['base05']
+    c.colors.prompts.border = colors['base00']
+    c.colors.prompts.bg = colors['base00']
+    c.colors.prompts.selected.bg = colors['base0A']
+    c.colors.statusbar.normal.fg = colors['base0B']
+    c.colors.statusbar.normal.bg = colors['base00']
+    c.colors.statusbar.insert.fg = colors['base00']
+    c.colors.statusbar.insert.bg = colors['base0D']
+    c.colors.statusbar.passthrough.fg = colors['base00']
+    c.colors.statusbar.passthrough.bg = colors['base0C']
+    c.colors.statusbar.private.fg = colors['base00']
+    c.colors.statusbar.private.bg = colors['base03']
+    c.colors.statusbar.command.fg = colors['base05']
+    c.colors.statusbar.command.bg = colors['base00']
+    c.colors.statusbar.command.private.fg = colors['base05']
+    c.colors.statusbar.command.private.bg = colors['base00']
+    c.colors.statusbar.caret.fg = colors['base00']
+    c.colors.statusbar.caret.bg = colors['base0E']
+    c.colors.statusbar.caret.selection.fg = colors['base00']
+    c.colors.statusbar.caret.selection.bg = colors['base0D']
+    c.colors.statusbar.progress.bg = colors['base0D']
+    c.colors.statusbar.url.fg = colors['base05']
+    c.colors.statusbar.url.error.fg = colors['base08']
+    c.colors.statusbar.url.hover.fg = colors['base05']
+    c.colors.statusbar.url.success.http.fg = colors['base0C']
+    c.colors.statusbar.url.success.https.fg = colors['base0B']
+    c.colors.statusbar.url.warn.fg = colors['base0E']
+    c.colors.tabs.bar.bg = colors['base00']
+    c.colors.tabs.indicator.start = colors['base0D']
+    c.colors.tabs.indicator.stop = colors['base0C']
+    c.colors.tabs.indicator.error = colors['base08']
+    c.colors.tabs.odd.fg = colors['base05']
+    c.colors.tabs.odd.bg = colors['base00']
+    c.colors.tabs.even.fg = colors['base05']
+    c.colors.tabs.even.bg = colors['base00']
+    c.colors.tabs.selected.odd.fg = colors['base05']
+    c.colors.tabs.selected.odd.bg = colors['base02']
+    c.colors.tabs.selected.even.fg = colors['base05']
+    c.colors.tabs.selected.even.bg = colors['base02']
+    c.colors.tabs.pinned.odd.fg = colors['base00']
+    c.colors.tabs.pinned.odd.bg = colors['base0A']
+    c.colors.tabs.pinned.even.fg = colors['base00']
+    c.colors.tabs.pinned.even.bg = colors['base0A']
+    c.colors.tabs.pinned.selected.odd.fg = colors['base00']
+    c.colors.tabs.pinned.selected.odd.bg = colors['base0D']
+    c.colors.tabs.pinned.selected.even.fg = colors['base00']
+    c.colors.tabs.pinned.selected.even.bg = colors['base0D']
 
+# config.source('qutenyan/nyan.py')
