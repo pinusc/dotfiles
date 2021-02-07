@@ -217,6 +217,16 @@ Pause
 @shift + Print
   scrot -s -e 'mv $f ~/shots'
 
+~F9
+        if [[ -f /tmp/pushtotalk.lock ]]; then; \
+          xdotool search --name ".*Jitsi Meet.*" keyup space; \
+          rm /tmp/pushtotalk.lock; \
+        else; \
+          xdotool search --name ".*Jitsi Meet.*" keydown space; \
+          touch /tmp/pushtotalk.lock; \
+        fi;
+
+
 # make sxhkd and panel reload its configuration files:
 super + Escape
        pkill -USR1 -x sxhkd; \
