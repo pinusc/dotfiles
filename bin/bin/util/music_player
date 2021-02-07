@@ -1,37 +1,47 @@
 #!/bin/bash
 
 DESKTOP="^3"
-GEOMETRY_VISUALIZER="70x25"
-GEOMETRY_PLAYER="118x25"
-GEOMETRY_ALBUMART="32x20"
+MAX_WIDTH=960
+HEIGHT=360
+GAP=60
+total_height=$(( HEIGHT * 2 + GAP ))
+total_width="$MAX_WIDTH"
+monitor_geometry="$(xrandr | grep "$(bspc query -M -m focused --names)" | cut -d' ' -f4)"
+monitor_width="$( echo "$monitor_geometry" | cut -d+ -f1 | cut -dx -f1 )"
+monitor_height="$( echo "$monitor_geometry" | cut -d+ -f1 | cut -dx -f2 )"
+x1=$(( (monitor_width - total_width) / 2 ))
+y1=$(( (monitor_height - total_height) / 2 ))
+VISUALIZER_WIDTH=$(( MAX_WIDTH - HEIGHT - GAP ))
+ALBUMART_WIDTH="$HEIGHT"
 
-VISUALIZER_NAME="cava_window"
+VISUALIZER_NAME="cava"
 VISUALIZER_COMMAND="cava"
 
 PLAYER_NAME="ncmpcpp_window"
 PLAYER_COMMAND="ncmpcpp"
 
 ALBUMART_NAME="albumart_window"
-ALBUMART_COMMAND="while true; do display_current_mpd_albumart.sh && sleep 2; done"
-ALBUMART_COMMAND="tmux -f $HOME/.tmux.music.conf attach"
 
 if [[ "$1" -ne "-nk" ]]; then
     pkill ${PLAYER_COMMAND% *}
     pkill ${VISUALIZER_COMMAND% *}
 fi
 
-bspc rule -a URxvt:ncmpcpp_window -o desktop=$DESKTOP state=pseudo_tiled;
+bspc rule -a URxvt:"$PLAYER_NAME" -o desktop=$DESKTOP state=floating;
+urxvt -name "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &
 
-urxvt -geometry "$GEOMETRY_PLAYER" -name "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &
+sleep 0.5
+bspc rule -a URxvt:"$VISUALIZER_NAME" -o desktop=$DESKTOP state=floating split_dir=south;
+urxvt -name "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
 
-sleep 0.1;
+bspc rule -a Sxiv:$ALBUMART_NAME -o desktop=$DESKTOP state=floating split_dir=south;
+sxiv -s f -b -N "$ALBUMART_NAME" "$HOME/.cache/covers/current" &
+display_current_mpd_albumart.sh -c &
 
-# bspc rule -a URxvt:cava_window -o desktop=$DESKTOP state=pseudo_tiled split_dir=south;
-
-# urxvt -geometry "$GEOMETRY_VISUALIZER" -name "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
-
-# sleep 0.1;
-
-bspc rule -a URxvt:$ALBUMART_NAME -o desktop=$DESKTOP state=pseudo_tiled split_dir=south;
-
-urxvt -geometry "$GEOMETRY_PLAYER" -name "$ALBUMART_NAME" -e zsh -c "sleep 1; $ALBUMART_COMMAND" &
+sleep 0.5;
+xdotool search --classname "$PLAYER_NAME" windowsize $MAX_WIDTH $HEIGHT
+xdotool search --classname "$PLAYER_NAME" windowmove $x1 $y1
+xdotool search --classname "$VISUALIZER_NAME" windowsize $VISUALIZER_WIDTH $HEIGHT
+xdotool search --classname "$VISUALIZER_NAME" windowmove $(( x1 + ALBUMART_WIDTH + GAP)) $(( y1 + HEIGHT + GAP ))
+xdotool search --classname "$ALBUMART_NAME" windowsize $ALBUMART_WIDTH $HEIGHT
+xdotool search --classname "$ALBUMART_NAME" windowmove $x1 $(( y1 + HEIGHT + GAP ))

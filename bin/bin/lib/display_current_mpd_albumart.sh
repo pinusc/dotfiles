@@ -1,4 +1,5 @@
 #!/bin/bash
+CURRENT_DIR="$HOME/.cache/covers/current"
 clear
 sleep 1
 do_display() {
@@ -37,7 +38,9 @@ do_display() {
         # fi
     fi
 
-    img-display.sh "$fname"
+    echo "$fname"
+
+    [[ -f "$fname" ]] && cp "$fname" "$CURRENT_DIR"
 }
 do_display 
 
