@@ -161,25 +161,18 @@ super + shift + semicolon
         ~/bin/quake/quake-urxvt-newtab
 
 super + space
-    ~/bin/dmenu/launcher
-    # /usr/bin/lighthouse | sh
+        ~/bin/dmenu/launcher
 super + {_,shift} + a
-    ~/bin/dmenu/pass_menu.sh {_,--type}
-super  + v
-    ~/bin/dmenu/volume
+        ~/bin/dmenu/pass_menu.sh {_,--type}
+super  + {_,shift} + v
+        ~/bin/dmenu/clipboard_menu.sh {_,--type}
 super + c
-    ~/bin/dmenu/clipboard_menu.sh
-super + k
-    ~/bin/dmenu/calculator_menu.sh
-super + f
-    ~/bin/dmenu/file_menu.sh
-super + m
-    clerk
+        xcalc
 super + p
-    ~/bin/dmenu/power_menu.sh
+        ~/bin/dmenu/power_menu.sh
 
 super + z
-    info-notify
+    dunstctl history-pop
 
 super + e
 	~/bin/em &
