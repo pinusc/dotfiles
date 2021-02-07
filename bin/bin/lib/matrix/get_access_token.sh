@@ -8,7 +8,7 @@
 username="$1"
 password="$2"
 
-response=$(curl -s -XPOST -d '{"type":"m.login.password", "user":"'"$username"'", "password":"'"$password"'"}' "https://$HOST/_matrix/client/r0/login")
+response=$(curl -s -XPOST -d '{"type":"m.login.password", "user":"'"$username"'", "password":"'"$password"'"}' "https://$MATRIX_HOST/_matrix/client/r0/login")
 
 access_token=$(echo "$response" | jq -r '.access_token')
 echo "$access_token"
