@@ -193,11 +193,14 @@ XF86Audio{Raise,Lower}Volume
 XF86AudioMute
   pamixer -t
 
+XF86AudioMicMute
+  pamixer --source 1 -t
+
 XF86AudioPlay
   mpc toggle
 
 XF86AudioPrev
-  mpc previous
+  mpc prev
 
 XF86AudioNext
   mpc next
