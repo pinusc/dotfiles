@@ -12,6 +12,7 @@ Plug 'carlitux/deoplete-ternjs'
 Plug 'clojure-vim/async-clj-omni'
 Plug 'Shougo/neco-syntax'
 Plug 'artur-shaik/vim-javacomplete2'
+" Plug 'airblade/vim-rooter'
 " for global config
 Plug 'editorconfig/editorconfig-vim'
 
@@ -21,6 +22,7 @@ Plug 'junegunn/fzf.vim'
 
 " Commenter
 Plug 'tpope/vim-commentary'
+Plug 'mbbill/undotree'
 
 " Code snippets
 Plug 'SirVer/ultisnips'
@@ -32,7 +34,16 @@ Plug 'tpope/vim-fireplace', {'for': 'clojure'}
 " Bundle 'kien/rainbow_parentheses.vim'
 Plug 'tpope/vim-leiningen', {'for': 'clojure'}
 
+""" Android
+Plug 'hsanson/vim-android'
+
+" Haskell
+Plug 'neovimhaskell/haskell-vim', {'for': 'haskell'}
+
 Plug 'jceb/vim-orgmode'
+" wiki
+Plug 'fcpg/vim-waikiki'
+Plug 'mattn/calendar-vim'
 Plug 'vim-scripts/utl.vim' " Universal Text Linking
 Plug 'dhruvasagar/vim-table-mode'
 
@@ -45,15 +56,22 @@ Plug 'reedes/vim-textobj-quote', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-textobj-sentence', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-litecorrect', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-wordy', {'for': ['text', 'markdown', 'tex']}
-Plug 'reedes/vim-pencil', {'for': ['text', 'markdown', 'tex']}
+Plug 'reedes/vim-pencil', {'for': ['text', 'markdown']}
 Plug 'reedes/vim-lexical', {'for': ['text', 'markdown', 'tex']}
-Plug 'beloglazov/vim-online-thesaurus'
+Plug 'ron89/thesaurus_query.vim'
 Plug 'dbmrq/vim-ditto', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-wheel', {'for': ['text', 'markdown', 'tex']}
 
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
+
 """ Latex 
-Plug 'xuhdev/vim-latex-live-preview'
-Plug 'lervag/vimtex'
+Plug 'xuhdev/vim-latex-live-preview', {'for': 'tex'}
+Plug 'lervag/vimtex', {'for': 'tex'}
+
+""" Vue
+Plug 'posva/vim-vue', {'for': 'vue'}
 
 "Editing parentesi
 Plug 'guns/vim-sexp', { 'for': 'clojure' }
@@ -77,7 +95,8 @@ Plug 'pinusc/term.vim'
 
 "Cool start screen
 Plug 'mhinz/vim-startify'
-Plug 'easymotion/vim-easymotion'
+" Plug 'easymotion/vim-easymotion'
+Plug 'justinmk/vim-sneak'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'Yggdroot/indentLine'
 
@@ -90,6 +109,11 @@ filetype off
 filetype plugin indent on
 set ignorecase
 set smartcase
+nmap Y y$
+
+" mostly for latex
+set conceallevel=1
+set concealcursor=""
 
 " command completion
 set wildmode=longest,list,full
@@ -98,6 +122,20 @@ set wildmenu
 set t_Co=16
 set background=dark
 colorscheme term
+
+set undolevels=10000         " use many levels of undo
+set history=10000
+
+if has('persistent_undo')
+    set undofile 
+endif 
+
+" auto close location list when switching buffers
+augroup lostcontext
+  au!
+  autocmd BufWinEnter quickfix nnoremap <silent> <buffer> q :cclose<cr>:lclose<cr>
+  autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) | bd | q | endif
+augroup END
 
 " let base16colorspace=256
 " colorscheme base16-vim
@@ -124,7 +162,8 @@ colorscheme term
 "     call Base16hi("htmlBold", g:base16_gui05, g:base16_gui00, g:base16_cterm05, g:base16_cterm00, "bold", "bold")
 "     hi StartifySection ctermfg=1
 "     hi StartifyHeader ctermfg=4
-"     hi StartifyPath ctermfg=243
+"IMPORTANT: Please read through the instructions at least once completely before actually following them to avoid any problems because you missed something!
+     hi StartifyPath ctermfg=243
 " endfunction
 
 
@@ -149,6 +188,8 @@ set fillchars=fold:\
 " }}}
 
 " {{{ Filetype specific
+"
+let g:org_heading_shade_leading_stars = 1
 
 augroup vimrc
     au bufwinenter setlocal foldmethod=manual
@@ -159,15 +200,25 @@ augroup vimrc
     au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=marker | endif
 augroup END
 
-augroup make
-    au!
-    autocmd Filetype java set makeprg=javac\ %
-    autocmd Filetype c set makeprg=make
-augroup END
+" use this variable to remember initial src dir
+let g:startcwd = getcwd()
+function! SetupJava()
+  " let l:path=system("echo -n \"$CLASSPATH:$(git rev-parse --show-toplevel)\"")
+  let l:path=system("echo -n \"$CLASSPATH:" . g:startcwd . "\"")
+  " echom l:path
+  let g:neomake_java_javac_classpath = l:path.'/src/'
+endfunction
 
-augroup complete
+
+augroup java
     au!
     autocmd FileType java setlocal omnifunc=javacomplete#Complete
+    autocmd Filetype java setlocal foldmethod=syntax
+    " foldnestmax=2 folds classes and methods but not inner blocks
+    autocmd Filetype java setlocal foldnestmax=2
+    autocmd Filetype java set makeprg=make
+    " autocmd Filetype let g:neomake_java_javac_classpath = 'src'
+    autocmd Filetype java call SetupJava()
 augroup END
 
 let g:pencil#conceallevel = 0
@@ -176,9 +227,10 @@ function! Prose()
   let g:textobj#quote#educate = 0
   let g:pencil#wrapModeDefault = 'soft'
   let g:pencil#conceallevel = 0
-  let g:lexical#thesaurus = ['~/.config/nvim/thesaurus/mthesaur.txt',]
-  let g:lexical#dictionary_key = '<c-d>'
-  let g:lexical#dictionary = ['/usr/share/dict/words',]
+  set keywordprg=dict\ -s\ substring
+  " let g:lexical#thesaurus = ['~/.config/nvim/thesaurus/mthesaur.txt',]
+  " let g:lexical#dictionary_key = '<c-d>'
+  " let g:lexical#dictionary = ['/usr/share/dict/words',]
   nnoremap <c-t> :OnlineThesaurusCurrentWord<CR>
   call pencil#init()
   call lexical#init()
@@ -191,16 +243,36 @@ function! Prose()
   xnoremap <buffer> <silent> Q gq
   nnoremap <buffer> <silent> <leader>Q vapJgqap
 
-  " force top correction on most recent misspelling
-  nnoremap <buffer> <c-s> [s1z=<c-o>
-  inoremap <buffer> <c-s> <c-g>u<Esc>[s1z=`]A<c-g>u
-
   " replace common punctuation
   iabbrev <buffer> << «
   iabbrev <buffer> >> »
 
   let g:languagetool_jar = '/usr/share/java/languagetool/languagetool-commandline.jar'
 endfunction
+
+function! PandocPreview() 
+    autocmd BufWritePost <buffer> silent execute "!pandoc % -o %:r.pdf &"
+    write
+    execute "!zathura %:r.pdf &"
+endfunction
+
+command! -nargs=0 PandocPreview call PandocPreview()
+
+function! UpdateWordCount()
+    exe "normal! gg"
+    call search("\\.\\.\\.")
+    exe "normal! V"
+    call search("Word Count")
+    exe "normal! k"
+    let d = wordcount()
+    " for [key, value] in items(d)
+    "     echo key . ': ' . value
+    " endfor
+    let words = d.visual_words
+    exe "%s/Word Count:.*/Word Count: " . words . "/"
+    exe "normal! V"
+endfunction
+command! -nargs=0 UpdateWordCount call UpdateWordCount()
 
 " automatically initialize buffer by file type
 augroup prose
@@ -263,7 +335,11 @@ augroup fold
     autocmd FileType clojure IndentLinesDisable
 augroup END
     
+let g:python_host_prog = '/usr/bin/python'
+let g:python2_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = '/usr/bin/python3'
 
+let g:neomake_python_enabled_makers = ['pylama']
 
 " }}}
 
@@ -279,6 +355,72 @@ let g:gitgutter_sign_removed = '·'
 let g:gitgutter_sign_removed_first_line = '·'
 let g:gitgutter_sign_modified_removed = '·'
 
+" {{{ Latex
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+let g:vimtex_fold_enabled=1
+let g:tex_flavor='latex'
+let g:tex_conceal='abdmg'
+let g:neomake_tex_enabled_makers=[]
+let g:vimtex_doc_handlers=['Texdoc_zathura']
+
+let g:vimtex_compiler_latexrun = {
+            \ 'backend' : 'nvim',
+            \ 'background' : 1,
+            \ 'build_dir' : '',
+            \ 'options' : [
+            \   '-verbose-cmds',
+            \   '-shell-escape',
+            \   '--latex-args="-synctex=1"',
+            \ ],
+            \}
+
+let g:vimtex_compiler_latexmk = {
+    \ 'options' : [
+    \   '-pdf',
+    \   '-shell-escape',
+    \   '-verbose',
+    \   '-file-line-error',
+    \   '-synctex=1',
+    \   '-interaction=nonstopmode',
+    \ ],
+    \}
+
+" lifted from vimtex/doc.vim with a change to open texdoc in zathura
+function! Texdoc_zathura(context) abort " 
+  if !has_key(a:context, 'selected')
+    call vimtex#doc#make_selection(a:context)
+  endif
+
+  if empty(a:context.selected) | return | endif
+
+  if get(a:context, 'ask_before_open', 1)
+    call vimtex#echo#formatted([
+          \ 'Open documentation for ',
+          \ ['VimtexSuccess', a:context.selected], ' [y/N]? '
+          \])
+
+    let l:choice = nr2char(getchar())
+    if l:choice ==# 'y'
+      echon 'y'
+    else
+      echohl VimtexWarning
+      echon l:choice =~# '\w' ? l:choice : 'N'
+      echohl NONE
+      return
+    endif
+  endif
+
+  let l:os = vimtex#util#get_os()
+  let l:url = 'http://texdoc.net/pkg/' . a:context.selected
+
+  silent execute '!zathura ' . l:url . ' &'
+
+  redraw!
+endfunction
+
+
+" }}}
 
 " {{{ Pymode
 let g:pymode_rope = 0
@@ -339,7 +481,7 @@ let g:startify_custom_header = s:filter_header(startify#fortune#cowsay())
 let g:user_emmet_install_global = 0
 augroup Emmet
     au!
-    autocmd FileType html,css,scss EmmetInstall
+    autocmd FileType html,css,scss,vue EmmetInstall
     autocmd FileType html,css,scss imap <buffer> <TAB> <plug>(emmet-expand-abbr)
 augroup END
 
@@ -356,10 +498,6 @@ let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
 inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><s-tab> pumvisible() ? "\<C-p>" : "\<TAB>"
 
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-
 aug omnicomplete 
     au!
     au FileType css,sass,scss,stylus,less setl omnifunc=csscomplete#CompleteCSS
@@ -374,17 +512,27 @@ call neomake#configure#automake('w')
 
 let g:netrw_liststyle = 3
 
+let g:sneak#s_next = 1
+
+" {{{ wiki.vim
+
+" }}}
+
 " }}}
 
 " {{{ Mappings 
 " Display TODO
 nnoremap <leader>TODO :vimgrep TODO **/*.py
 
-" Tab split more comodo
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" autocorrect
+" force top correction on most recent misspelling
+imap <C-l> <Esc>[s1z=`]a
+nmap <C-l> [s1z=``
+
+" linewise paste
+nnoremap <leader>p m`o<ESC>p``
+nnoremap <leader>P m`O<ESC>p``
+
 
 tnoremap <Esc> <C-\><C-n>?\$<CR>
 "
@@ -400,29 +548,24 @@ map <F5> :!java %:r
 " omap > ]
 " xmap < [
 " xmap > ]
-
-" to move by screeen line
-" :noremap <Up> gk
-" :noremap! <Up> <C-O>gk
-" :noremap <Down> gj
-" :noremap! <Down> <C-O>gj
-" the following are optional, to move by file lines using Alt-arrows
-" :noremap <M-k> gk
-" :noremap <M-j> gj
-" :noremap <M-Up> k
-" :noremap <M-Down> j
 "
-:tnoremap <A-h> <C-\><C-n><C-w>h
-:tnoremap <A-j> <C-\><C-n><C-w>j
-:tnoremap <A-k> <C-\><C-n><C-w>k
-:tnoremap <A-l> <C-\><C-n><C-w>l
-:nnoremap <A-h> <C-w>h
-:nnoremap <A-j> <C-w>j
-:nnoremap <A-k> <C-w>k
-:nnoremap <A-l> <C-w>l
+tnoremap <A-h> <C-\><C-n><C-w>h
+tnoremap <A-j> <C-\><C-n><C-w>j
+tnoremap <A-k> <C-\><C-n><C-w>k
+tnoremap <A-l> <C-\><C-n><C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
+" additional window mappings to avoid conflict with sexp
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 imap jk <Esc>
 map <f2> :NERDTreeToggle<cr>
 let mapleader = "\<Space>"
+let maplocalleader = "\<Space>\<Space>"
 
 " file bindings
 map <leader>w :w<CR>
@@ -450,10 +593,11 @@ map <leader>gr :Grebase<cr>
 
 " other bindings
 nnoremap <C-q> :center 80<cr>hhv0r=0r#A<space><esc>40A=<esc>d80<bar>
-nnoremap <C-h> :.,$!pandoc -f markdown -t html<cr>
-nnoremap <C-p> :.,$!pandoc -f markdown -t html<cr>
-vnoremap <C-h> :'<,'>$!pandoc -f markdown -t html<cr>
-vnoremap <C-p> :'<,'>$!pandoc -f markdown -t html<cr>
+nnoremap <C-s> yypVr=k
+" nnoremap <C-h> :.,$!pandoc -f markdown -t html<cr>
+" nnoremap <C-p> :.,$!pandoc -f markdown -t html<cr>
+" vnoremap <C-h> :'<,'>$!pandoc -f markdown -t html<cr>
+" vnoremap <C-p> :'<,'>$!pandoc -f markdown -t html<cr>
 
 function! StartMakeView()
     NeomakeSh! make view
@@ -539,7 +683,6 @@ function! RestoreSession(name)
   if a:name !=? '' 
       echo g:session_dir . a:name
     if filereadable(g:session_dir . a:name)
-      echo 'baz'
       execute 'source ' . g:session_dir . a:name
     end
   end
@@ -555,8 +698,8 @@ endfunction
 " Restore and save sessions.
 if argc() == 0
     augroup session
-        autocmd VimEnter * call RestoreSession(FindProjectName())
-        autocmd VimLeave * call SaveSession(FindProjectName())
+        autocmd VimEnter * nested call RestoreSession(FindProjectName())
+        autocmd VimLeave * nested call SaveSession(FindProjectName())
     augroup END
 end
 
