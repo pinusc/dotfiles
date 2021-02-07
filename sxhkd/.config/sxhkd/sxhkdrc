@@ -225,3 +225,6 @@ super + Escape
 
 ctrl + F1
 	google-chrome-stable
+
+XF86Launch1
+    mpv --fullscreen /data/kommunism.webm
