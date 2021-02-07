@@ -23,16 +23,19 @@ bspc monitor "^1" -d \
     $(echo -e '\uf135')   `# rocket` \
     $(echo -e '\uf2db')   `# microchip` \
     $(echo -e '\uf21e')   `# hearthbeat`
-if [[ NMON -gt 1 ]]; then
+if [[ "$NMON" -gt 1 ]]; then
     bspc monitor "^2" -d \
-        $(echo -e '\uf0ac')  `#internet` \
         $(echo -e '\uf121')  `# editor` \
         $(echo -e '\uf120')  `# terminal` \
         $(echo -e '\uf02d')  `# man` \
         $(echo -e '\uf025')  `# music` \
+        $(echo -e '\uf15c')  `# document` \
+        $(echo -e '\uf0ac')  `#internet` \
         $(echo -e '\uf21e')  `# heartbeat` \
         $(echo -e '\uf094')  `# lemon` \
-        $(echo -e '\uf130')  `# phone`
+        $(echo -e '\uf130')  `# phone` \ 
+        $(echo -e '\uf2db')  `# microchip` \
+        $(echo -e '\uf21e')  `# hearthbeat`
 fi
 
 # bspc monitor ^1 -s ^2
