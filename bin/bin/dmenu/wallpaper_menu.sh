@@ -12,7 +12,7 @@ It allows for various methods of setting the wallpaper, which you can select in 
 EOF
 fi
 
-method=$(echo "Unsplash|Directory|Fortune" | rofi -sep '|' -dmenu -p "Which method to set wallpaper? " -a)
+method=$(echo "Unsplash|Directory|Fortune" | rofi -i -sep '|' -dmenu -p "Which method to set wallpaper? " -a)
 
 case "$method" in
     Unsplash)
