@@ -447,7 +447,7 @@ ignore_leading_the = yes
 #
 #empty_tag_marker = <empty>
 #
-#tags_separator = " | "
+tags_separator = ", "
 #
 #tag_editor_extended_numeration = no
 #
