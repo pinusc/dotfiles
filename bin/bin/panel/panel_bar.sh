@@ -92,6 +92,23 @@ while read -r line ; do
             line=${line#?}
             battery="$PADDING%{F$bcolor}${line#?}%{F-}"
             ;;
+        b*)
+            bcolor=$COLOR_CLOCK
+            case $line in
+                bf*)
+                    bcolor=$COLOR_BATTERY_FULL
+                    ;;
+                bm*)
+                    bcolor=$COLOR_BATTERY_MEDIUM
+                    ;;
+                be*)
+                    bcolor=$COLOR_BATTERY_EMPTY
+                    ;;
+            esac
+            #battery
+            line=${line#?}
+            phonebattery="$PADDING%{F$bcolor}${line#?}%{F-}"
+            ;;
         L*)
             l=${line#?}
             l=${l#?}
@@ -124,6 +141,10 @@ while read -r line ; do
         C*)
             # clock output
             clock="$PADDING%{F$COLOR_CLOCK}${line#?}%{F-}"
+            ;;
+        T*)
+            # temp
+            cputemp="$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
             ;;
         V*)
             # alsa volume
@@ -214,12 +235,12 @@ while read -r line ; do
                 case $pom_rem in
                     P*)
                         color_pom=$COLOR_POMODORO_ACTIVE
-                        pom_rem=$PADDING${pom_rem#?}
+                        pom_rem=${pom_rem#?}
                         pom_icon=$IC_POMODORO_TICKING
                         ;;
                     p*)
                         color_pom=$COLOR_POMODORO_PAUSE
-                        pom_rem=$PADDING${pom_rem#?}
+                        pom_rem=${pom_rem#?}
                         pom_icon=$IC_POMODORO_EMPTY
                         ;;
                     n*)
@@ -232,7 +253,7 @@ while read -r line ; do
                 color_pom=$COLOR_POMODORO_INACTIVE
             fi
 
-            pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}${pom_icon}${pom_rem}%{A}%{A}%{F-}"
+            pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}${pom_icon}$PADDING_SHORT${pom_rem}%{A}%{A}%{F-}"
             ;;
         R*)
             # music info
@@ -255,7 +276,7 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${cputemp}${phonebattery}${music}${volume}%{c}${wm_infos}%{r}${pom}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
         ;;
         2)

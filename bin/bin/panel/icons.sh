@@ -1,6 +1,7 @@
 export IC_ETHERNET="\\uf6ff"
 export IC_BLUETOOTH="\\uf5af"
 export IC_WIFI="\\uf1eb"
+export IC_VPN="\\uf983"
 export IC_CONNECTED="\\uf0dc"
 export IC_NOCONNECTION="\\uf05e"
 
@@ -34,6 +35,7 @@ export IC_MUSIC_PAUSE="\\uf04c"
 export IC_MUSIC_PLAY="\\uf04b"
 export IC_MUSIC_NEXT="\\uf051"
 
+export IC_PHONE="\\uf10b"
 export IC_BATTERY_POWER="\\uf21e"
 export IC_BATTERY_FULL="\\uf240"
 export IC_BATTERY_GT_65="\\uf241"
@@ -47,3 +49,5 @@ export IC_WALLPAPER="\\uf03e"
 export IC_POMODORO_FULL="\\ue001"
 export IC_POMODORO_EMPTY="\\ue002"
 export IC_POMODORO_TICKING="\\ue003"
+
+export IC_TEMP="\\uf2c9"

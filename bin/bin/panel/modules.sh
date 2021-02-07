@@ -1,4 +1,6 @@
 #!/usr/bin/bash
+
+# TODO: rewrite modules so that variables are local!
 . icons.sh
 . settings.sh
 clock() {
