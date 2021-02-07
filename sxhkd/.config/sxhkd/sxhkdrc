@@ -7,7 +7,7 @@ super + alt + Escape
 	bspc quit
 
 # close current node
-super + {_,shift} + w
+super + {_,alt} + w
 	bspc node {-c,-k}
 
 #toggle monocle
@@ -46,8 +46,8 @@ super + m
 super + shift + {_, ctrl} + space
 	bspc node @/ -F {vertical, horizontal}
 
-super + r
-	bspc node @/ -R 90
+super + {_, shift} + r
+	bspc node @{/,parent} -R 90
 
 #balance desktop
 
@@ -63,7 +63,7 @@ super + {comma,period}
 
 #Move through desktops
 super + {Left,Right}
-	bspc desktop -f {prev,next}
+	bspc desktop -f {prev,next}.local
 
 super + Tab
   bspc desktop -f last
