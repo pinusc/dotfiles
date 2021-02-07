@@ -1,4 +1,8 @@
 #!/usr/bin/python
+"""
+Add albums (directories) tp mpc queue from a directory, in random order.
+E.g. shuffle mozart symphonies while ensuring the movements stay clumped together.
+"""
 
 from sys import exit, argv
 from random import randint
@@ -8,12 +12,12 @@ import os
 def main():
     pl = addDir(argv[1])
     for song in flatten(pl):
-        cmus_add(song)
+        mpc_add(song)
     return 0
 
 
-def cmus_add(song):
-    os.system('cmus-remote ' + song)
+def mpc_add(song):
+    os.system('mpc add ' + song)
 
 
 def addDir(path):
