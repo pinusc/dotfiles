@@ -1,7 +1,9 @@
 #!/bin/zsh
 
+FONT="IBM Plex Mono"
+
 source "$HOME/bin/lib/colors.sh"
-i3lock -e -B=20 -k --indicator \
+i3lock -e -c 00000000 -k --indicator \
     --bshlcolor="${base0A:1}ff" \
     --keyhlcolor="${base0E:1}ff" \
     --insidecolor="${base00:1}aa" \
@@ -14,8 +16,14 @@ i3lock -e -B=20 -k --indicator \
     --datecolor="${base05:1}bb"\
     --verifcolor="${base0C:1}ff" \
     --noinputtext="" \
-    --veriftext="" \
-    --wrongtext=""
+    --time-font="$FONT" \
+    --date-font="$FONT" \
+    --layout-font="$FONT" \
+    --verif-font="$FONT" \
+    --wrong-font="$FONT" \
+    --greeter-font="$FONT" \
+    --veriftext="..." \
+    --wrongtext="XXX"
 
 # trap "killall conky" EXIT
 # conky -c dotfiles/conkyrc2 &> /dev/null &
