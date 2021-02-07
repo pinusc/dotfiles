@@ -128,8 +128,8 @@ super + {_,shift} + u
     ~/.config/bspwm/misc/toggle {hide,show}
     
 # wm independent hotkeys
-super + alt + w; o
-  bin/util/open_weechat_ssh_url.sh
+super + alt + o; w
+  ~/bin/util/open_weechat_url.sh
 
 #lock 
 {super + shift + Delete,XF86ScreenSaver}
