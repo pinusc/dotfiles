@@ -30,15 +30,6 @@ super + {s,f}
 super + shift + s
   bspc node -g sticky
 
-#super + {grave,Tab}
-#	bspc {node,desktop} -f last
-
-#last node
-super + {o,i}
-	bspc control --record-history off; \
-	bspc desktop {older,newer} -f; \
-	bspc control --record-history on
-
 super + m
 	bspc node -s biggest.local
 
