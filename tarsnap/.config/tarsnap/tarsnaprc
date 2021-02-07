@@ -31,8 +31,10 @@ humanize-numbers
 # Exclude files and directories matching specified patterns.
 # Only one file or directory per command; multiple "exclude"
 # commands may be given.
+exclude college/moodle/
 exclude **/readings
 exclude **/sources
+exclude **/resources
 exclude **/bin
 exclude **/out
 exclude **/res
@@ -40,6 +42,15 @@ exclude **/.git
 exclude .git*
 exclude **/build
 exclude *.bak
+exclude *.~lock.*
+exclude *.fls
+exclude *.log
+exclude *.aux
+exclude *.fdb_latexmk
+exclude *.synctex.gz
+exclude **/projects/**.txt
+exclude *.o
+exclude *hi.
 
 # syncthing
 exclude .stfolder

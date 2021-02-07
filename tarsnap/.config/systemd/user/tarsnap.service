@@ -4,3 +4,7 @@ Description=Tarsnap Backup for docs
 [Service]
 Type=oneshot
 ExecStart=%h/.config/tarsnap/tarsnap-backup.sh
+Restart=on-failure
+RestartSec=120
+StartLimitBurst=2
+StartLimitIntervalSec=1000
