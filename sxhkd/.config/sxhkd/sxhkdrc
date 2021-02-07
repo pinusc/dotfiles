@@ -42,6 +42,10 @@ super + {o,i}
 super + m
 	bspc node -s biggest.local
 
+super + shift + m
+        bspc rule --add "*:*:mutt" --one-shot state=floating; \
+        urxvt -geometry 200x50 -e mutt
+
 #flip desktop
 super + shift + {_, ctrl} + space
 	bspc node @/ -F {vertical, horizontal}
