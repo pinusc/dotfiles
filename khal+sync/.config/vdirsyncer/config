@@ -15,7 +15,42 @@ fileext = ".vcf"
 type = "carddav"
 # We can simplify this URL here as well. In theory it shouldn't matter.
 # url = "https://dav.gstelluto.com/"
-url = "https://dav.gstelluto.com/pinusc/3abc8ed8-d990-40a2-be61-31e69445cc70/"
+url = "http://dav.gstelluto.com/radicale/pinusc/9bf128d5-fb63-bb8f-8fca-ed7c60e2f2ff/"
 username = "pinusc"
-# password = "tf1N,|42%(Gy2m0C8uPntG.Z("
-password.fetch = ["command", "sh", "-c", "pass servers/sofronia/pinusc | head -n  1"]
+password.fetch = ["command", "sh", "-c", "pass servers/dav.gstelluto.com | head -n  1"]
+
+[pair my_cal]
+a = "my_cal_local"
+b = "my_cal_remote"
+collections = ["from a", "from b"]
+
+[storage my_cal_local]
+type = "filesystem"
+path = "~/.calendar/"
+fileext = ".ics"
+
+[storage my_cal_remote]
+type = "caldav"
+# We can simplify this URL here as well. In theory it shouldn't matter.
+url = "https://dav.gstelluto.com/radicale/pinusc/29b453f1-d608-4ff1-95d4-e9c607d71dab/"
+username = "pinusc"
+password.fetch = ["command", "sh", "-c", "pass servers/dav.gstelluto.com | head -n  1"]
+
+
+[pair gcal]
+a = "gcal_local"
+b = "gcal_remote"
+collections = ["from a", "from b"]
+
+[storage gcal_local]
+type = "filesystem"
+path = "~/.calendar-gcal/"
+fileext = ".ics"
+
+[storage gcal_remote]
+type = "caldav"
+# We can simplify this URL here as well. In theory it shouldn't matter.
+url = "https://www.google.com/calendar/dav/gstell23@colby.edu/events"
+username = "gstell23@colby.edu"
+password.fetch = ["command", "sh", "-c", "pass school/colby.edu | head -n  1"]
+
