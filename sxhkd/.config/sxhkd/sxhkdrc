@@ -215,9 +215,11 @@ XF86AudioStop
 Pause
   mpc toggle
 
-Print
-  cd ~/pics/screenshots && nux move android folder
-  scrot
+@Print
+  scrot -e 'mv $f ~/shots'
+
+@shift + Print
+  scrot -s -e 'mv $f ~/shots'
 
 # make sxhkd and panel reload its configuration files:
 super + Escape
