@@ -68,14 +68,16 @@ bspc rule -a Emacs state=tiled
 bspc rule -a Pavucontrol state=floating center=on
 bspc rule -a libreoffice-writer state=tiled follow=on desktop="^5"
 
-bspc rule -a google-chrome follow=on desktop="^6"
-bspc rule -a vivaldi-stable follow=on desktop="^6"
 bspc rule -a Firefox follow=on desktop="^6"
+bspc rule -a qutebrowser follow=on desktop="^6"
 
 bspc rule -a gimp state=floating desktop="^1"
 bspc rule -a vlc follow=on desktop="^2"
-bspc rule -a mpv state=floating center=on
+bspc rule -a mpv state=floating center=on\n
+bspc rule -a XCalc state=floating center=on
 bspc rule -a Anki state=floating center=on
+bspc rule -a "*:urxvt-quaked" state=floating
+bspc rule -a "*:quake-tabbed" state=floating
 bspc rule -a "com-chschmid-jdotxt-Jdotxt" state=floating sticky=on
 
 if [ -e "$BSPWM_TREE" ] ; then
@@ -96,19 +98,20 @@ xrdb -merge /home/pinusc/.Xresources
 xset fp+ /usr/share/fonts/X11/gohu &
 # setxkbmap it
 xmodmap ~/.Xmodmap
-xsetroot -cursor_name left_ptr &
+xcape
+xsetroot -cursor_name crosshair &
 
 #=================================== SCREEN ====================================
 feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper &
 
 # disable screensaver
 xautolock -time 15 -locker lock &
-redshift -t 5500:3700 &
+redshift -t 6500:2000 &
 
 #==================================== APPS =====================================
-# clipmenud &
+clipmenud &
 sxhkd &
 panel &
 # bspc config -m 1 top_padding 39 &
-mpd &
 music_player &
+/usr/lib/kdeconnectd &
