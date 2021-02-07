@@ -85,10 +85,8 @@ super + alt + {Left,Down,Up,Right}
 	bspc node -v {-15 0, 0 15, 0 -15, 15 0}
 
 #resize node 2
-super + alt + {h,j,k,l}
-	bspc node -z {left -10 0,bottom 0 10,bottom 0 -10,left +10 0}
-super + shift + alt + {h,j,k,l}
-	bspc node -z {right -10 0,top 0 10,top 0 -10,right +10 0}
+super +  {_, shift} + alt + {h,j,k,l}
+	export PX={10,50}; bspc node -z {left -$PX 0,bottom 0 $PX,bottom 0 -$PX,left +$PX 0}
 
 #set split ratio
 super + ctrl + {1-9}
