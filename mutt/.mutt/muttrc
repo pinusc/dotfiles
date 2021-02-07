@@ -1,6 +1,7 @@
 source /usr/share/doc/mutt/samples/colors.linux
 color status black green
-color index magenta default "~N"
+color index yellow default "~N"
+color index magenta default "~O"
 color index blue default "~T"
 color index red default "~D"
 
@@ -20,7 +21,6 @@ set signature        = ~/.mutt/sig           # my signature file
 # set spoolfile=+/
 # set header_cache=~/.cache/mutt
 
-set sendmail="/usr/bin/sendmail"
 set realname="Giuseppe Stelluto"
 
 set from="giuseppe@gstelluto.com"
@@ -32,6 +32,8 @@ folder-hook . set record="+gstelluto/sent"
 # folder-hook +colby* set from="gstell23@colby.edu"
 folder-hook +colby* set from="giuseppe.stelluto@colby.edu"
 folder-hook +colby* set copy=no
+folder-hook +logins* set from="logins@gstelluto.com"
+folder-hook +gstelluto* set from="giuseppe@gstelluto.com"
 folder-hook . set copy=no
 
 
@@ -42,11 +44,11 @@ set wait_key = no        # shut up, mutt
 set mbox_type = Maildir  # mailbox type
 set timeout = 3          # idle time before scanning
 set mail_check = 0       # minimum time between scans
-unset move               # gmail does that
+# unset move               # gmail does that
 set delete               # don't ask, just do
 unset confirmappend      # don't ask, just do!
 set quit                 # don't ask, just do!!
-unset mark_old           # read/new is good enough for me
+set mark_old             # read/new is good enough for me
 set beep_new             # bell on new mails
 set pipe_decode          # strip headers and eval mimes when piping
 set thorough_search      # strip headers and eval mimes before searching<Paste>
@@ -77,28 +79,56 @@ hdr_order from: to: cc: date: subject:  # and in this order
 
 # Default inbox.
 set spoolfile = "+colby/inbox"
+# virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
+# set virtual_spoolfile=yes
+# set folder=~/.notmuch
+# bind index,pager X change-vfolder
+# bind index,pager \eX vfolder-from-query
+# set nm_default_url = "notmch://?query=tag:inbox"
+# set nm_query_type = messages
+# set nm_record = no
+# set nm_db_limit = 100
+# set nm_open_timeout = 5
+# set nm_record_tags = ""
+# set nm_unread_tag = unread
+# set vfolder_format = "%6n(%6N) %f"
+# # Points to the notmuch directory
+# set nm_default_url = "notmuch://$HOME/mail/colby/inbox"
+# Makes notmuch return threads rather than messages
+# set nm_query_type = "threads"
+# Binding for notmuch search
+# bind index \\ vfolder-from-query
+macro index \Cf "<enter-command>unset wait_key<enter><shell-escape>read -p 'Enter a search term to find with notmuch: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;s/\^id:// for@a;$,=\"|\";print@a' | perl -le '@a=<>; chomp@a; s/\\+/\\\\+/ for@a;print@a' \`\"<enter>" "show only messages matching a notmuch pattern"
+macro index \Cl "<limit>~A<enter>"
+
+
+
 
 # Alternate email addresses.
 alternates giuseppe@gstelluto.com giuseppe.stelluto@gmail.com gstell@protonmail.com gstelluto@uwcchina.org logins@gstelluto.com gstell23@colby.edu giuseppe.stelluto@colby.edu
 
-mailboxes +colby \
-          +colby/inbox \
-          +colby/classes \
-          +colby/intl \
-          +colby/sent \
-          +colby/spam \
-          +gstelluto \
-          +gstelluto/inbox \
-          +gstelluto/sent \
-          +gstelluto/spam \
-          +logins \
-          +logins/inbox \
-          +logins/sent \
-          +logins/spam \
-          +gmail \
-          +gmail/inbox \
-          +gmail/sent \
-          +gmail/spam \
+mailboxes  +colby \
+           +colby/inbox \
+           +colby/all \
+           +colby/logins \
+           +colby/classes \
+           +colby/gdrive \
+           +colby/intl \
+           +colby/sent \
+           +colby/spam \
+           +gstelluto \
+           +gstelluto/inbox \
+           +logins \
+           +logins/inbox \
+           +protonmail-gstell \
+           +protonmail-gstell/inbox \
+           +local \
+           +gmail \
+           +gmail/inbox \
+           +gmail/sent \
+           +gmail/spam \
+           +citywalk \
+           +citywalk/inbox
 
 # by default, deleted mail will go in ~/mail/trash
 folder-hook . set trash = +trash
@@ -131,6 +161,11 @@ bind index,pager J sidebar-next
 bind index,pager K sidebar-prev
 bind index,pager L sidebar-open
 
+bind editor \t complete-query
+bind editor \ca complete-query
+bind index \ca query
+
+
 # Pager View Options ---------------------------------
 set pager_index_lines = 10 # number of index lines to show
 set pager_context = 3      # number of context lines to show
@@ -157,6 +192,10 @@ bind index g noop
 bind index gj next-entry
 bind index gk previous-entry
 
+macro index gc "<change-folder> =colby/inbox<enter>"
+macro index gl "<change-folder> =logins/inbox<enter>"
+macro index gm "<change-folder> =gmail/inbox<enter>"
+
 bind pager R  group-reply
 
 # View attachments properly.
@@ -167,3 +206,18 @@ bind attach <return> view-mailcap
 macro compose H "F pandoc -s -f markdown -t html \ny^T^Utext/html; charset=us-ascii\n"
 set wait_key=no
 
+# macro index S "<shell-escape>mbsync -a; notmuch new<enter>"
+bind index,pager B sidebar-toggle-visible
+
+# score
+score '~A' +10
+score '~f colbynow@colby.edu' -10
+score '~f nobody@colby.edu' -10
+color index color242 default "~n 0"
+color index color14 default "~b zoom.us"
+
+folder-hook . "macro index S '<shell-escape>mbsync -a; notmuch new<enter>'"
+folder-hook +colby* "macro index S '<shell-escape>mbsync colby; notmuch new<enter>'"
+folder-hook +gstelluto* "macro index S '<shell-escape>mbsync gstelluto; notmuch new<enter>'"
+folder-hook +logins* "macro index S '<shell-escape>mbsync logins; notmuch new<enter>'"
+folder-hook +gmail* "macro index S '<shell-escape>mbsync gmail; notmuch new<enter>'"
