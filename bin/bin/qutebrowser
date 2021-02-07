@@ -1,1 +1,3 @@
-/home/pinusc/dev/qutebrowser/.venv/bin/qutebrowser
+#!/bin/bash
+
+python ~/dev/qutebrowser/qutebrowser.py "$@"
