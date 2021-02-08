@@ -180,8 +180,7 @@ XF86MonBrightness{Up,Down}
   xbacklight {+,-} 10 && PERCENT=$(xbacklight | grep -o "[0-9]*" | head -n 1) && ~/bin/panel/dzen2/popup "Brightness: $PERCENT%" 1
 
 XF86Audio{Raise,Lower}Volume
-  #amixer -q set Master 5%{+,-}
-  change_volume.sh {increase, decrease} 5
+    ponymix increase 5
 
 XF86AudioMute
   pamixer -t
