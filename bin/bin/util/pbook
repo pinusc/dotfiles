@@ -1,4 +1,5 @@
 #!/bin/bash
+# Script to choose and open a book in $HOME/books with fzf+zathura
 BOOK_DIR="$HOME/books"
 
 [[ -z "$PDF_VIEWER" ]] && PDF_VIEWER=zathura
@@ -10,12 +11,20 @@ fi
 
 
 cd "$BOOK_DIR" || exit
-fname="$(find . -mindepth 1 -maxdepth 2 -type f -name '*.pdf' | fzf "${fzf_a[@]}")"
+if which fd &>/dev/null; then
+    fname="$(fd -e pdf -e epub -e mobi | fzf "${fzf_a[@]}")"
+else
+    fname="$(find . -type f -name '*.pdf' | fzf "${fzf_a[@]}")"
+fi
+
+if [[ -z "$fname" ]]; then
+    exit 1
+fi
 
 if [[ -f "$fname" ]]; then
     "$PDF_VIEWER" "$fname" &
     disown
 else
-    echo "No syllabus found!"
+    echo "No file found!"
     exit 1
 fi
