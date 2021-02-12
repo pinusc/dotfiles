@@ -31,8 +31,11 @@ bindkey '^R' history-incremental-search-backward
 
 spaces=$(printf " %.0s" {1..$(( (COLUMNS - 40) / 2 ))})
 if which fortune &>/dev/null && which cowsay &>/dev/null; then
-    setopt LOCAL_OPTIONS NO_NOTIFY NO_MONITOR
-    fortune | cowsay | sed "s/^/$spaces/" &
+    # must run in separate shell so that we hide job control's output
+    (
+        setopt LOCAL_OPTIONS NO_NOTIFY NO_MONITOR
+        fortune | cowsay | sed "s/^/$spaces/" &
+    )
 fi
 
 # ====== load aliases =======
