@@ -153,8 +153,6 @@ weather() {
 network() {
     interface="$(ip link | grep -E '(wl|en)p.*s.*:' | grep 'state UP' | awk '{ print $2 }')"
     network_type="${interface:0:2}"
-    # TODO handle wireguard not being a catchcall vpn ?
-    vpn=$(ip -br a | cut -d" " -f1 | grep -E "(tun|wg)[[:digit:]]")
     case $network_type in
         wl)
             link=$(iw "$interface" link)
@@ -171,8 +169,12 @@ network() {
             state=d
         ;;
     esac
-    if [[ -n "$vpn" ]]; then
-        ic_type="$IC_VPN"
+    vpn_interface=$(ip -br a | cut -d" " -f1 | grep -E "(tun|wg)[[:digit:]]")
+    if [[ -n "$vpn_interface" ]]; then
+        # check that this is an actual vpn through which we route traffic
+        if ip route | grep "$vpn_interface" | grep -q "^0.0.0.0"; then
+            ic_type="$IC_VPN"
+        fi
     fi
     if [[ -z "$ic_state" ]]; then
         ADDRESS=perdu.com HTMLGREP="Vous Etes Perdu" check_connection
