@@ -235,41 +235,40 @@ music_normalize_title () {
 
 # music controls
 music() {
+    local title
+    local artist
     {
-        if command -v mpris && [[ -n $(mpris --list | grep -v chromium) ]]; then
-            player=$(mpris --list | awk -F '.' '{ print $4; }' | grep -E 'mopidy|mpv|sporify' | head -n 1)
+        local IC_PLAYPAUSE=""
+        if command -v playerctl; then
+            if command -v get_mpris_active_player.sh; then
+                player=$(get_mpris_active_player.sh)
+            else
+                player=$(playerctl --list-all | head -n 1)
+            fi
             if [[ -n "$player" ]]; then
-                meta="$(mpris "$player" meta)"
-                readarray -t metarray <<< "$meta"
-                # TODO remove incredibly unsafe code
-                for l in "${!metarray[@]}"; do
-                    # lines are of the form mpris:$propname=$prop
-                    p="${metarray[$l]#*:}"  # gets the line and strips "mpris:"
-                    propname="${p%=*}"
-                    # for some reason sometimes artist is artist[]
-                    propname=$(echo "$propname" | tr -dc "[:alnum:]") # remove special characters
-                    value="${p#*=}"
-                    eval "${propname}=\"${value}\""
-                done
-                if [[ $(mpris "$player" get player/status) = "Paused" ]]; then
-                    music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player play:}$IC_MUSIC_PLAY%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
-                elif [[ $(mpris "$player" get player/status) = "Playing" ]]; then
-                    music_command="%{A:mpris $player prev:}$IC_MUSIC_PREV%{A} %{A:mpris $player pause:}$IC_MUSIC_PAUSE%{A} %{A:mpris $player next:}$IC_MUSIC_NEXT%{A}"
+                title="$(playerctl -p "$player" metadata title)"
+                artist="$(playerctl -p "$player" metadata artist)"
+                if [[ $(playerctl -p "$player" status) = "Paused" ]]; then
+                    IC_PLAYPAUSE="$IC_MUSIC_PLAY"
+                elif [[ $(playerctl -p "$player" status) = "Playing" ]]; then
+                    IC_PLAYPAUSE="$IC_MUSIC_PAUSE"
                 fi
+                music_command="%{A:playerctl -p $player previous:}$IC_MUSIC_PREV%{A} %{A:playerctl -p $player play-pause:}$IC_PLAYPAUSE%{A} %{A:playerctl -p $player next:}$IC_MUSIC_NEXT%{A}"
                 [[ "$player" = spotify ]] && music_command="${command} $IC_SPOTIFY"
             fi
         fi
-        if command -v mpc && [[ -z "$music_command" ]]; then
+        if command -v mpc && [[ -z "$title" ]]; then
             title=$(mpc -f "%title%" | head -n1)
             if [[ -z "$title" ]]; then
                 title=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
             fi
             if [[ $(mpc status | awk '/volume/ {print $2}') != "n/a" ]]; then
                 if mpc status | grep -q "paused"; then
-                    music_command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc play:}$IC_MUSIC_PLAY%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                    IC_PLAYPAUSE="$IC_MUSIC_PLAY"
                 else
-                    music_command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                    IC_PLAYPAUSE="$IC_MUSIC_PAUSE"
                 fi
+                music_command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PLAYPAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
             fi
         fi
     } > /dev/null 2>&1
