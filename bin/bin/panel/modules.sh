@@ -252,9 +252,11 @@ music() {
                     IC_PLAYPAUSE="$IC_MUSIC_PLAY"
                 elif [[ $(playerctl -p "$player" status) = "Playing" ]]; then
                     IC_PLAYPAUSE="$IC_MUSIC_PAUSE"
+                else
+                    IC_PLAYPAUSE="$IC_MUSIC_PAUSE"
                 fi
                 music_command="%{A:playerctl -p $player previous:}$IC_MUSIC_PREV%{A} %{A:playerctl -p $player play-pause:}$IC_PLAYPAUSE%{A} %{A:playerctl -p $player next:}$IC_MUSIC_NEXT%{A}"
-                [[ "$player" = spotify ]] && music_command="${command} $IC_SPOTIFY"
+                [[ "$player" = spotify ]] && music_command="${music_command} $IC_SPOTIFY"
             fi
         fi
         if command -v mpc && [[ -z "$title" ]]; then
@@ -268,7 +270,7 @@ music() {
                 else
                     IC_PLAYPAUSE="$IC_MUSIC_PAUSE"
                 fi
-                music_command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_MUSIC_PLAYPAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
+                music_command="%{A:mpc prev:}$IC_MUSIC_PREV%{A} %{A:mpc pause:}$IC_PLAYPAUSE%{A} %{A:mpc next:}$IC_MUSIC_NEXT%{A}"
             fi
         fi
     } > /dev/null 2>&1
