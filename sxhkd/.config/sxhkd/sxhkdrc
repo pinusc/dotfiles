@@ -176,6 +176,10 @@ super + shift + e
 super + {F12,F11}
   ~/bin/panel/dzen2/popup "Volume: $(ponymix {increase,decrease} 5)%" 1
 
+# o as in 'o'pen pdf
+super + o
+    ~/bin/dmenu/pdf_menu.sh
+
 XF86MonBrightness{Up,Down}
   xbacklight {+,-} 10 && PERCENT=$(xbacklight | grep -o "[0-9]*" | head -n 1) && ~/bin/panel/dzen2/popup "Brightness: $PERCENT%" 1
 

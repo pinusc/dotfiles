@@ -4,13 +4,9 @@ URxvt*termName:xterm-256color
 URxvt*geometry:120*80
 Xft.dpi: 80
 URxvt*scrollBar:false
-! URxvt*font:xft:Source Code Pro for Powerline:size=10
-!URxvt*font:-gohu-*-medium-*-*-*-11-*-*-*-*-*-*-*
- URxvt*font: \
+URxvt*font: \
     -gohu-*-medium-*-*-*-14-*-*-*-*-*-*-*, \
-    xft: GohuFont Nerd Font:size=14, \
-    xft: Source Code Pro:style=Italic:size=14, \
-    xft: Symbola:size=11:antialias=false
+    xft:Symbols Nerd Font:size=14
 
 URxvt*iso14755:true
 URxvt.imLocale:en_US.UTF-8
@@ -20,8 +16,10 @@ urxvt*dynamicColors: on
 URxvt.inputMethod: ibus
 URxvt.preeditType: OverTheSpot
 URxvt.internalBorder: 5
-URxvt.perl-ext-common: default,font-size
+URxvt.perl-ext-common: default,font-size,matcher
 URxvt.perl-lib: /home/pinusc/.urxvt/ext
+URxvt.url-launcher: /usr/bin/xdg-open
+URxvt.matcher.button: 1
 
 URxvt.keysym.C-Up:     font-size:increase
 URxvt.keysym.C-Down:   font-size:decrease
@@ -68,3 +66,7 @@ rofi.color-active: base00, base05, base00, base01, base05
 rofi.color-urgent: base00, base05, base00, base01, base05
 rofi.monitor: -4
 rofi.font: Source Code Pro 11
+rofi.kb-row-down: Control+j
+rofi.kb-accept-entry: Return,KP_Enter,Control+m
+rofi.kb-row-up: Control+k
+rofi.kb-remove-to-eol: 
