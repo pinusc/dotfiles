@@ -57,19 +57,10 @@ if which fzf &>/dev/null; then
     export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
     export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 
+    which fd &>/dev/null && export FZF_ALT_C_COMMAND="fd --type directory --follow --min-depth 1"
+
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
-
-# ====== theming & style =======
-zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]} m:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=1
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle :compinstall filename '/home/pinusc/.zshrc'
-
-PROMPT="%F{green}%m%f %# "
 
 # ===== load plugins =======
 
