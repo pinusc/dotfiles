@@ -1,8 +1,8 @@
 export EDITOR='nvim'
 export VISUAL='nvim'
 export MAIL="$HOME/mail"
-export PAGER='less'
-# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export PAGER='bat'
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export PDF_VIEWER='zathura'
 export BROWSER='/usr/bin/qutebrowser'
 # export TERM="rxvt-unicode-256color"
@@ -11,6 +11,7 @@ export BROWSER='/usr/bin/qutebrowser'
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_SCREENSHOTS_DIR="$HOME/shots"
 
 export TEXMFHOME="$HOME/.local/share/texmf"
 export QT_STYLE_OVERRIDE=kvantum
@@ -29,7 +30,9 @@ path=(
   $HOME/.local/bin
   # /usr/local/heroku/bin
   /usr/local/{bin,sbin}
+  $HOME/usr/local/{bin,sbin}
   # $(ruby -rubygems -e "puts Gem.user_dir")/bin
+  $HOME/.emacs.d/bin
   $path
 )
 
