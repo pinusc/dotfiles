@@ -1,6 +1,7 @@
 text/html; qutebrowser file://%s; needsterminal; nametemplate=%s.html
 text/html; cat %s | pipe2w3m.sh; copiousoutput;
 text/plain; cat %s; copiousoutput;
-application/pdf; evince %s;
+application/pdf; zathura --fork %s;
 image/jpeg; sxiv %s;
+image/png; sxiv %s;
 application/vnd.openxmlformats-officedocument.wordprocessingml.document; libreoffice %s &;

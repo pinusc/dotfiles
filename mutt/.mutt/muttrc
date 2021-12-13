@@ -1,12 +1,8 @@
+# vim: ft=neomuttrc
 source /usr/share/doc/mutt/samples/colors.linux
-color status black green
-color index yellow default "~N"
-color index magenta default "~O"
-color index blue default "~T"
-color index red default "~D"
-
 set query_command = "khard email --parsable" 
 macro index,pager A "<pipe-message>khard add-email<return>" "add the sender email address to khard"
+macro index,pager a "<pipe-message>khard add-email<return>" "add the sender email address to khard"
 
 set folder           = ~/mail                # mailbox location
 set alias_file       = ~/.mutt/alias         # where to store aliases
@@ -16,6 +12,8 @@ set certificate_file = ~/.mutt/certificates  # where to store certs
 set mailcap_path     = ~/.mutt/mailcap       # entries for filetypes
 set tmpdir           = ~/.mutt/temp          # where to keep temp files
 set signature        = ~/.mutt/sig           # my signature file
+set abort_noattach   = ask-yes
+set abort_noattach_regex = "^[^>].*attach(|ed|ments?)"
 
 # set folder=~/mail/giuseppe@gstelluto.com/INBOX
 # set spoolfile=+/
@@ -63,7 +61,6 @@ set sidebar_short_path = yes
 set sidebar_delim_chars="/"
 set sidebar_folder_indent = yes
 set sidebar_width   = 24
-color sidebar_new color221 color233
 
 # Status Bar -----------------------------------------
 set status_chars  = " *%A"
@@ -113,15 +110,18 @@ mailboxes  +colby \
            +colby/logins \
            +colby/classes \
            +colby/gdrive \
-           +colby/intl \
            +colby/sent \
            +colby/spam \
            +gstelluto \
            +gstelluto/inbox \
            +logins \
            +logins/inbox \
+           +logins/archive \
            +protonmail-gstell \
            +protonmail-gstell/inbox \
+           +bak-relay \
+           +bak-relay/logins \
+           +bak-relay/giuseppe \
            +local \
            +gmail \
            +gmail/inbox \
@@ -191,6 +191,8 @@ bind pager G  bottom
 bind index g noop
 bind index gj next-entry
 bind index gk previous-entry
+bind index \cu half-up
+bind index \cd half-down
 
 macro index gc "<change-folder> =colby/inbox<enter>"
 macro index gl "<change-folder> =logins/inbox<enter>"
@@ -213,11 +215,24 @@ bind index,pager B sidebar-toggle-visible
 score '~A' +10
 score '~f colbynow@colby.edu' -10
 score '~f nobody@colby.edu' -10
-color index color242 default "~n 0"
-color index color14 default "~b zoom.us"
 
 folder-hook . "macro index S '<shell-escape>mbsync -a; notmuch new<enter>'"
 folder-hook +colby* "macro index S '<shell-escape>mbsync colby; notmuch new<enter>'"
 folder-hook +gstelluto* "macro index S '<shell-escape>mbsync gstelluto; notmuch new<enter>'"
 folder-hook +logins* "macro index S '<shell-escape>mbsync logins; notmuch new<enter>'"
 folder-hook +gmail* "macro index S '<shell-escape>mbsync gmail; notmuch new<enter>'"
+
+color status black green
+color index yellow default "~N"
+color index magenta default "~O"
+color index color14 default "~b zoom.us"
+color index color242 default "~n 0"
+uncolor index "~D"
+color index black red "~D"
+uncolor index "~T"
+color index blue default "~T"
+color indicator black yellow
+
+# color sidebar default default
+color sidebar_new yellow default
+color normal default default
