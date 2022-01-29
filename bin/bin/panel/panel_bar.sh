@@ -72,8 +72,9 @@ while read -r line ; do
             line=${line:3}
             keyboard_icon="$PADDING%{F$kcolor}$line%{F-}"
             ;;
-        K*)
-            keyboard="$PADDING_SHORT%{F$COLOR_KEYBOARD}${line#?}%{F-}"
+        Kb*)
+            line=${line:2}
+            keyboard="$PADDING_SHORT%{F$COLOR_KEYBOARD}${line}%{F-}"
             ;;
         B*)
             bcolor=$COLOR_CLOCK
@@ -109,6 +110,13 @@ while read -r line ; do
             line=${line#?}
             phonebattery="$PADDING%{F$bcolor}${line#?}%{F-}"
             ;;
+        l*)
+            if [ "$line" = "l-" ]; then
+                vpn=""
+            else
+                vpn="$PADDING%{F$COLOR_VPN}${line#?}%{F-}"
+            fi
+            ;;
         L*)
             l=${line#?}
             l=${l#?}
@@ -136,7 +144,7 @@ while read -r line ; do
             ;;
         D*)
             # date output
-            date="$PADDING_SHORT$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
+            date="$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
             ;;
         C*)
             # clock output
@@ -156,7 +164,8 @@ while read -r line ; do
             IFS=':'
             auto_mon=1
             if [[ -n "$auto_mon" ]]; then
-                line=$(echo "$line" | sed 's/^W//; s/^m.*:M/M/; s/M\(.*\):m.*/M\1/')
+                # line=$(echo "$line" | sed 's/^W//; s/^m.*:M/M/; s/M\(.*\):m.*/M\1/')
+                line=$(echo "$line" | sed 's/^W//; s/:\([mM]\)/\n\1/g' | grep '^M')
                 # echo "line: $line" >&2
                 set -- $line
             else
@@ -276,7 +285,7 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${cputemp}${phonebattery}${music}${volume}%{c}${wm_infos}%{r}${pom}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${cputemp}${phonebattery}${music}${volume}%{c}${wm_infos}%{r}${pom}${gpginfo}${vpn}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
         ;;
         2)

@@ -23,7 +23,6 @@ init() {
     fi
     PANEL_FIFO=$(mktemp -u /tmp/panel_fifo.XXXX)
     mkfifo "$PANEL_FIFO"
-    bspc subscribe > "$PANEL_FIFO" &
 }
 
 shutdown() {
@@ -50,6 +49,7 @@ loop() {
     {
         # do once
         [[ -n ${has_zscroll+x} ]] && music_zscroll_watch "$ZSCROLLFILE" 2 &
+        bspc subscribe &
         while true; do
             keyboard &
             pcheck_pomodoro # do not use &, needs local state
@@ -70,6 +70,7 @@ loop() {
                 wallpaper &
             fi
             if (( i % 10 == 0 )); then
+                vpn &
                 network &
                 [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
             fi
@@ -95,8 +96,7 @@ main() {
     init
     loop
     PANEL_WM_NAME="bar_wmname"
-    rm /tmp/log.txt
-    . panel_bar.sh 1 < "$PANEL_FIFO" | tee /tmp/log.txt | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP_X}+${PANEL_GAP_Y}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
+    . panel_bar.sh 1 < "$PANEL_FIFO"  | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP_X}+${PANEL_GAP_Y}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
     # . panel_bar.sh 1 < "$PANEL_FIFO" | lemonbar -d -n "$PANEL_WM_NAME" -a 30 -o -2 -g "${PANEL_WIDTH}x${PANEL_HEIGHT}+${PANEL_GAP_X}+${PANEL_GAP_Y}" -f "$PANEL_FONT_FAMILY" -f "$ICON_FONT" -F "$COLOR_FOREGROUND" -B "$COLOR_BACKGROUND" -u 2 | bash &
     # Depending on the font/platform used, add -o -4 or so to shuift the text up
     # Not necessary with FontAwesome.ttf (4.7.0) and Gohu GohuFont ttf (through AUR)

@@ -149,6 +149,21 @@ weather() {
     echo -e F"$color$icon $temperature"
 }
 
+vpn() {
+    local vpn_interface
+    vpn_interface=$(ip -br a | cut -d" " -f1 | grep -E "(tun[[:digit:]]|cs-.*)")
+    if [[ -n "$vpn_interface" ]]; then
+        # check that this is an actual vpn through which we route traffic
+        if ip route get 1.1.1.1 | grep "$vpn_interface"; then
+            echo "l$IC_VPN $vpn_interface"
+        else
+            echo "l-"
+        fi
+    else
+        echo "l-"
+    fi
+}
+
 # wifi
 network() {
     interface="$(ip link | grep -E '(wl|en)p.*s.*:' | grep 'state UP' | awk '{ print $2 }')"
@@ -169,13 +184,6 @@ network() {
             state=d
         ;;
     esac
-    vpn_interface=$(ip -br a | cut -d" " -f1 | grep -E "(tun|wg)[[:digit:]]")
-    if [[ -n "$vpn_interface" ]]; then
-        # check that this is an actual vpn through which we route traffic
-        if ip route | grep "$vpn_interface" | grep -q "^0.0.0.0"; then
-            ic_type="$IC_VPN"
-        fi
-    fi
     if [[ -z "$ic_state" ]]; then
         ADDRESS=perdu.com HTMLGREP="Vous Etes Perdu" check_connection
         case $? in
@@ -415,7 +423,7 @@ keyboard() {
     if [ "$var" = "disabled" ]; then
         color="r"
     fi
-    echo "K$(setxkbmap -query | awk '/layout:/ {print $2; exit}' | head -c 2)"
+    echo "Kb$(setxkbmap -query | awk '/layout:/ {print $2; exit}' | head -c 2)"
     echo "Kc$color%{A:$dkeyboard:}$IC_KEYBOARD%{A}"
 }
 
