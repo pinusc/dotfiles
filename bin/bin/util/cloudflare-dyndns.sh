@@ -89,6 +89,7 @@ parse_params() {
 }
 
 BASEURL="https://api.cloudflare.com/client/v4"
+check_dep
 parse_params "$@"
 setup_colors
 auth_header="Authorization: Bearer $CLOUDFLARE_API_KEY"
