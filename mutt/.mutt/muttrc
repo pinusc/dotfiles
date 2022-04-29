@@ -1,13 +1,19 @@
 # vim: ft=neomuttrc
-source /usr/share/doc/mutt/samples/colors.linux
+source /home/giusb/.mutt/colors.linux
+color status black green
+color index yellow default "~N"
+color index magenta default "~O"
+color index blue default "~T"
+color index red default "~D"
+
 set query_command = "khard email --parsable" 
 macro index,pager A "<pipe-message>khard add-email<return>" "add the sender email address to khard"
 macro index,pager a "<pipe-message>khard add-email<return>" "add the sender email address to khard"
 
 set folder           = ~/mail                # mailbox location
 set alias_file       = ~/.mutt/alias         # where to store aliases
-set header_cache     = ~/.local/share/mutt/cache/headers # where to store headers
-set message_cachedir = ~/.local/share/mutt/cache/bodies  # where to store bodies
+set header_cache     = ~/.mutt/cache/headers # where to store headers
+set message_cachedir = ~/.mutt/cache/bodies  # where to store bodies
 set certificate_file = ~/.mutt/certificates  # where to store certs
 set mailcap_path     = ~/.mutt/mailcap       # entries for filetypes
 set tmpdir           = ~/.mutt/temp          # where to keep temp files
@@ -25,16 +31,16 @@ set realname="Giuseppe Stelluto"
 set from="giuseppe@gstelluto.com"
 
 folder-hook . set from="giuseppe@gstelluto.com"
+folder-hook . set copy=no
 folder-hook . set record="+gstelluto/sent"
-folder-hook . set copy=yes
 
-# folder-hook +colby* set from="gstell23@colby.edu"
-folder-hook +logins* set copy=yes
+folder-hook +colby* set from="gstell23@colby.edu"
+# folder-hook +colby* set from="giuseppe.stelluto@colby.edu"
+folder-hook +colby* set copy=no
 folder-hook +logins* set from="logins@gstelluto.com"
-folder-hook +logins* set record="+logins/sent"
-folder-hook +gstelluto* set copy=yes
+folder-hook +logins* set copy=yes
 folder-hook +gstelluto* set from="giuseppe@gstelluto.com"
-folder-hook +gstelluto* set record="+gstelluto/sent"
+folder-hook . set copy=no
 
 
 set edit_headers=yes
@@ -77,7 +83,7 @@ hdr_order from: to: cc: date: subject:  # and in this order
 # Account Settings -----------------------------------
 
 # Default inbox.
-set spoolfile = "+logins/inbox"
+set spoolfile = "+colby/inbox"
 # virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
 # set virtual_spoolfile=yes
 # set folder=~/.notmuch
@@ -106,37 +112,25 @@ macro index \Cl "<limit>~A<enter>"
 # Alternate email addresses.
 alternates giuseppe@gstelluto.com giuseppe.stelluto@gmail.com gstell@protonmail.com gstelluto@uwcchina.org logins@gstelluto.com gstell23@colby.edu giuseppe.stelluto@colby.edu
 
-mailboxes  +gstelluto \
-           +gstelluto/inbox \
-           +gstelluto/sent \
-           +logins \
-           +logins/inbox \
-           +logins/archive \
-           +gmail \
-           +gmail/inbox \
-           +gmail/sent \
-           +gmail/spam \
-           +local \
-           +colby \
+mailboxes  +colby \
            +colby/inbox \
+           +colby/all \
            +colby/logins \
            +colby/classes \
            +colby/gdrive \
            +colby/sent \
            +colby/spam \
-           +protonmail-gstell \
-           +protonmail-gstell/inbox
+           +logins \
+           +logins/inbox \
+           +local \
 
 # by default, deleted mail will go in ~/mail/trash
 folder-hook . set trash = +trash
 # but for these accounts, it will go in the correct trash folder
-folder-hook +gstelluto* set trash = +gstelluto/trash
 folder-hook +logins* set trash = +gstelluto/trash
 folder-hook +colby* set trash = +gstelluto/trash
-folder-hook +gmail* set trash = +gstelluto/trash
 
 set postponed = "+drafts"
-folder-hook +gstelluto* set postponed = "+gstelluto/drafts"
 folder-hook +logins* set postponed = "+gstelluto/drafts"
 folder-hook +colby* set postponed = "+colby/drafts"
 
@@ -186,8 +180,6 @@ bind pager G  bottom
 # bind pager gk noop
 # bind pager gj noop
 bind index g noop
-bind index gg first-entry
-bind index G last-entry
 bind index gj next-entry
 bind index gk previous-entry
 bind index \cu half-up
@@ -195,7 +187,6 @@ bind index \cd half-down
 
 macro index gc "<change-folder> =colby/inbox<enter>"
 macro index gl "<change-folder> =logins/inbox<enter>"
-macro index gs "<change-folder> =gstelluto/inbox<enter>"
 macro index gm "<change-folder> =gmail/inbox<enter>"
 
 bind pager R  group-reply
@@ -217,7 +208,7 @@ score '~f colbynow@colby.edu' -10
 score '~f nobody@colby.edu' -10
 
 folder-hook . "macro index S '<shell-escape>mbsync -a; notmuch new<enter>'"
-folder-hook +gstelluto* "macro index S '<shell-escape>mbsync gstelluto; notmuch new<enter>'"
+folder-hook +colby* "macro index S '<shell-escape>mbsync colby; notmuch new<enter>'"
 folder-hook +logins* "macro index S '<shell-escape>mbsync logins; notmuch new<enter>'"
 folder-hook +gmail* "macro index S '<shell-escape>mbsync gmail; notmuch new<enter>'"
 

@@ -1,4 +1,3 @@
-text/html; qutebrowser file://%s; needsterminal; nametemplate=%s.html
 text/html; cat %s | pipe2w3m.sh; copiousoutput;
 text/plain; cat %s; copiousoutput;
 application/pdf; zathura --fork %s;

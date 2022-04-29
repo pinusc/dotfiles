@@ -40,7 +40,7 @@ else
   esac
 fi
 
-if [[ "$SESSION_TYPE" = "remote/ssh" && -z "$TMUX" ]]; then 
+if [[ ( "$SESSION_TYPE" = "remote/ssh" || "$(tty)" == "/dev/tty1" ) && -z "$TMUX" ]]; then 
     # send window name as hostname (for tmux & terminal window names)
     printf '\033]0;%s\007' "$(hostname -s)"
     printf '\ek%s\e\\' "$(hostname -s)"
