@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+# Modified from https://github.com/yashlala/dotfiles/blob/global/scripts/.local/scripts/add-html-to-email
+# Many thanks to yashlala
+
+import subprocess
+import sys
+import os
+
+from email import policy
+from email.mime.text import MIMEText
+from email.parser import Parser
+
+import markdown
+
+# TODO: 
+# This script fails completely when the input email is UTF-8 encoded. 
+# Can we change that? 
+# I've tried generating a policy object: take a look at that later. 
+
+
+# Cheat Sheet (Inspired by Akkana): 
+# When given a 'multipart/alternative' message, the last part of the message is
+# preferred as the authoritative message body (RFC 2046). If we attach the HTML
+# last (as shown below), the HTML will be shown on most clients. 
+# 
+# An example email hierarchy is shown below. 
+# multipart/mixed
+#   multipart/alternative
+#     text/plain
+#     multipart/related
+#       text/html
+#       inline image
+#   other attachment
+#   other attachment
+
+
+def add_html(msg):
+    body = msg.get_body()
+
+    if body.get_content_type() == 'text/plain': 
+        text = body.get_payload()
+        body.set_content(clean_plain(text))
+        body.add_alternative(to_html(text), subtype='html')
+
+    return msg
+
+def pandoc_html(text):
+    args = ['-f', 'markdown', '--to', 'html']
+    completedproc = subprocess.run(['pandoc'] + args,
+        capture_output=True,
+        input=text,
+        text=True
+    )
+    return completedproc.stdout
+
+def pandoc_plain(text):
+    args = ['-f', 'markdown', '--to', 'plain']
+    args += ['--reference-links', '--reference-location=block']
+    completedproc = subprocess.run(['pandoc'] + args,
+        capture_output=True,
+        input=text,
+        text=True
+    )
+    return completedproc.stdout
+
+
+def to_html(text):
+    html_data = pandoc_html(text)
+    return html_data
+
+def clean_plain(text):
+    plaintext =  pandoc_plain(text)
+    t = MIMEText(plaintext, 'plain', 'utf-8')
+    return plaintext
+
+if __name__ == "__main__":
+    # Use CRLF newlines as per RFC.
+    msg = Parser(policy=policy.SMTP).parse(sys.stdin)
+    msg = add_html(msg)
+    os.write(1, msg.as_bytes())

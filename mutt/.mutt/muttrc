@@ -14,6 +14,7 @@ set tmpdir           = ~/.mutt/temp          # where to keep temp files
 set signature        = ~/.mutt/sig           # my signature file
 set abort_noattach   = ask-yes
 set abort_noattach_regex = "^[^>].*attach(|ed|ments?)"
+set sendmail = "~/bin/util/mutt-sendmail-markdown-wrapper"
 
 # set folder=~/mail/giuseppe@gstelluto.com/INBOX
 # set spoolfile=+/
@@ -31,6 +32,7 @@ folder-hook . set record="+gstelluto/sent"
 folder-hook +colby* set from="giuseppe.stelluto@colby.edu"
 folder-hook +colby* set copy=no
 folder-hook +logins* set from="logins@gstelluto.com"
+folder-hook +logins* set copy=yes
 folder-hook +gstelluto* set from="giuseppe@gstelluto.com"
 folder-hook . set copy=no
 

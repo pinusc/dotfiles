@@ -1,0 +1,3 @@
+#!/bin/bash
+
+~/bin/modules/add-html-to-email | sendmail "$@"
