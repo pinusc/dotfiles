@@ -30,7 +30,7 @@ if (@ARGV == 2)  {
 sub seconds2str {
     my $total = shift;
     my $minutes = int($total / 60);
-    my $seconds = $total - $minutes;
+    my $seconds = $total % 60;
     if ($minutes > 0) {
         return sprintf("%02d:%02d", $minutes, $seconds);
     } else {
