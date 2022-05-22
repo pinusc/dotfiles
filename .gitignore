@@ -13,10 +13,12 @@ mpd/.config/mpd/*
 tarsnap/.config/tarsnap/*.key
 anacron/.config/anacron/spool/
 mutt/.mutt/temp/
+<<<<<<< HEAD
 qutebrowser/.config/qutebrowser/bookmarks
 qutebrowser/.config/qutebrowser/quickmarks
 /qutebrowser/.config/qutebrowser/__pycache__
 /qutebrowser/.config/qutebrowser/pdfjs
+qutebrowser/bookmarks/urls
 qutebrowser/.local/share
 qutebrowser/.local/lib
 mutt/.mutt/cache
@@ -32,3 +34,6 @@ bin/bin/panel/api_keys.sh
 /nnn/.config/nnn/bookmarks
 /cava/.config/cava/shaders
 /bin/bin/lib/geolocate
+w3m/.w3m/*
+!w3m/.w3m/config
+!w3m/.w3m/keymap
