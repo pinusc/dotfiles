@@ -1,0 +1,4 @@
+#compdef lxcsh
+local -a options
+IFS=$'\n' options=($(lxc list -f csv 2>/dev/null | cut -d, -f1))
+_describe 'values' options
