@@ -30,10 +30,10 @@ if [[ "$DOCKED" = 1 ]]; then
     echo "docky docked"
     xrandr --auto
     # Here nmonitors is the number of _external_ displays
-    nmonitors=$(xrandr --listmonitors | awk '{ print $4; }' | grep '.' | grep -v 'LVDS' | wc -l)
+    nmonitors=$(xrandr --listmonitors | awk '{ print $4; }' | grep '.' | grep -c -v 'LVDS')
     # monitor is (hopefully) the primary external display
     monitor=$(xrandr --listmonitors | awk '{ print $4; }' | grep '.' | grep -v 'LVDS' | head -n 1)
-    echo $nmonitors
+    echo "$nmonitors"
     if [ "$nmonitors" -eq 2 ]; then
         # special config for three monitors
         xrandr --output VGA1 --auto
@@ -43,8 +43,8 @@ if [[ "$DOCKED" = 1 ]]; then
         case "$monitor" in
             DP2)
                 # remember to set primary correctly for bar reasons
-                xrandr --output DP2 --primary --mode --mode 2560x1080
-                xrandr --output LVDS1 --right-of DP2
+                xrandr --output DP2 --primary --mode 2560x1080
+                xrandr --output LVDS1 --left-of DP2
                 ;;
             HDMI2)
                 xrandr --newmode "1366x768"x0.0   69.30  1366 1404 1426 1436  768 771 777 803 -hsync -vsync
