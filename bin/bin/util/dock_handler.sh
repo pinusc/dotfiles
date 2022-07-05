@@ -11,6 +11,15 @@ Options:
 
 EOF
 
+if [[ -z "$1" ]]; then
+    if grep -q 1 /sys/devices/platform/dock.1/docked; then
+        DOCKED=1
+    else
+        DOCKED=0
+    fi
+fi
+
+
 case "$1" in
     dock)
         DOCKED=1;
@@ -18,7 +27,7 @@ case "$1" in
     undock)
         DOCKED=0;
         ;;
-    -h|--help|*)
+    -h|--help)
         echo -n "$helpstring"
         echo "DOCK ARG"
         echo "$1"
