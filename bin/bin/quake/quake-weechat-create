@@ -2,4 +2,4 @@
 
 WIDFILE="$1"
 wid=$(<"$WIDFILE")
-urxvt -embed "$wid" -e tmux -L weechat attach &
+urxvt -depth 32 -bg rgba:0000/0000/0000/cccc -embed "$wid" -e tmux -L weechat attach &

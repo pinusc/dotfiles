@@ -143,14 +143,15 @@ super + Return
   urxvt
 
 super + apostrophe
-        ~/bin/quake/quake-urxvt "quake-weechat" "quake-weechat-create"
+        ~/bin/quake/quake-urxvt -e "ssh weechat" "quake-weechat"
 
 super + {ctrl,shift} + Return
         ~/bin/quake/quake-urxvt
 
 super + semicolon
-        ~/bin/quake/quake-urxvt
-super + shift + semicolon
+        ~/bin/quake/quake-urxvt 
+
+super + shift + colon
         ~/bin/quake/quake-urxvt-newtab
 
 super + space

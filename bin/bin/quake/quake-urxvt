@@ -2,26 +2,72 @@
 
 IFS='' read -r -d '' helpstring <<EOF
 quake-rxvt: manage quaked windows
-USAGE: quake-rxvt [WMNAME CREATE_COMMAND]
+USAGE: quake-rxvt [-e EXEC_COMMAND WMNAME] [WMNAME CREATE_COMMAND]
 
 Args:
     WMNAME              The X WMNAME of the window to manage
     CREATE_COMMAND      The command to run to create a window with class WMNAME, taking a WIDFILE as \$1
+    -e EXEC_COMMAND     If supplied, a TERM window executing EXEC_COMMAND will be created
 
 Defaults to creating urxvt windows.
 
 EOF
+msg() {
+  echo >&2 -e "${1-}"
+}
 
-if [[ -n "$1" ]]; then
-    if [[ "$1" == --help || "$1" == -h ]]; then
-        echo "$helpstring"
-        exit 0
-    fi
-    WMNAME="$1"
-fi
-if [[ -n "$2" ]]; then
-    CREATE_COMMAND="$2"
-fi
+die() {
+  local msg=$1
+  local code=${2-1} # default exit status 1
+  msg "$msg"
+  exit "$code"
+}
+
+usage() {
+    echo "$helpstring"
+    exit 0
+}
+
+
+parse_params() {
+  # default values of variables set from params
+  EXEC_COMMAND=""
+  CREATE_COMMAND=""
+
+  while :; do
+    case "${1-}" in
+    -h | --help) usage ;;
+    -v | --verbose) set -x ;;
+    -e)
+      EXEC_COMMAND="${2-}"
+      shift
+      ;;
+    -?*) die "Unknown option: $1" ;;
+    *) break ;;
+    esac
+    shift
+  done
+
+  args=("$@")
+
+  # check required params and arguments
+  [[ ${#args[@]} -gt 2 ]] && die "Incorrect arguments passed. Try --help"
+
+  if [[ "${#args[@]}" -gt 0 ]]; then
+      WMNAME="${args[0]}"
+      if [[ "${#args[@]}" -eq 2 ]]; then
+          CREATE_COMMAND="${args[1]}"
+      fi
+  fi
+  if [[ -n "$WMNAME" && -z "$EXEC_COMMAND" && -z "$CREATE_COMMAND" ]]; then
+      die "Incorrect arguments passed. Try --help"
+  fi
+
+  return 0
+}
+
+parse_params "$@"
+
 [[ -z "$WMNAME" ]] && WMNAME="quake-tab"
 [[ -z "$CREATE_COMMAND" ]] && CREATE_COMMAND="quake-urxvt-newtab"
 WIDFILE="/tmp/quake-tabbed-$WMNAME.wid"
@@ -30,11 +76,14 @@ wid=$(xdotool search --classname "$WMNAME")
 
 GEOMETRY=1366x768
 
-
 if [[ -z "$wid" ]]; then
     wid=$(tabbed -n "$WMNAME" -d -g "$GEOMETRY" )
     echo "$wid" > "$WIDFILE"
-    "$CREATE_COMMAND" "$WIDFILE"
+    if [[ -n "$EXEC_COMMAND" ]]; then
+        "$CREATE_COMMAND" "$WIDFILE" "$EXEC_COMMAND"
+    else
+        "$CREATE_COMMAND" "$WIDFILE"
+    fi
     exit 0
 fi
 

@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
 WIDFILE="$1"
+if [ -z "$WIDFILE" ]; then
+    WIDFILE="/tmp/quake-tabbed-quake-tab.wid"
+fi
 wid=$(<"$WIDFILE")
-urxvt -embed "$wid" &
+xdotool windowmap "$(wid)"  # make sure window is visible
+to_exec="$2"
+
+color="$(grep background "$HOME/.Xresources" | cut -d'#' -f2)"
+
+if [ -n "$to_exec" ]; then
+    # urxvt -depth 32 -bg "[80]#$color" -embed "$wid" -e sh -c "$to_exec" &
+    st -w "$wid" -e sh -c "$to_exec" &
+else
+    # urxvt -depth 32 -bg "[80]#$color" -embed "$wid" &
+    st -w "$wid" &
+fi
