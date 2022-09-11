@@ -55,6 +55,7 @@ alias vp="zathura --fork"
 alias zathura="zathura --fork"
 
 alias tarsnap="tarsnap --configfile ~/.config/tarsnap/tarsnaprc"
+alias mopidy="mopidy --config ~/.config/mopidy/mopidy.conf"
 
 mdmake() {
     cp "$HOME/.config/templates/pandoc/Makefile" "."
@@ -66,21 +67,26 @@ if hash pinfo >&/dev/null; then
     alias info='pinfo'
 fi
 if hash exa >&/dev/null; then
-    alias ls='exa'   
+    alias ls='exa --sort=name --icons'   
     alias lt='exa -T'
     alias lg='exa --long --git'
 fi
 
 alias l='ls'
-alias ll='ls -lh'
+alias ll='ls -lh --git'
 alias la='ll -a'
-alias lt='ls -al --tree'
+alias lt='ls -l --tree'
+alias ltg='ls -l --tree --git'
 
 if [ "$SHELL" = /bin/zsh ]; then 
-    alias -g LL='| bat'
-    alias -g LLH='--help | bat'
-    alias -g LLC='--color=always | bat'
+    alias -g LL="| $PAGER"
+    alias -g LLH="--help | $PAGER"
+    alias -g LLC="--color=always | $PAGER"
+    alias -g LLA="2>&1 | $PAGER"
     alias -g NNNSEL='$(nnn -p -)'
+    alias -g CSVLL="| csv2table.sh"
+    alias -g MRF="*(om[1])"
+    alias -g LASTF="*(om[1])"
 fi
 if hash rg &>/dev/null;then 
     alias rgc='rg --color always'
@@ -148,15 +154,7 @@ alias gamma_laptop="xgamma -rgamma 0.78 -bgamma 0.65 -ggamma 0.72"
 alias cp_torrent="rsync -r --info=progress2 'astolfo.gstelluto.com:/var/lib/transmission-daemon/downloads/*' /data/movies"
 
 tldr() {
-    curl -s "cheat.sh/$(echo -n "$*" | jq -sRr @uri)"
-}
-
-tcl_tv() {
-    xrandr --newmode "1366x768"x0.0   69.30  1366 1404 1426 1436  768 771 777 803 -hsync -vsync
-    xrandr --addmode HDMI2 "1366x768"x0.0
-    xrandr --output HDMI2 --left-of LVDS1 --mode "1366x768"x0.0 --gamma 1 --output LVDS1 --primary
-    killall panel; panel &
-    ~/bin/util/wallpaper/random_wallpaper.sh
+    curl -s "cheat.sh/$(echo -n "$*" | jq -sRr @uri)" | less -R
 }
 
 weechat="mosh weechat"
@@ -177,9 +175,12 @@ alias ksac="kdeconnect-cli -n sacripante"
 # }
 
 alias pastebin="nc termbin.com 9999"
+alias todo.sh="todo.sh -d ~/.config/todotxt/todo.cfg"
 
 alias rm='echo "This is not the command you are looking for."; false'
 alias rrm='trash-put'
+alias trash-restore='trash-restore "$(trash-list | fzf --reverse -q "$(realpath "$PWD") " | sed "s/\S* \S* //")"'
+alias psgrep='ps aux | grep '
 
 ssps() {
     read -r -d '' awkcommand <<'    EOF'
@@ -216,6 +217,12 @@ send2ebook () {
     scp "$1" diana:/home/ftpinusc/ftpbook
 }
 
+if [ "$SHELL" = /bin/zsh ]; then 
+alias -g ...="../.."
+alias -g ....="../../.."
+alias -g .....="../../../.."
+fi
+
 alias N='sudo -E nnn -dH'
 [ "$SHELL" = /bin/zsh ] && alias -g NPICK='$(nnn -p -)'
 # autocd for nnn
@@ -243,6 +250,88 @@ n ()
 
     if [ -f "$NNN_TMPFILE" ]; then
             . "$NNN_TMPFILE"
-            rm -f "$NNN_TMPFILE" > /dev/null
+            \rm -f "$NNN_TMPFILE" > /dev/null
     fi
+}
+
+jog () {
+    grep -a "${PWD}   " ~/.zsh_history_ext | cat | cut -f1 -d"|" | tail
+}
+
+earthengine_notify () {
+    ee_command='
+NAME=$(echo {} | cut -d" " -f3);
+ID=$(echo {} | cut -d" " -f1);
+notify-send "Earthengine: waiting on $ID";
+earthengine task wait "$ID";
+notify-send "Earth Engine Task Completed: $NAME";
+'
+    mailcommand='echo -n "Subject: EE Task completed $NAME\n\nEnjoy :)" | sendmail -f noreply@gstelluto.com gstell23@colby.edu'
+    if [ "$1" = '--email' ]; then
+        ee_command="$ee_command\n$mailcommand"
+    fi
+    earthengine task list | grep -e READY -e RUNNING | sed 's/"/\"/' | xargs -I{} -P100 sh -c "$ee_command"
+}
+
+earthengine_notify_bulk () {
+    ee_command='
+notify-send "Earth Engine Task Completed: $NAME";
+echo -n "Subject: EE Task completed $NAME\n\nEnjoy :)" | sendmail -f noreply@gstelluto.com gstell23@colby.edu
+'
+# echo $ee_command
+    earthengine task list | grep -e READY -e RUNNING | sed 's/"/\"/' | cut -d" " -f1 | xargs earthengine task wait -v ; notify-send "Earth Engine: all tasks completed"; echo -e -n "Subject: EE Task completed \n\nEnjoy :)" | sendmail -f noreply@gstelluto.com gstell23@colby.edu
+}
+
+bluetooth_restart () {
+    sudo rmmod btusb
+    sudo modprobe btusb
+    sudo systemctl restart bluetooth
+    bluetoothctl -- power on
+}
+alias restart_bluetooth=bluetooth_restart
+
+pdfcut () {
+    if [ "$1" = -h ]; then
+        echo "Usage: pdfcut FILE RANGE"
+        return 1
+    fi
+    local outf
+    local zathura_pid
+    outf="$(mktemp pdfcut-XXXX.pdf)"
+    pdfjam  --fitpaper true --outfile "$outf" "$1" "$2"
+    \zathura "$outf" &
+    zathura_pid=$!
+    if read -q "RES?Is this okay? "; then
+        \rm "$1"
+        mv "$outf" "$1"
+    else 
+        \rm "$outf"
+    fi
+    kill "$zathura_pid"
+}
+
+pandoc_watch () {
+    echo "Starting to watch $1"
+    mdfile="$1"
+    pdffile="$(basename $1 .md)"
+    while true; do 
+        inotifywait -e close_write "$mdfile"
+        pandoc --citeproc "$1" -o "${pdffile}.pdf" --pdf-engine=xelatex
+    done &>>pandoc.log &
+}
+
+serve_books () {
+    addr="${1:-$HOME/books}"
+    echo "$addr"
+    echo "Sudo password might be required?"
+    sudo echo ""
+    sudo /home/pinusc/builds/linux-router/lnxrouter --ap wlp3s0 sacripante -g 192.168.1.1 -p peppe1999 &
+    rclone serve --addr :0 --user giusb --pass peppe99 ftp "$addr" &
+    sleep 1
+    read -q "?Press anything to exit... "
+    kill %%
+}
+
+tilderadio () {
+    mpv 'https://azuracast.tilderadio.org/radio/8000/radio.ogg'
 }

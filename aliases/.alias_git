@@ -7,3 +7,4 @@ alias gag="git annex get"
 alias gll="git log --stat --color" # normally glg
 alias glg="git log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'" # Normally glola
 alias glga="glg --all" # Normally glola
+alias gd="git difftool"
