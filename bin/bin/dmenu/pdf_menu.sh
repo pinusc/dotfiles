@@ -10,7 +10,7 @@ fi
 set -Eeuo pipefail
 
 FOLDERS=(books docs downloads tmp)
-FORMATS=(-e pdf -e epub)
+FORMATS=(-e pdf -e epub -e djvu)
 
 cd "$HOME"
 fname="$(cd "$HOME"; fd --base-directory "$HOME" -I . -e "${FORMATS[@]}" "${FOLDERS[@]}" | rofi -dmenu -i)"
