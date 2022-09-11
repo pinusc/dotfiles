@@ -18,12 +18,14 @@ i3lock -e -c 00000000 -k --indicator \
     --noinputtext="" \
     --time-font="$FONT" \
     --date-font="$FONT" \
+    --datestr="%F" \
     --layout-font="$FONT" \
     --verif-font="$FONT" \
     --wrong-font="$FONT" \
     --greeter-font="$FONT" \
     --veriftext="..." \
-    --wrongtext="XXX"
+    --wrongtext="XXX" \
+    --blur=10
 
 # trap "killall conky" EXIT
 # conky -c dotfiles/conkyrc2 &> /dev/null &
