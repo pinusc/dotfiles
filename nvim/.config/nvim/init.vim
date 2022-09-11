@@ -3,8 +3,10 @@ scriptencoding utf-8
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'neomake/neomake'
+Plug 'neovim/nvim-lspconfig'
 " Plug 'ervandew/supertab'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Plug '~/projects/webcomplete/src/vim-plugin'
 
 Plug 'zchee/deoplete-jedi'
@@ -185,6 +187,299 @@ augroup end
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
 set fillchars=fold:\ 
+" }}}
+
+" {{{ LSP
+" lua require'lspconfig'.denols.setup{}
+
+lua << EOF
+local nvim_lsp = require('lspconfig')
+
+-- Use an on_attach function to only map the following keys 
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  --Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=false }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space><space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space><space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space><space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap("v", '<space>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', opts)
+  buf_set_keymap("n", '<space><space>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', {noremap=false})
+
+end
+
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { "denols", "pylsp" }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+nvim_lsp["pylsp"].setup {
+    filetypes = { "python", "python.ipynb" }
+}
+local border = {
+      {"┌", "FloatBorder"},
+      {"─", "FloatBorder"},
+      {"┐", "FloatBorder"},
+      {"│", "FloatBorder"},
+      {"┘", "FloatBorder"},
+      {"─", "FloatBorder"},
+      {"└", "FloatBorder"},
+      {"│", "FloatBorder"},
+}
+
+-- LSP settings (for overriding per client)
+local handlers =  {
+  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
+  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
+}
+
+-- To instead override globally
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = opts.border or border
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
+
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = false,
+    signs = true,
+    update_in_insert = false,
+    underline = false
+  }
+)
+-- show diagnostics on hover only
+vim.o.updatetime = 250
+vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, border=border})]]
+EOF
+
+" }}}
+
+" {{{ Treesitter
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    highlight = {
+        enable = true,              -- false will disable the whole extension
+        disable = { "c", "rust", "markdown" },  -- list of language that will be disabled
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+        -- Using this option may slow down your editor, and you may see some duplicate highlights.
+        -- Instead of true it can also be a list of languages
+        additional_vim_regex_highlighting = false,
+    },
+    indent = {
+        enable = true,
+    },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = "<C-p>",
+            node_incremental = "<C-p>",
+        },
+    },
+    rainbow = {
+        enable = true,
+        -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+        extended_mode = false, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+        max_file_lines = nil, -- Do not enable for files with more than n lines, int
+        -- colors = {}, -- table of hex strings
+        -- termcolors = {} -- table of colour name strings
+    },
+}
+EOF
+" }}}
+
+" {{{ Mappings 
+" Display TODO
+nnoremap <leader>TODO :vimgrep TODO **/*.py
+
+" autocorrect
+" force top correction on most recent misspelling
+imap <C-l> <Esc>[s1z=`]a
+nmap <C-l> [s1z=``
+
+" linewise paste
+nnoremap <leader>p m`o<ESC>p``
+nnoremap <leader>P m`O<ESC>p``
+
+
+tnoremap <Esc> <C-\><C-n>?\$<CR>
+"
+" map <F9> :make<Return>:copen<Return>
+map <F9> :lclose<Return>
+map <F10> :cprevious<Return>
+map <F11> :cnext<Return>
+map <F5> :!java %:r
+" for unimparied
+" nmap < [
+" nmap > ]
+" omap < [
+" omap > ]
+" xmap < [
+" xmap > ]
+"
+tnoremap <A-h> <C-\><C-n><C-w>h
+tnoremap <A-j> <C-\><C-n><C-w>j
+tnoremap <A-k> <C-\><C-n><C-w>k
+tnoremap <A-l> <C-\><C-n><C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
+" additional window mappings to avoid conflict with sexp
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+imap jk <Esc>
+map <f2> :NERDTreeToggle<cr>
+let mapleader = "\<Space>"
+let maplocalleader = "\<Space>\<Space>"
+
+" file bindings
+map <leader>w :w<CR>
+map <leader>W :Gw<CR>
+map <leader>qq :q<CR>
+map <leader>qa :qa<CR>
+map <leader>Q :q!<CR>
+map <leader>x :x<CR>
+nnoremap <leader>cd :lcd %:p:h<CR>:pwd<CR>
+nnoremap <leader>cD :cd %:p:h<CR>:pwd<CR>
+
+" find bindings
+map <leader><tab> :e #<cr>
+map <leader>e :Explore<cr><cr>
+map <leader>s :Sexplore<cr><cr>
+map <leader>v :Vexplore<cr><cr>
+map <leader>u :UndotreeToggle<CR>
+map <leader>h :nohlsearch<CR>
+map <leader>ji :call cursor(0, 1)<cr>:call search("import")<cr>
+
+" git bindings
+map <leader>gs :Git<cr>
+map <leader>gc :Git commit<cr>
+map <leader>gr :Git rebase<cr>
+map <leader>gl :Gclog<cr>
+map <leader>gb :Git_blame<cr>
+map <leader>gw :Gwrite<cr>
+
+" other bindings
+nnoremap <C-q> :center 80<cr>hhv0r=0r#A<space><esc>40A=<esc>d80<bar>
+nnoremap <C-s> yypVr=k
+" nnoremap <C-h> :.,$!pandoc -f markdown -t html<cr>
+" nnoremap <C-p> :.,$!pandoc -f markdown -t html<cr>
+" vnoremap <C-h> :'<,'>$!pandoc -f markdown -t html<cr>
+" vnoremap <C-p> :'<,'>$!pandoc -f markdown -t html<cr>
+
+function! StartMakeView()
+    NeomakeSh! make view
+    augroup makeview
+        au!
+        autocmd CursorHold,CursorHoldI,BufWritePost <buffer> :NeomakeSh! make
+    augroup END
+    redraw!
+endfunction
+
+command! StartMakeView call StartMakeView()
+
+nmap ; <cmd>Telescope buffers<CR>
+nmap <Leader>f <cmd>Telescope find_files<CR>
+nmap <Leader>F <cmd>Telescope git_files<CR>
+nmap <Leader>' <cmd>Telescope oldfiles<CR>
+nmap <Leader>t <cmd>Telescope current_buffer_tags<CR>
+nmap <Leader>T <cmd>Telescope tags<CR>
+nmap <Leader>p <cmd>Telescope registers<CR>
+map <leader>/ <cmd>Telescope live_grep<CR>
+lua << EOF
+local actions = require('telescope.actions')
+require('telescope').setup{
+defaults = {
+    mappings = {
+        i = {
+            -- To disable a keymap, put [map] = false
+            -- So, to not map "<C-n>", just put
+            ["<C-n>"] = false,
+            ["<C-p>"] = false,
+            ["<C-k>"] = actions.move_selection_previous,
+            ["<C-j>"] = actions.move_selection_next,
+
+            -- Otherwise, just set the mapping to the function that you want it to be.
+            ["<C-i>"] = actions.select_horizontal,
+
+            -- Add up multiple actions
+            ["<cr>"] = actions.select_default + actions.center,
+            ["<esc>"] = actions.close,
+            },
+        },
+    }
+}
+EOF
+
+" sessions
+let g:session_dir = $HOME . '/.config/nvim/sessions/'
+function! FindProjectName()
+  let s:name = getcwd()
+  if !isdirectory('.git')
+    let s:name = substitute(finddir('.git', '.;'), '/.git', '', '')
+  end
+  if s:name !=? '' 
+    let s:name = matchstr(s:name, '.*', strridx(s:name, '/') + 1)
+  end
+  return s:name
+endfunction
+
+" Sessions only restored if we start Vim without args.
+function! RestoreSession(name)
+  if a:name !=? '' 
+      echo g:session_dir . a:name
+    if filereadable(g:session_dir . a:name)
+      execute 'source ' . g:session_dir . a:name
+    end
+  end
+endfunction
+
+" Sessions only saved if we start Vim without args.
+function! SaveSession(name)
+  if a:name !=? '' 
+    execute 'mksession! ' . g:session_dir . a:name
+  end
+endfunction
+
+" Restore and save sessions.
+if argc() == 0
+    augroup session
+        autocmd VimEnter * nested call RestoreSession(FindProjectName())
+        autocmd VimLeave * nested call SaveSession(FindProjectName())
+    augroup END
+end
+
 " }}}
 
 " {{{ Filetype specific
