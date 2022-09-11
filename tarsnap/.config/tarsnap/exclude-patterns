@@ -1,0 +1,29 @@
+# Exclude files and directories matching specified patterns.
+# Only one file or directory per command; multiple "exclude"
+# commands may be given.
+data/docs/papers
+**/college/moodle
+**/readings
+**/sources
+**/resources
+**/bin
+**/mnt
+**/out
+**/res
+**/.git
+**/.git*
+**/build
+**/*.bak
+**/*.~lock.*
+**/*.fls
+**/*.log
+**/*.aux
+**/*.fdb_latexmk
+**/*.synctex.gz
+**/projects/**/*.txt
+**/*.o
+**/*hi.
+
+# syncthing
+**/.stfolder
+**/.stignore
