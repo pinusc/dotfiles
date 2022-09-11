@@ -17,6 +17,7 @@ Plug 'artur-shaik/vim-javacomplete2'
 " Plug 'airblade/vim-rooter'
 " for global config
 Plug 'editorconfig/editorconfig-vim'
+Plug 'subnut/nvim-ghost.nvim', {'do': ':call nvim_ghost#installer#install()', 'on': []}
 
 Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -809,9 +810,15 @@ let g:netrw_liststyle = 3
 
 let g:sneak#s_next = 1
 
-" {{{ wiki.vim
+" {{{ GhostText
+augroup nvim_ghost_user_autocommands
+  au User www.reddit.com,www.stackoverflow.com set filetype=markdown
+  au User *github.com set filetype=markdown
+  au User code.earthengine.google.com set filetype=javascript
+  " au User code.earthengine.google.com lua vim.lsp.callbacks["textDocument/publishDiagnostics"] = function() end
+augroup END
 
-" }}}
+command! GhostSStart call plug#load('nvim-ghost.nvim')
 
 " }}}
 
