@@ -14,11 +14,11 @@ super + {_,alt} + w
 super + t
 	bspc desktop -l next
 
-super + ctrl + alt + p
+super + shift + p
 	bspc node -t \~pseudo_tiled
 
 super + shift + t
-	bspc node -t \~pseudo_tiled
+	bspc node -t tiled
 
 #equalize area
 super + b
@@ -34,8 +34,7 @@ super + m
 	bspc node -s biggest.local
 
 super + shift + m
-        bspc rule --add "*:*:mutt" --one-shot state=floating; \
-        urxvt -geometry 200x50 -e mutt
+        ~/bin/quake/quake-urxvt -e "neomutt" "quake-mutt" 
 
 #flip desktop
 super + shift + {_, ctrl} + space
@@ -60,6 +59,9 @@ super + {comma,period}
 super + {Left,Right}
 	bspc desktop -f {prev,next}.local
 
+super + {u,d}
+	bspc desktop -f {prev,next}.local
+
 super + Tab
   bspc desktop -f last
 
@@ -67,6 +69,9 @@ super + Tab
 # @Move troughmonitors
 super + shift + {Left,Right}
 	bspc monitor -f {prev,next}
+
+super + alt + shift + {Left,Right}
+	bspc desktop -b {prev,next}
 
 #split node in
 super + ctrl + {h,j,k,l}
@@ -100,10 +105,6 @@ bspc {node,desktop} -f last
 
 super + alt + {_,shift} + {grave,1-9,0}
 	bspc node -d "{1-2}:^$(( {0,1-9,10} + 1))"
-
-super + shift + {o,p}
-	bspc desktop -R {270,90}
-
 
 super + ctrl + {Left,Down,Up,Right}
 	bspc node -p {\~west,\~south,\~north,\~east}
@@ -140,7 +141,7 @@ shift + Shift_R
   ~/bin/util/toggle_dvorak.sh
 
 super + Return
-  urxvt
+  st
 
 super + apostrophe
         ~/bin/quake/quake-urxvt -e "ssh weechat" "quake-weechat"
@@ -165,11 +166,17 @@ super + c
 super + p
         ~/bin/dmenu/power_menu.sh
 
-super + z
+# aka super + \
+super + backslash
+    dunstctl close
+
+# aka super + |
+# aka super + shift + \
+super + bar
     dunstctl history-pop
 
-super + e
-	~/bin/em &
+hyper + ISO_Level3_Shift
+    xdotool search --name "firefox" key 'Ctrl+grave'
 
 super + shift + e
 	killall empty
@@ -181,11 +188,14 @@ super + {F12,F11}
 super + o
     ~/bin/dmenu/pdf_menu.sh
 
+super + shift + o
+    ~/bin/util/papis-open.sh
+
 XF86MonBrightness{Up,Down}
   xbacklight {+,-} 10 && PERCENT=$(xbacklight | grep -o "[0-9]*" | head -n 1) && ~/bin/panel/dzen2/popup "Brightness: $PERCENT%" 1
 
 XF86Audio{Raise,Lower}Volume
-    ponymix increase 5
+    ponymix {increase,decrease} 5
 
 XF86AudioMute
   pamixer -t
@@ -194,47 +204,43 @@ XF86AudioMicMute
   pamixer --source 1 -t
 
 XF86AudioPlay
-  mpc toggle
+  sh -c 'playerctl -p $(get_mpris_active_player.sh) play-pause'
 
 XF86AudioPrev
-  mpc prev
+  sh -c 'playerctl -p $(get_mpris_active_player.sh) previous'
 
 XF86AudioNext
-  mpc next
+  sh -c 'playerctl -p $(get_mpris_active_player.sh) next'
 
 XF86AudioStop
-  mpc stop
+  sh -c 'playerctl -p $(get_mpris_active_player.sh) stop'
 
 Pause
-  mpc toggle
+  sh -c 'playerctl -p $(get_mpris_active_player.sh) play-pause'
 
 @Print
-  scrot -e 'mv $f ~/shots'
+  shotgun "/home/pinusc/shots/$(date | cut -d' ' -f1).png"
 
-@shift + Print
-  scrot -s -e 'mv $f ~/shots'
+shift + Print
+  shotgun -g "$(hacksaw)" "/home/pinusc/shots/$(date | cut -d' ' -f1).png"
 
 ~F9
-        if [[ -f /tmp/pushtotalk.lock ]]; then; \
-          xdotool search --name ".*Jitsi Meet.*" keyup space; \
-          rm /tmp/pushtotalk.lock; \
-        else; \
-          xdotool search --name ".*Jitsi Meet.*" keydown space; \
-          touch /tmp/pushtotalk.lock; \
-        fi;
+    if [[ -f /tmp/pushtotalk.lock ]]; then; \
+      xdotool search --name ".*Jitsi Meet.*" keyup space; \
+      rm /tmp/pushtotalk.lock; \
+    else; \
+      xdotool search --name ".*Jitsi Meet.*" keydown space; \
+      touch /tmp/pushtotalk.lock; \
+    fi;
 
 
 # make sxhkd and panel reload its configuration files:
 super + Escape
-       pkill -USR1 -x sxhkd; \
-       killall panel; \
-       panel 2>&1 >/dev/null &
+    pkill -USR1 -x sxhkd
 
 super + shift + Escape
-    xrandr --auto
-
-ctrl + F1
-	google-chrome-stable
+    killall panel; \
+    panel 2>&1 >/dev/null &
 
 XF86Launch1
     mpv --fullscreen /data/kommunism.webm
