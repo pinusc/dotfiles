@@ -1,0 +1,15 @@
+[papers]
+dir = ~/docs/papers
+
+[philosophy]
+dir = ~/docs/papers/philosophy
+
+[settings]
+opentool = nuke
+file-browser = nnn
+picktool = fzf
+fzf-binary = /usr/bin/fzf
+editor = vim
+add-folder-name = {doc[author]}-{doc[year]}-{doc[title]}
+add-file-name = {doc[author]}-{doc[year]}-{doc[title]}
+add-edit = True
