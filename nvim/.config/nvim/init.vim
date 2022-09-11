@@ -19,9 +19,8 @@ Plug 'artur-shaik/vim-javacomplete2'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'subnut/nvim-ghost.nvim', {'do': ':call nvim_ghost#installer#install()', 'on': []}
 
-Plug 'mileszs/ack.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'nvim-lua/plenary.nvim'  " telescope dependency
+Plug 'nvim-telescope/telescope.nvim'
 
 " Commenter
 Plug 'tpope/vim-commentary'
@@ -822,188 +821,33 @@ command! GhostSStart call plug#load('nvim-ghost.nvim')
 
 " }}}
 
-" {{{ Mappings 
-" Display TODO
-nnoremap <leader>TODO :vimgrep TODO **/*.py
+" {{{ waikiki
+map <leader>a :e ~/docs/notes/index.wiki.md<CR>
+map <leader>o :e ~/docs/notes/todo.txt<CR>
 
-" autocorrect
-" force top correction on most recent misspelling
-imap <C-l> <Esc>[s1z=`]a
-nmap <C-l> [s1z=``
+" let g:waikiki_default_maps = 1
 
-" linewise paste
-nnoremap <leader>p m`o<ESC>p``
-nnoremap <leader>P m`O<ESC>p``
+let g:waikiki_roots = ['~/docs/notes/']
+let g:waikiki_wiki_patterns = ['/.wiki.md/']
+let g:waikiki_default_maps  = 1
 
+function! SetupWaikikiBuffer() abort
+    nmap  <buffer>  zl                    <Plug>(waikikiFollowLink)
+    nmap  <buffer>  zh                    <Plug>(waikikiGoUp)
+    xn    <buffer>  <LocalLeader>c        <Esc>m`g'<O```<Esc>g'>o```<Esc>``
+    nmap  <buffer><silent> <LocalLeader>i :let &l:cocu = (&l:cocu==""
+                \ ? "n" : "")<cr>
+    setl sw=2
+    setl cole=2
+endfun
 
-tnoremap <Esc> <C-\><C-n>?\$<CR>
-"
-" map <F9> :make<Return>:copen<Return>
-map <F9> :lclose<Return>
-map <F10> :cprevious<Return>
-map <F11> :cnext<Return>
-map <F5> :!java %:r
-" for unimparied
-" nmap < [
-" nmap > ]
-" omap < [
-" omap > ]
-" xmap < [
-" xmap > ]
-"
-tnoremap <A-h> <C-\><C-n><C-w>h
-tnoremap <A-j> <C-\><C-n><C-w>j
-tnoremap <A-k> <C-\><C-n><C-w>k
-tnoremap <A-l> <C-\><C-n><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
-" additional window mappings to avoid conflict with sexp
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-imap jk <Esc>
-map <f2> :NERDTreeToggle<cr>
-let mapleader = "\<Space>"
-let maplocalleader = "\<Space>\<Space>"
-
-" file bindings
-map <leader>w :w<CR>
-map <leader>W :Gw<CR>
-map <leader>qq :q<CR>
-map <leader>qa :qa<CR>
-map <leader>Q :q!<CR>
-map <leader>x :x<CR>
-nnoremap <leader>cd :lcd %:p:h<CR>:pwd<CR>
-nnoremap <leader>cD :cd %:p:h<CR>:pwd<CR>
-
-" find bindings
-map <leader><tab> :e #<cr>
-map <leader>e :Explore<cr><cr>
-map <leader>s :Sexplore<cr><cr>
-map <leader>v :Vexplore<cr><cr>
-map <leader>u :UndotreeToggle<CR>
-map <leader>h :nohlsearch<CR>
-map <leader>ji :call cursor(0, 1)<cr>:call search("import")<cr>
-
-" git bindings
-map <leader>gs :Gstatus<cr>
-map <leader>gc :Gcommit<cr>
-map <leader>gr :Grebase<cr>
-
-" other bindings
-nnoremap <C-q> :center 80<cr>hhv0r=0r#A<space><esc>40A=<esc>d80<bar>
-nnoremap <C-s> yypVr=k
-" nnoremap <C-h> :.,$!pandoc -f markdown -t html<cr>
-" nnoremap <C-p> :.,$!pandoc -f markdown -t html<cr>
-" vnoremap <C-h> :'<,'>$!pandoc -f markdown -t html<cr>
-" vnoremap <C-p> :'<,'>$!pandoc -f markdown -t html<cr>
-
-function! StartMakeView()
-    NeomakeSh! make view
-    augroup makeview
-        au!
-        autocmd CursorHold,CursorHoldI,BufWritePost <buffer> :NeomakeSh! make
-    augroup END
-    redraw!
-endfunction
-
-command! StartMakeView call StartMakeView()
-
-
-" fzf mappings
-let g:fzf_command_prefix = 'Fzf'
-
-command! -bang -nargs=* FzfRg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
-
-nmap ; :FzfBuffers<CR>
-nmap <leader>; :FzfHistory<CR>
-nmap <Leader>f :FzfGFiles<CR>
-nmap <Leader>F :FzfFiles<CR>
-nmap <Leader>' :FzfFiles<CR>
-nmap <Leader>t :FzfBTags<CR>
-nmap <Leader>T :FzfTags<CR>
-map <leader>/ :FzfRg!<CR>
-map <leader>gl :FzfCommits<CR>
-augroup fzf-bind
+augroup Waikiki
     au!
-    autocmd FileType fzf tmap <buffer> <esc> <c-g>
+    autocmd User setup call SetupWaikikiBuffer()
+    au FileType markdown call SetupWaikikiBuffer()
 augroup END
 
-function! s:neigh_sink(file)
-    if filereadable(a:file)
-        execut 'e' . a:file
-    endif
-    if isdirectory(a:file)
-          let command = 'find ' . a:file . ' -maxdepth 1'
-
-          call fzf#run({
-                \ 'source': command,
-                \ 'sink':  function('s:neigh_sink'),
-                \ 'options': '-m -x +s',
-                \ 'down':  '40%' })
-    endif
-endfunction
-
-function! s:fzf_neighbouring_files()
-  let current_file =expand('%')
-  let cwd = fnamemodify(current_file, ':p:h')
-  " let command = 'cat <(find ' . cwd . ' -maxdepth 1) <(echo ..)'
-  let command = 'echo ..; find ' . cwd . ' -maxdepth 1'
-
-  call fzf#run({
-        \ 'source': command,
-        \ 'sink':  function('s:neigh_sink'),
-        \ 'options': '-m -x +s',
-        \ 'down':  '40%' })
-endfunction
-
-command! FZFNeigh call s:fzf_neighbouring_files()
-
-" sessions
-let g:session_dir = $HOME . '/.config/nvim/sessions/'
-function! FindProjectName()
-  let s:name = getcwd()
-  if !isdirectory('.git')
-    let s:name = substitute(finddir('.git', '.;'), '/.git', '', '')
-  end
-  if s:name !=? '' 
-    let s:name = matchstr(s:name, '.*', strridx(s:name, '/') + 1)
-  end
-  return s:name
-endfunction
-
-" Sessions only restored if we start Vim without args.
-function! RestoreSession(name)
-  if a:name !=? '' 
-      echo g:session_dir . a:name
-    if filereadable(g:session_dir . a:name)
-      execute 'source ' . g:session_dir . a:name
-    end
-  end
-endfunction
-
-" Sessions only saved if we start Vim without args.
-function! SaveSession(name)
-  if a:name !=? '' 
-    execute 'mksession! ' . g:session_dir . a:name
-  end
-endfunction
-
-" Restore and save sessions.
-if argc() == 0
-    augroup session
-        autocmd VimEnter * nested call RestoreSession(FindProjectName())
-        autocmd VimLeave * nested call SaveSession(FindProjectName())
-    augroup END
-end
+" }}}
 
 " }}}
 
