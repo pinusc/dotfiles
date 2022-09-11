@@ -13,21 +13,56 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 bindkey -v
 
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+
+set -o noclobber
+# not in alias file because security feature
+alias cp='cp -i'
+alias mv='mv -i'
+
+# for jog
+function zshaddhistory() {
+	echo "${1%%$'\n'}|${PWD}   " >> ~/.zsh_history_ext
+}
+
+# ====== theming & style =======
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]} m:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu yes select search
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle :compinstall filename '/home/pinusc/.zshrc'
+
+PROMPT="%F{green}%m%f %# "
+
+zmodload zsh/complist
+# bindkey -M menuselect 'h' vi-backward-char
+# bindkey -M menuselect 'k' vi-down-line-or-history
+# bindkey -M menuselect 'l' vi-forward-char
+# bindkey -M menuselect 'j' vi-down-line-or-history
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
 # completion regens cache one a day
 autoload -Uz compinit
 autoload -U zmv
 # (#qN.mh+24) is fancy glob to match files older than 24 hours
-if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+if [[ -n ${HOME}/.zcompdump(#qN.mh+24) ]]; then
 	compinit;
 else
 	compinit -C;
 fi;
 
-autoload -Uz run-help
 hash run-help &>/dev/null && unalias run-help
+autoload run-help
 alias help=run-help
 bindkey -a 'H' run-help # press H in command mode to see manpage
 bindkey '^R' history-incremental-search-backward
+bindkey '^e' push-line-or-edit
 
 spaces=$(printf " %.0s" {1..$(( (COLUMNS - 40) / 2 ))})
 if which fortune &>/dev/null && which cowsay &>/dev/null; then
@@ -47,6 +82,10 @@ done
 
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye &> /dev/null
+
+if which zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
 
 if which fzf &>/dev/null; then
     source /usr/share/fzf/key-bindings.zsh
@@ -70,5 +109,8 @@ fi
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+bindkey '^K' history-substring-search-up
+bindkey '^J' history-substring-search-down
 
 wait # so we don't get a prompt before background jobs
+
