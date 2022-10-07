@@ -301,7 +301,7 @@ bluetooth_restart () {
 alias restart_bluetooth=bluetooth_restart
 
 pdfcut () {
-    if [ "$1" = -h ]; then
+    if [ "$1" = -h ] || [ -z "$1" ] || [ -z "$2" ]; then
         echo "Usage: pdfcut FILE RANGE"
         return 1
     fi
