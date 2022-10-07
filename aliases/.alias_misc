@@ -79,10 +79,20 @@ alias lt='ls -l --tree'
 alias ltg='ls -l --tree --git'
 
 if [ "$SHELL" = /bin/zsh ]; then 
-    alias -g LL="| $PAGER"
-    alias -g LLH="--help | $PAGER"
-    alias -g LLC="--color=always | $PAGER"
-    alias -g LLA="2>&1 | $PAGER"
+    if [[ "$PAGER" = 'bat' || "$PAGER" =~ ".*bat.*" ]]; then
+        alias -g LL="| $PAGER --plain"
+        alias -g LLH="--help | $PAGER --plain --language=cmd-help"
+        alias -g LLC="--color=always | $PAGER --plain"
+        alias -g LLA="2>&1 | $PAGER"
+        alias -g BB="| $PAGER --style auto"
+        alias -g BBC="--color=always | $PAGER --style auto"
+        alias -g BBA="2>&1 | $PAGER --style auto"
+    else
+        alias -g LL="| $PAGER"
+        alias -g LLH="--help | $PAGER"
+        alias -g LLC="--color=always | $PAGER"
+        alias -g LLA="2>&1 | $PAGER"
+    fi
     alias -g NNNSEL='$(nnn -p -)'
     alias -g CSVLL="| csv2table.sh"
     alias -g MRF="*(om[1])"

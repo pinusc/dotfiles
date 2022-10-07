@@ -1,7 +1,7 @@
 export EDITOR='nvim'
 export VISUAL='nvim'
 export MAIL="$HOME/mail"
-export PAGER='bat --paging always'
+command -v bat &>/dev/null && export PAGER='bat'
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export PDF_VIEWER='zathura'
 export BROWSER='/usr/bin/qutebrowser'
