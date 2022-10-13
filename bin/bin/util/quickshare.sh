@@ -6,7 +6,7 @@ parse_params() {
     # default values of variables set from params
     directory="$PWD"
     port=8000
-    server=argo
+    server=persephone
 
     while :; do
         case "${1-}" in
@@ -34,6 +34,7 @@ parse_params() {
 
     return 0
 }
+parse_params "$@"
 
 {
     cd "$directory" || die "Directory does not exist: $directory"
