@@ -19,10 +19,11 @@ To execute, run `gnu stow** + each of the desired directories. This directory sh
 - compton
 - xautolock
 - redshift
-- mpv e mpv-mpris
+- mpv + mpv-mpris
 
 ### Panel dependencies
 - bash-fuzzy-clock
+- perl-net-dbus
 
 ### Emacs dependencies
 - Minimap Font (TTF) [github](https://github.com/davestewart/minimap-font) 
@@ -47,6 +48,7 @@ To execute, run `gnu stow** + each of the desired directories. This directory sh
 - community/
 - fortune
 - cowsay
+- envrc
 
 ### sudo visudo
 - Add line "Defaults !lecture,tty_tickets,!fqdn,insults"
@@ -76,3 +78,17 @@ Right now, it just runs anacron every hour.
 6. Modules/
 -----------
 This folder is for programs and scripts I did not write and can't or shouldn't be installed with a package manager. When possible, I use `git submodule` to include them without cluttering my repo; however, if I have to make some changes to the original source code and the repo is small, I'll just add the files in the index and source control them. This has proven to be the easiest version; forking and modifying the source code in another repo is too cumbersome most of the time, and I don't do it  unless necessary.
+
+###nnn plugins
+Run
+
+    $ curl -Ls https://raw.githubusercontent.com/jarun/nnn/master/plugins/getplugs | sh
+
+Dependencies:
+- aur/dragon-drag-and-drop
+- viu
+
+### media
+MPD scrobbling: install `aur/mpdas` and run `$ systemctl --user enable mpdas`
+Set up mpv interface
+
