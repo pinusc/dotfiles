@@ -1,7 +1,7 @@
-nvim/.config/nvim/plugged/
-nvim/.config/nvim/spell/
-nvim/.config/nvim/sessions
-nvim/.config/nvim/.netrwhist
+nvim/.config/nvim/*
+!nvim/.config/nvim/init.vim
+!nvim/.config/nvim/UltiSnips
+!nvim/.config/nvim/spell/*.add
 mpd/.config/mpd/*
 !mpd/.config/mpd/mpd.conf
 !mpd/.config/mpd/playlilsts/
