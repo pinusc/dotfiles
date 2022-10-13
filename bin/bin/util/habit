@@ -1,0 +1,27 @@
+#!/bin/bash
+
+command="$1"
+direction="done"
+
+if [[ -z "$command" ]]; then
+    echo "Command needed (up, down, daily, todo)"
+    exit 1
+fi
+
+regex="s/ b'/ /; s/'\$//" 
+regex_head="s/^\[[^]]*\] //"
+
+if [[ "$command" = up || "$command" = down ]]; then
+    direction="$command"
+    command="habits"
+    regex="$regex_head; $regex"
+elif [[ "$command" = todo ]]; then
+    command=todos
+elif [[ "$command" = daily ]]; then
+    command=dailies
+fi
+
+task_id="$(habitica "$command" | sed "$regex" | rofi -i -dmenu | sed "$regex_head" | cut -d' ' -f1)"
+
+echo habitica "$command" "$direction" "$task_id"
+habitica "$command" "$direction" "$task_id"
