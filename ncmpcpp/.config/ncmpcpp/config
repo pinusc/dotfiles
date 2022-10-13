@@ -20,7 +20,7 @@
 ## (eg. ncmpc) also use that location.
 ##
 #
-#lyrics_directory = ~/.lyrics
+lyrics_directory = ~/.local/share/lyrics
 #
 ##### connection settings #####
 #
@@ -92,7 +92,7 @@
 #
 ## Available values: spectrum, wave.
 ##
-visualizer_type = spectrum 
+# visualizer_type = spectrum 
 #
 # visualizer_look = ●▮
 visualizer_look = ◆▋ 
@@ -325,7 +325,7 @@ playlist_display_mode = columns
 progressbar_look = ━━━
 # progressbar_look = ─>
 #
-progressbar_boldness = yes
+# progressbar_boldness = yes
 #
 ## Available values: database, playlist.
 ##
@@ -339,7 +339,7 @@ progressbar_boldness = yes
 #
 ## Available values: artist, album_artist, date, genre, composer, performer.
 ##
-#media_library_primary_tag = artist
+media_library_primary_tag = album_artist
 #
 ## Available values: wrapped, normal.
 ##
@@ -367,8 +367,8 @@ progressbar_boldness = yes
 #
 fetch_lyrics_for_current_song_in_background = no
 follow_now_playing_lyrics = yes
-#
-#store_lyrics_in_song_dir = no
+
+store_lyrics_in_song_dir = no
 #
 #generate_win32_compatible_filenames = yes
 #
@@ -495,7 +495,7 @@ main_window_color = white
 #
 # color2 = red
 #
-main_window_highlight_color = green
+#main_window_highlight_color = green
 #
 #progressbar_color = black
 #
@@ -505,7 +505,7 @@ progressbar_elapsed_color = green
 #
 #alternative_ui_separator_color = black
 #
-active_column_color = red
+# active_column_color = red
 #
 #visualizer_color = yellow
 #
