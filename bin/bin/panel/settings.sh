@@ -4,11 +4,8 @@ export TMPDIR=$(mktemp -d)
 dim=$(xrandr | awk '/.*primary/ { print $4; exit }')
 dimx=${dim%x*}
 export PANEL_GAP=$(bspc config window_gap)
-if [[ $(hostname -s) = mandricardo ]]; then
-    export MAIN_MONITOR="LVDS-1"
-else
-    export MAIN_MONITOR="HDMI-1"
-fi
+export MAIN_MONITOR="$(xrandr | awk '/primary/{print $1;}')"
+
 monitor_pos=$(xrandr --listactivemonitors | grep '^ 0' | \
     cut -d' ' -f4 | cut -d+ -f2)
 
