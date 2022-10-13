@@ -9,9 +9,8 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Plug '~/projects/webcomplete/src/vim-plugin'
 
-Plug 'zchee/deoplete-jedi'
-Plug 'carlitux/deoplete-ternjs'
-Plug 'clojure-vim/async-clj-omni'
+" Plug 'zchee/deoplete-jedi', {'for': 'python'}
+Plug 'carlitux/deoplete-ternjs', {'for': 'javascript'}
 Plug 'Shougo/neco-syntax'
 Plug 'artur-shaik/vim-javacomplete2'
 " Plug 'airblade/vim-rooter'
@@ -33,21 +32,18 @@ Plug 'honza/vim-snippets'
 """ Clojure
 Plug 'guns/vim-clojure-static', {'for': 'clojure'}
 Plug 'tpope/vim-fireplace', {'for': 'clojure'}
-" Bundle 'kien/rainbow_parentheses.vim'
+" Plug 'clojure-vim/async-clj-omni', {'for': 'clojure'}
 Plug 'tpope/vim-leiningen', {'for': 'clojure'}
 
 """ Android
 Plug 'hsanson/vim-android'
 
-" Haskell
-Plug 'neovimhaskell/haskell-vim', {'for': 'haskell'}
-
-Plug 'jceb/vim-orgmode'
-" wiki
-Plug 'fcpg/vim-waikiki'
-Plug 'mattn/calendar-vim'
-Plug 'vim-scripts/utl.vim' " Universal Text Linking
-Plug 'dhruvasagar/vim-table-mode'
+" Plug 'jceb/vim-orgmode', {'for': 'org'}
+" " wiki
+" Plug 'fcpg/vim-waikiki'
+" Plug 'mattn/calendar-vim'
+" Plug 'vim-scripts/utl.vim' " Universal Text Linking
+" Plug 'dhruvasagar/vim-table-mode'
 
 """ Prose
 Plug 'junegunn/goyo.vim'
@@ -64,20 +60,25 @@ Plug 'ron89/thesaurus_query.vim'
 Plug 'dbmrq/vim-ditto', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-wheel', {'for': ['text', 'markdown', 'tex']}
 
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vim-pandoc/vim-pandoc', {'for': 'markdown'}
+Plug 'vim-pandoc/vim-pandoc-syntax', {'for': 'markdown'}
 
 
 """ Latex 
-Plug 'xuhdev/vim-latex-live-preview', {'for': 'tex'}
 Plug 'lervag/vimtex', {'for': 'tex'}
 
 """ Vue
 Plug 'posva/vim-vue', {'for': 'vue'}
 
+""" Todo.txt
+Plug 'freitass/todo.txt-vim'
+
+
 "Editing parentesi
 Plug 'guns/vim-sexp', { 'for': 'clojure' }
 Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
+Plug 'p00f/nvim-ts-rainbow'
+
 "Parentesi arcobaleno
 " UnPlugin 'oblitum/rainbow'
 Plug 'tpope/vim-fugitive'
@@ -87,8 +88,21 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 
-Plug 'klen/python-mode', { 'for': 'python' }
-Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
+" Plug 'klen/python-mode', { 'for': 'python' }
+" Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
+
+" Jupyter
+" This setup requires `pip install --user jupytext qtconsole`
+" Afterwards, just opening .ipynb files should convert them correctly
+" To execute cells, run `jupytext qtconsole` in a terminal (disown it too)
+" Then run :JupyterConnect in vim
+" Now pressing alt+Enter on a cell will run it and move to the next one
+" Plug 'jupyter-vim/jupyter-vim'
+Plug '~/.config/nvim/plugged/jupyter-vim'
+Plug 'goerz/jupytext.vim'
+Plug '~/.config/nvim/plugged/vim-textobj-hydrogen'
+" Plug 'jpalardy/vim-slime', { 'for': 'python' }
+" Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
 
 Plug 'mattn/emmet-vim'
 
@@ -97,10 +111,8 @@ Plug 'pinusc/term.vim'
 
 "Cool start screen
 Plug 'mhinz/vim-startify'
-" Plug 'easymotion/vim-easymotion'
 Plug 'justinmk/vim-sneak'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'Yggdroot/indentLine'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 call plug#end()    
 " }}}
@@ -114,7 +126,7 @@ set smartcase
 nmap Y y$
 
 " mostly for latex
-set conceallevel=1
+set conceallevel=0
 set concealcursor=""
 
 " command completion
@@ -138,6 +150,13 @@ augroup lostcontext
   autocmd BufWinEnter quickfix nnoremap <silent> <buffer> q :cclose<cr>:lclose<cr>
   autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) | bd | q | endif
 augroup END
+
+function! SynStack()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 " let base16colorspace=256
 " colorscheme base16-vim
@@ -168,8 +187,6 @@ augroup END
      hi StartifyPath ctermfg=243
 " endfunction
 
-
-let g:indentLine_char = '│'
 
 syntax enable
 set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
@@ -287,7 +304,7 @@ require'nvim-treesitter.configs'.setup {
     ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     highlight = {
         enable = true,              -- false will disable the whole extension
-        disable = { "c", "rust", "markdown" },  -- list of language that will be disabled
+        disable = { "c", "rust", "markdown", "tex", "latex" },  -- list of language that will be disabled
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
@@ -554,26 +571,16 @@ endfunction
 command! -nargs=0 PandocPreview call PandocPreview()
 
 function! UpdateWordCount()
-    exe "normal! gg"
-    call search("\\.\\.\\.")
-    exe "normal! V"
-    call search("Word Count")
-    exe "normal! k"
-    let d = wordcount()
-    " for [key, value] in items(d)
-    "     echo key . ': ' . value
-    " endfor
-    let words = d.visual_words
+    let words = system("pandoc ".. expand('%') .. " --to plain | perl -ne 'print if //../Word Count/' | wc -w")
     exe "%s/Word Count:.*/Word Count: " . words . "/"
-    exe "normal! V"
 endfunction
 command! -nargs=0 UpdateWordCount call UpdateWordCount()
 
 " automatically initialize buffer by file type
-augroup prose
-    au!
-    autocmd FileType markdown,mkd,text,rst call Prose()
-augroup END
+" augroup prose
+"     au!
+"     autocmd FileType markdown,mkd,text,rst call Prose()
+" augroup END
 
 " invoke manually by command for other file types
 command! -nargs=0 Prose call Prose()
@@ -620,15 +627,15 @@ if !exists ('*GetClojureFold')
 endif
 
 " }}} Clojure
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
 
-augroup fold
-    au!
-    autocmd Filetype c set foldmethod=syntax
-    autocmd Filetype python setlocal foldmethod=expr
-    autocmd Filetype help,startify,clojure :IndentLinesDisable
-    autocmd FileType clojure call TurnOnClojureFolding()
-    autocmd FileType clojure IndentLinesDisable
-augroup END
+" augroup fold
+"     au!
+"     autocmd Filetype c set foldmethod=syntax
+"     " autocmd Filetype python setlocal foldmethod=expr
+"     autocmd FileType clojure call TurnOnClojureFolding()
+" augroup END
     
 let g:python_host_prog = '/usr/bin/python'
 let g:python2_host_prog = '/usr/bin/python2'
@@ -650,13 +657,60 @@ let g:gitgutter_sign_removed = '·'
 let g:gitgutter_sign_removed_first_line = '·'
 let g:gitgutter_sign_modified_removed = '·'
 
+" Visual Multi
+let g:VM_default_mappings = 0
+let g:VM_maps = {}
+let g:VM_maps["Add Cursor Down"] = '<M-Down>'
+let g:VM_maps["Add Cursor Up"] = '<M-Up>'
+
+" {{{ Jupytext
+let g:jupytext_enable = 1
+let g:jupytext_fmt = 'py:percent'
+let g:jupytext_filetype_map = {
+        \    'py:percent': 'python.ipynb',
+        \    'R:percent': 'R.ipynb'
+        \ }
+" let g:jupyter_highlight_cells = 0
+
+call textobj#user#map('hydrogen', {
+\  '-': {
+\    'move-n': '}',   
+\    'move-p': '{',   
+\    }
+\  })
+
+let g:pymode_motion = 0
+augroup Jupytext
+    au! 
+    autocmd Bufenter *.ipynb let b:jupyter_kernel_type = 'python'
+    autocmd Bufenter *.ipynb call jupyter#load#MakeStandardCommands()
+    autocmd BufEnter *.ipynb nnoremap <buffer> <A-CR> :JupyterSendCell<CR> <bar> :call search('^# %%\( \=\[markdown]\)\@!', 'W') <bar> :norm j<CR>
+    autocmd BufEnter *.ipynb nnoremap <buffer> <A-\> :JupyterSendCell<CR>
+    autocmd Bufenter *.r.ipynb let g:jupytext_fmt = 'R:percent'
+    autocmd Bufenter *.r.ipynb let b:jupyter_kernel_type = 'R'
+    autocmd Bufenter *.r.ipynb set ft=R.ipynb
+    autocmd Bufenter *.R call jupyter#load#MakeStandardCommands()
+    autocmd BufEnter *.R nnoremap <buffer> <A-CR> :JupyterSendCell<CR> <bar> :call search('^# %%\( \=\[markdown]\)\@!', 'W') <bar> :norm j<CR>
+    autocmd BufEnter *.R nnoremap <buffer> <A-\> :JupyterSendCell<CR>
+augroup END
+
+" }}}
+
+" {{{ Pandoc
+let g:pandoc#syntax#conceal#use=0
+let g:pandoc#filetypes#pandoc_markdown=1
+
+" }}}
+
 " {{{ Latex
 let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
 let g:vimtex_fold_enabled=1
-let g:tex_flavor='latex'
-let g:tex_conceal='abdmg'
-let g:neomake_tex_enabled_makers=[]
+let g:vimtex_syntax_conceal={}
+let g:vimtex_syntax_conceal_default=0
+let g:tex_flavor='xetex'
+let g:tex_conceal=''
+let g:neomake_tex_enabled_makers=['proselint']
 let g:vimtex_doc_handlers=['Texdoc_zathura']
 
 let g:vimtex_compiler_latexrun = {
@@ -680,6 +734,12 @@ let g:vimtex_compiler_latexmk = {
     \   '-interaction=nonstopmode',
     \ ],
     \}
+
+aug inkscape
+    autocmd FileType latex inoremap <buffer> <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
+    autocmd FileType latex nnoremap <buffer><localleader>f : silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
+    au!
+aug END
 
 " lifted from vimtex/doc.vim with a change to open texdoc in zathura
 function! Texdoc_zathura(context) abort " 
@@ -707,11 +767,11 @@ function! Texdoc_zathura(context) abort "
   endif
 
   let l:os = vimtex#util#get_os()
-  let l:url = 'http://texdoc.net/pkg/' . a:context.selected
+  let l:url = 'https://texdoc.org/serve/' . a:context.selected . '/0'
 
-  silent execute '!zathura ' . l:url . ' &'
+  execute '!zathura --fork <(curl ' . l:url . ')'
 
-  redraw!
+  " redraw!
 endfunction
 
 
@@ -747,7 +807,7 @@ let g:pymode_folding = 0
 " }}} 
 
 " {{{ Startify
-let g:startify_bookmarks = [{'s': '~/docs/school/'}, {'b': '~/bin'}, {'p': '~/projects/'}, {'v': '~/.config/nvim/init.vim'}]
+let g:startify_bookmarks = [{'v': '~/.config/nvim/init.vim'}, {'t': '~/docs/notes/todo.txt'}, {'n': '~/docs/notes/QuickNote.md'}]
 let g:startify_list_order = [
             \ ['   Bookmarks:'],
             \ 'bookmarks',
@@ -798,7 +858,7 @@ aug omnicomplete
     au FileType css,sass,scss,stylus,less setl omnifunc=csscomplete#CompleteCSS
     au FileType html,htmldjango,jinja,markdown setl omnifunc=emmet#completeTag
     au FileType javascript,jsx setl omnifunc=tern#Complete
-    au FileType python setl omnifunc=pythoncomplete#Complete
+    " au FileType python setl omnifunc=pythoncomplete#Complete
     au FileType xml setl omnifunc=xmlcomplete#CompleteTags
 aug END
 
@@ -856,7 +916,10 @@ augroup END
 set laststatus=2
 set statusline=
 " set statusline+=\ %*
-set statusline+=\ %f%(\ %h%)%(\ %m%)
+set statusline+=%(\ %y%)%(\ %h%)\ [%{&ff}\/%{&fenc}]
+set statusline+=\ %f
+set statusline+=%(\ %m%)
+set statusline+=%(\ %r%)
 set statusline+=%=
 " set statusline+=\ %{LinterStatus()}
 set statusline+=\ [%l:%c\ %p%%]
