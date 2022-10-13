@@ -32,10 +32,9 @@ fileext = ".ics"
 [storage my_cal_remote]
 type = "caldav"
 # We can simplify this URL here as well. In theory it shouldn't matter.
-url = "https://dav.gstelluto.com/radicale/pinusc/29b453f1-d608-4ff1-95d4-e9c607d71dab/"
+url = "https://dav.gstelluto.com/radicale/pinusc/"
 username = "pinusc"
 password.fetch = ["command", "sh", "-c", "pass servers/dav.gstelluto.com | head -n  1"]
-
 
 [pair gcal]
 a = "gcal_local"
