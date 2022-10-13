@@ -14,8 +14,10 @@ EOF
 if [[ -z "$1" ]]; then
     if grep -q 1 /sys/devices/platform/dock.1/docked; then
         DOCKED=1
+        xmodmap "${HOME}/.Xmodmap"
     else
         DOCKED=0
+        xmodmap "${HOME}/.Xmodmap.laptop"
     fi
 fi
 
@@ -53,7 +55,7 @@ if [[ "$DOCKED" = 1 ]]; then
             DP2)
                 # remember to set primary correctly for bar reasons
                 xrandr --output DP2 --primary --mode 2560x1080
-                xrandr --output LVDS1 --left-of DP2
+                xrandr --output LVDS1 --right-of DP2
                 ;;
             HDMI2)
                 xrandr --newmode "1366x768"x0.0   69.30  1366 1404 1426 1436  768 771 777 803 -hsync -vsync
