@@ -10,32 +10,45 @@ settings:
     global: true
   bindings.commands:
     global:
+      command:
+        <Ctrl+h>: :rl-backward-char
+        <Ctrl+j>: :completion-item-focus next
+        <Ctrl+k>: :completion-item-focus prev
+        <Ctrl+l>: :rl-forward-char
       insert:
-        <Ctrl-A>: 'spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass
+        <Ctrl+a>: 'spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass
           --username-pattern ".*login: (.+)" --username-target secret --username-default
           logins@gstelluto.com'
       normal:
         ',A': spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass
           --password-only
         ',m': spawn qmpv {url}
+        ',otp': spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass
+          -o
         ',r': spawn --userscript ~/.local/share/qutebrowser/userscripts/readability
         ;m: hint links spawn qmpv {hint-url}
         ;o: hint links spawn url_opener.sh "{hint-url}"
-        <Ctrl-A>: 'spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass
+        <Ctrl+a>: 'spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass
           --username-pattern ".*login: (.+)" --username-target secret --username-default
           logins@gstelluto.com'
         '`': config-cycle tabs.show always never
+        tSH: spawn -u domcycle content.javascript.enabled
         tn: set content.proxy none
         tt: set -p content.proxy socks://localhost:9050/ ;; later 1000 open -t check.torproject.org
         xs: set-cmd-text -s :open site:{url:host}
+      prompt:
+        <Ctrl+j>: :prompt-item-focus-next
+        Ctrl-J: :prompt-item-focus-next
+  colors.tabs.selected.odd.bg:
+    global: '#504945'
   colors.webpage.darkmode.enabled:
     global: false
   colors.webpage.darkmode.grayscale.all:
     global: false
   colors.webpage.darkmode.threshold.background:
     global: 10
-  colors.webpage.prefers_color_scheme_dark:
-    global: true
+  colors.webpage.preferred_color_scheme:
+    global: dark
   content.autoplay:
     global: false
   content.blocking.enabled:
@@ -45,6 +58,8 @@ settings:
     - https://easylist.to/easylist/easylist.txt
     - https://easylist.to/easylist/easyprivacy.txt
     - https://testpages.adblockplus.org/en/abp-testcase-subscription.txt
+  content.blocking.method:
+    global: adblock
   content.blocking.whitelist:
     global:
     - piwik.org
@@ -64,13 +79,18 @@ settings:
   content.headers.do_not_track:
     global: true
   content.headers.user_agent:
-    global: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
-      Gecko) Chrome/71.0.3578.98 Safari/537.36
+    global: Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko)
+      {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}
+    https://accounts.google.com/*: Mozilla/5.0 ({os_info}; rv:90.0) Gecko/20100101
+      Firefox/90.0
+  content.javascript.can_access_clipboard:
+    global: true
   content.javascript.can_open_tabs_automatically:
     global: true
   content.javascript.enabled:
     '*://*.127.0.0.1/*': true
     '*://*.192.168.1.1/*': true
+    '*://*.git.sr.ht/*': false
     '*://*.githubassets.com/*': true
     '*://*.gstelluto.com/*': true
     '*://*.matrix.org/*': true
@@ -80,12 +100,23 @@ settings:
     '*://*.riot.im/*': true
     '*://*.searx.me/*': true
     '*://*.world.openfoodfacts.org/*': true
+    '*://archive.org/*': true
+    '*://boardgamegeek.com/*': true
+    '*://colby.zoom.us/*': true
+    '*://discord.com/*': true
     '*://duckduckgo.com/*': true
     '*://en.wikipedia.org/*': true
+    '*://git.sr.ht/*': false
     '*://gitlab.com/*': true
+    '*://habitica.com/*': true
+    '*://localhost/*': true
+    '*://pandas.pydata.org/*': true
     '*://pi.hole/*': true
+    '*://poste.it/*': true
+    '*://search.giusb.party/*': true
+    '*://www.notion.so/*': true
     '*://www.openstreetmap.org/*': true
-    global: true
+    global: false
     https://*.colby.edu/*: true
     https://*.github.com/*: true
     https://app.talkspace.com/*: true
@@ -106,7 +137,7 @@ settings:
     https://discord.com: true
     https://meet.google.com: true
     https://meet.jit.si: true
-  content.notifications:
+  content.notifications.enabled:
     http://latest.glowing-bear.org: true
     https://filmora.wondershare.com: false
   content.pdfjs:
@@ -115,6 +146,9 @@ settings:
     global: true
   content.proxy:
     global: none
+  content.register_protocol_handler:
+    https://mail.google.com?extsrc=mailto&url=%25s: false
+    https://mail.proton.me#mailto=%25s: false
   content.user_stylesheets:
     global: null
   content.webgl:
@@ -122,7 +156,7 @@ settings:
   downloads.location.directory:
     global: ~/downloads
   downloads.location.remember:
-    global: false
+    global: true
   downloads.location.suggestion:
     global: both
   downloads.remove_finished:
@@ -136,9 +170,16 @@ settings:
     - nvim {file}
   fileselect.handler:
     global: external
+  fileselect.multiple_files.command:
+    global:
+    - st
+    - -e
+    - nnn
+    - -p
+    - '{}'
   fileselect.single_file.command:
     global:
-    - urxvt
+    - st
     - -e
     - nnn
     - -p
@@ -181,7 +222,7 @@ settings:
   hints.auto_follow:
     global: unique-match
   hints.auto_follow_timeout:
-    global: 1500
+    global: 0
   hints.mode:
     global: letter
   input.mouse.rocker_gestures:
@@ -215,9 +256,11 @@ settings:
   url.searchengines:
     global:
       '!amazon': https://www.amazon.com/s/?tag=duc0c-20&search-alias%3Daps&field-keywords={}
-      DEFAULT: https://duckduckgo.com/?q={}
+      DEFAULT: https://search.giusb.party/searx/search?q={}
       aw: https://wiki.archlinux.org/index.php/{}
+      bgg: https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q={}&B1=Go
       d: https://thefreedictionary.com/{}
+      ddg: https://duckduckgo.com/{}
       enit: https://www.wordreference.com/enit/{}
       gh: https://github.com/search?q={}&type=Repositories
       hn: https://duckduckgo.com/?q=site:news.ycombinator.com+{}
