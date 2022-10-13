@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# jumps to a course directory and then a subdirectory
+
+COMMAND=c
+
+echo "$1"
+
+if [[ "$1" = "--moodle" ]]; then
+    COMMAND=m
+    shift
+fi
+
+if [[ "$#" -gt 0 ]]; then
+    . "$COMMAND" "$1"
+else
+    . "$COMMAND"
+fi
+fzf_a=(--info inline --height 10 --reverse -1 -e)
+
+if [[ "$#" -ge 2 ]]; then
+    shift
+    fzf_a+=(-q "$*")
+fi
+
+
+dir="$(find . -mindepth 1 -maxdepth 2 -type d | fzf "${fzf_a[@]}")"
+
+cd "$dir" || echo "uh-oh"

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+[[ -z "$PDF_VIEWER" ]] && PDF_VIEWER=zathura
+
+if [[ "$#" -gt 0 ]]; then
+    . c "$*"
+else
+    . c
+fi
+
+if [[ -f syllabus.pdf ]]; then
+    fname=syllabus.pdf
+elif [[ -f resources/syllabus.pdf ]]; then
+    fname=resources/syllabus.pdf
+fi
+
+if [[ -f "$fname" ]]; then
+    "$PDF_VIEWER" "$fname" &
+    disown
+else
+    echo "No syllabus found!"
+    exit 1
+fi

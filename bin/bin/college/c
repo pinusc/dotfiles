@@ -1,0 +1,23 @@
+#!/bin/zsh
+
+CDIR=~/docs/college/courses
+NAMEFILE="$CDIR/names.txt"
+fzf_a=(--info inline --height 10 --reverse -1 -e)
+
+if [[ "$#" -ge 1 ]]; then
+    arg="$@"
+    fzf_a+=(-q "$arg")
+fi
+
+courses=$(find "$CDIR" -mindepth 1 -maxdepth 1 -type d | sort -r)
+cur_n=$(basename "$(echo "$courses" | head -n 1)" | cut -d- -f1 | head -c 1)
+
+cur_courses=$(find "$CDIR" -mindepth 1 -maxdepth 1 -iname "${cur_n}*" | sort -r)
+namecomm='cnum=$(basename {} | cut -d- -f2);cname=$(grep "$cnum" '"$NAMEFILE"');echo "${cname:-cnum}"'
+selected=$(echo "$cur_courses" | xargs -I{} sh -c "$namecomm"| fzf "${fzf_a[@]}")
+if [[ -n "$selected" ]]; then
+    course_path=$(echo "$cur_courses" | grep "$(echo "$selected" | cut -d' ' -f1)")
+    echo "$course_path"
+
+    cd "$course_path" || echo "ERROR"
+fi

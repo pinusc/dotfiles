@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [[ "$1" = "-h" || "$1" = "--help" ]]; then
+    cat<<EOF
+    Usage: apdf [search-term]
+    Find and open a pdf file from ~/docs, ~/books, ~/downloads, ~/tmp
+EOF
+fi
+
+
+set -Eeuo pipefail
+
+FOLDERS=(~/books ~/docs ~/downloads ~/tmp)
+FORMATS=(-e pdf -e epub -e djvu)
+
+fzf_a=(--info inline --height 10 --reverse -1 -e)
+
+if [[ "$#" -ge 2 ]]; then
+    shift
+    fzf_a+=(-q "$*")
+fi
+
+fname="$(fd -I . -e "${FORMATS[@]}" "${FOLDERS[@]}" | fzf "${fzf_a[@]}")"
+
+if [[ -f "$fname" ]]; then
+    "$PDF_VIEWER" "$fname" &
+    disown
+else
+    exit 1
+fi

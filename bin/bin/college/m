@@ -1,0 +1,18 @@
+#!/bin/zsh
+
+MDIR="$HOME/docs/college/moodle"
+fzf_a=(--info inline --height 10 --reverse -1 -e)
+
+if [[ "$#" -ge 1 ]]; then
+    arg="$@"
+    fzf_a+=(-q "$arg")
+fi
+
+courses=$(find "$MDIR" -mindepth 1 -maxdepth 1 -type d | sort -r)
+
+namecomm='basename "{}" | cut -d- -f2-'
+selected=$(echo "$courses" | xargs -I{} sh -c "$namecomm"| fzf "${fzf_a[@]}")
+if [[ -n "$selected" ]]; then
+    course_path=$(echo "$courses" | grep "$selected")
+    cd "$course_path" || echo "ERROR"
+fi

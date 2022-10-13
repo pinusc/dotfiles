@@ -1,0 +1,25 @@
+#!/bin/bash
+
+[[ -z "$PDF_VIEWER" ]] && PDF_VIEWER=zathura
+if [[ "$#" -gt 0 ]]; then
+    . c "$1"
+else
+    . c
+fi
+fzf_a=(--info inline --height 10 --reverse -1 -e)
+
+if [[ "$#" -ge 2 ]]; then
+    shift
+    fzf_a+=(-q "$*")
+fi
+
+
+fname="$(find . -mindepth 1 -maxdepth 2 -type f -name '*.pdf' | fzf "${fzf_a[@]}")"
+
+if [[ -f "$fname" ]]; then
+    "$PDF_VIEWER" "$fname" &
+    disown
+else
+    echo "No syllabus found!"
+    exit 1
+fi
