@@ -9,8 +9,8 @@
 # p means pausa
 # so that P1445260919 means a pomodoro started Mon, 19 Oct 2015 13:21:59 GMT
 POMO_FILE="/home/pinusc/.config/pomodoro"
-POMODORO_DURATION=$(( 60 * 25 ))
-PAUSE_DURATION=$(( 60 * 5 ))
+POMODORO_DURATION=$(( 60 * 30 ))
+PAUSE_DURATION=$(( 60 * 15 ))
 AUTOPAUSE=1
 if [[ ! -s $POMO_FILE ]]; then
   touch $POMO_FILE
