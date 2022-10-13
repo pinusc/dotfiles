@@ -11,7 +11,9 @@
 [color]
 	ui = auto
 [diff]
-	tool = nvimdiff3
+	tool = nvimdiff
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [http]
 	cookiefile = /home/pinusc/.local/share/gitcookies
 [diff "jupyternotebook"]
