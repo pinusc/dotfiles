@@ -1,0 +1,7 @@
+[Unit]
+Description=Mailbox synchronization service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mbsync -Va ; rsync -r smtp2:/mail/ /home/pinusc/mail/bak-relay
+ExecStartPost=/usr/bin/notmuch new

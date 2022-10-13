@@ -1,8 +1,10 @@
+SyncState *
+# {{{ COLBY
 IMAPAccount colby
 # Address to connect to
 Host imap.gmail.com
 User gstell23@colby.edu
-PassCmd "pass school/colby.edu"
+PassCmd "cat /etc/smtpd/secrets | awk -F: '/colbymail/{ print $2; }'"
 # To store the password in an encrypted file use PassCmd instead of Pass
 # PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
 #
@@ -23,71 +25,85 @@ Path ~/mail/colby/
 Inbox ~/mail/colby/inbox
 
 Channel colby-default
-Master :colby-remote:
-Slave :colby-local:
+Far :colby-remote:
+Near :colby-local:
 # Exclude everything under the internal [Gmail] folder, except the interesting folders
 # Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/All Mail"
 Patterns "INBOX"
 # Or include everything
 #Patterns *
 # Automatically create missing mailboxes, both locally and on the server
-Create Slave
+Create Near
 
 Channel colby-sent
-Master :colby-remote:"[Gmail]/Sent Mail"
-Slave :colby-local:"sent"
-Create Slave
+Far :colby-remote:"[Gmail]/Sent Mail"
+Near :colby-local:"sent"
+Create Near
 
 Channel colby-all
-Master :colby-remote:"[Gmail]/All Mail"
-Slave :colby-local:"all"
-Create Slave
+Far :colby-remote:"[Gmail]/All Mail"
+Near :colby-local:"all"
+Create Near
 
 Channel colby-archive
-Master :colby-remote:"Archived Mail"
-Slave :colby-local:"archive"
-Create Slave
+Far :colby-remote:"Archived Mail"
+Near :colby-local:"archive"
+Create Near
 
 Channel colby-intl
-Master :colby-remote:"International"
-Slave :colby-local:"intl"
-Create Slave
+Far :colby-remote:"International"
+Near :colby-local:"intl"
+Create Near
 
-Channel colby-intl
-Master :colby-remote:"Classes"
-Slave :colby-local:"classes"
-Create Slave
+Channel colby-gdrive
+Far :colby-remote:"GDrive"
+Near :colby-local:"gdrive"
+Create Near
+
+Channel colby-logins
+Far :colby-remote:"Logins"
+Near :colby-local:"logins"
+Create Near
+
+Channel colby-classes
+Far :colby-remote:"Classes"
+Near :colby-local:"classes"
+Create Near
 
 Channel colby-trash
-Master :colby-remote:"[Gmail]/Trash"
-Slave :colby-local:"trash"
-Create Slave
+Far :colby-remote:"[Gmail]/Trash"
+Near :colby-local:"trash"
+Create Near
 
 Channel colby-spam
-Master :colby-remote:"[Gmail]/Spam"
-Slave :colby-local:"spam"
-Create Slave
+Far :colby-remote:"[Gmail]/Spam"
+Near :colby-local:"spam"
+Create Near
 
 Channel colby-drafts
-Master :colby-remote:"[Gmail]/Drafts"
-Slave :colby-local:"drafts"
+Far :colby-remote:"[Gmail]/Drafts"
+Near :colby-local:"drafts"
 Create Both
 
 Group colby
+Channel colby-default
 Channel colby-sent
 Channel colby-all
+Channel colby-logins
+Channel colby-classes
+Channel colby-gdrive
 Channel colby-drafts
 Channel colby-spam
 Channel colby-trash
 
-# Save the synchronization state files in the relevant directory
-SyncState *
+# }}}
 
+# {{{ GMAIL
 IMAPAccount gmail
 # Address to connect to
 Host imap.gmail.com
 User giuseppe.stelluto
-PassCmd "pass email/google.com@giuseppe.stelluto"
+Pass "nflewuspovlpdvsj"
 # To store the password in an encrypted file use PassCmd instead of Pass
 # PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
 #
@@ -108,35 +124,35 @@ Path ~/mail/gmail/
 Inbox ~/mail/gmail/inbox
 
 Channel gmail-default
-Master :gmail-remote:
-Slave :gmail-local:
+Far :gmail-remote:
+Near :gmail-local:
 # Exclude everything under the internal [Gmail] folder, except the interesting folders
 # Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/All Mail"
 Patterns "INBOX"
 # Or include everything
 #Patterns *
 # Automatically create missing mailboxes, both locally and on the server
-Create Slave
+Create Near
 
 Channel gmail-sent
-Master :gmail-remote:"[Gmail]/Sent Mail"
-Slave :gmail-local:"sent"
-Create Slave
+Far :gmail-remote:"[Gmail]/Sent Mail"
+Near :gmail-local:"sent"
+Create Near
 
 Channel gmail-all
-Master :gmail-remote:"[Gmail]/All Mail"
-Slave :gmail-local:"all"
-Create Slave
+Far :gmail-remote:"[Gmail]/All Mail"
+Near :gmail-local:"all"
+Create Near
 
 Channel gmail-trash
-Master :gmail-remote:"[Gmail]/Trash"
-Slave :gmail-local:"trash"
-Create Slave
+Far :gmail-remote:"[Gmail]/Trash"
+Near :gmail-local:"trash"
+Create Near
 
 Channel gmail-spam
-Master :gmail-remote:"[Gmail]/Spam"
-Slave :gmail-local:"spam"
-Create Slave
+Far :gmail-remote:"[Gmail]/Spam"
+Near :gmail-local:"spam"
+Create Near
 
 Group gmail
 Channel gmail-sent
@@ -145,78 +161,79 @@ Channel gmail-drafts
 Channel gmail-spam
 Channel gmail-trash
 
-# Save the synchronization state files in the relevant directory
-SyncState *
+# }}}
 
-IMAPAccount gstelluto
-# Address to connect to
-Host mail.gstelluto.com
-User pinusc
-PassCmd "pass servers/sofronia/pinusc"
-# To store the password in an encrypted file use PassCmd instead of Pass
-# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
-#
-# Use SSL
-SSLType IMAPS
-# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
-CertificateFile /etc/ssl/certs/ca-certificates.crt
+## {{{ GSTELLUTO (old)
+##IMAPAccount gstelluto
+### Address to connect to
+##Host mail.gstelluto.com
+##User pinusc
+##PassCmd "pass servers/sofronia/pinusc"
+### To store the password in an encrypted file use PassCmd instead of Pass
+### PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+###
+### Use SSL
+##SSLType IMAPS
+### The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+##CertificateFile /etc/ssl/certs/ca-certificates.crt
 
-IMAPStore gstelluto-remote
-Account gstelluto
+##IMAPStore gstelluto-remote
+##Account gstelluto
 
-MaildirStore gstelluto-local
-Subfolders Verbatim
-# The trailing "/" is important
-Path ~/mail/gstelluto/
-Inbox ~/mail/gstelluto/inbox
+##MaildirStore gstelluto-local
+##Subfolders Verbatim
+### The trailing "/" is important
+##Path ~/mail/gstelluto/
+##Inbox ~/mail/gstelluto/inbox
 
-Channel gstelluto-default
-Master :gstelluto-remote:
-Slave :gstelluto-local:
-Patterns "INBOX"
-Create Slave
+##Channel gstelluto-default
+##Far :gstelluto-remote:
+##Near :gstelluto-local:
+##Patterns "INBOX"
+##Create Near
 
-Channel gstelluto-sent
-Master :gstelluto-remote:"Sent"
-Slave :gstelluto-local:"sent"
-Create Slave
+##Channel gstelluto-sent
+##Far :gstelluto-remote:"Sent"
+##Near :gstelluto-local:"sent"
+##Create Near
 
-Channel gstelluto-all
-Master :gstelluto-remote:"Junk E-mail"
-Slave :gstelluto-local:"spam"
-Create Slave
+##Channel gstelluto-all
+##Far :gstelluto-remote:"Junk E-mail"
+##Near :gstelluto-local:"spam"
+##Create Near
 
-Channel gstelluto-trash
-Master :gstelluto-remote:"Trash"
-Slave :gstelluto-local:"trash"
-Create Slave
+##Channel gstelluto-trash
+##Far :gstelluto-remote:"Trash"
+##Near :gstelluto-local:"trash"
+##Create Near
 
-Channel gstelluto-spam
-Master :gstelluto-remote:"Archive"
-Slave :gstelluto-local:"archive"
-Create Slave
+##Channel gstelluto-spam
+##Far :gstelluto-remote:"Archive"
+##Near :gstelluto-local:"archive"
+##Create Near
 
-Channel gstelluto-drafts
-Master :gstelluto-remote:"Drafts"
-Slave :gstelluto-local:"drafts"
-Create Both
+##Channel gstelluto-drafts
+##Far :gstelluto-remote:"Drafts"
+##Near :gstelluto-local:"drafts"
+##Create Both
 
 
-Group gstelluto
-Channel gstelluto-sent
-Channel gstelluto-all
-Channel gstelluto-drafts
-Channel gstelluto-spam
-Channel gstelluto-trash
+##Group gstelluto
+##Channel gstelluto-sent
+##Channel gstelluto-all
+##Channel gstelluto-drafts
+##Channel gstelluto-spam
+##Channel gstelluto-trash
 
-# Save the synchronization state files in the relevant directory
-SyncState *
+### Save the synchronization state files in the relevant directory
+## }}}
 
+## {{{ LOGINS
 IMAPAccount logins
-# Address to connect to
 Host mail.gstelluto.com
-User logins
-PassCmd "pass servers/sofronia/logins"
+User logins@gstelluto.com
+Pass "0Q4WzjvdzGKe5HJ2PMePmkRdQ"
+CertificateFile ~/.local/share/mail/mail.gstelluto.com.cert
 SSLType IMAPS
 
 IMAPStore logins-remote
@@ -229,35 +246,172 @@ Path ~/mail/logins/
 Inbox ~/mail/logins/inbox
 
 Channel logins-default
-Master :logins-remote:
-Slave :logins-local:
+Far :logins-remote:
+Near :logins-local:
 Patterns "INBOX"
-Create Slave
+Create Near
 
-Channel logins-sent
-Master :logins-remote:"Sent"
-Slave :logins-local:"sent"
-Create Slave
+# Channel logins-sent
+# Far :logins-remote:"Sent"
+# Near :logins-local:"sent"
+# Create Near
 
-Channel logins-all
-Master :logins-remote:"Junk E-mail"
-Slave :logins-local:"spam"
-Create Slave
+# Channel logins-all
+# Far :logins-remote:"Junk E-mail"
+# Near :logins-local:"spam"
+# Create Near
 
-Channel logins-trash
-Master :logins-remote:"Trash"
-Slave :logins-local:"trash"
-Create Slave
+# Channel logins-trash
+# Far :logins-remote:"Trash"
+# Near :logins-local:"trash"
+# Create Near
 
-Channel logins-spam
-Master :logins-remote:"Archive"
-Slave :logins-local:"archive"
-Create Slave
+# Channel logins-spam
+# Far :logins-remote:"Archive"
+# Near :logins-local:"archive"
+# Create Near
 
 Group logins
-Channel logins-sent
-Channel logins-all
-Channel logins-spam
-Channel logins-trash
+Channel logins-default
+# Channel logins-sent
+# Channel logins-all
+# Channel logins-spam
+# Channel logins-trash
+# }}}
 
-SyncState *
+## {{{ GSTELLUTO
+#IMAPAccount gstelluto
+#Host mail.gstelluto.com
+#User giuseppe@gstelluto.com
+#Pass "auaFkyHJClO5fCEVrcvckAEA4"
+#SSLType IMAPS
+
+#IMAPStore gstelluto-remote
+#Account gstelluto
+
+#MaildirStore gstelluto-local
+#Subfolders Verbatim
+## The trailing "/" is important
+#Path ~/mail/gstelluto/
+#Inbox ~/mail/gstelluto/inbox
+
+#Channel gstelluto-default
+#Far :gstelluto-remote:
+#Near :gstelluto-local:
+#Patterns "INBOX"
+#Create Near
+
+## Channel logins-sent
+## Far :logins-remote:"Sent"
+## Near :logins-local:"sent"
+## Create Near
+
+## Channel logins-all
+## Far :logins-remote:"Junk E-mail"
+## Near :logins-local:"spam"
+## Create Near
+
+## Channel logins-trash
+## Far :logins-remote:"Trash"
+## Near :logins-local:"trash"
+## Create Near
+
+## Channel logins-spam
+## Far :logins-remote:"Archive"
+## Near :logins-local:"archive"
+## Create Near
+
+## Group logins
+## Channel logins-sent
+## Channel logins-all
+## Channel logins-spam
+## Channel logins-trash
+## }}}
+
+## {{{ PROTONMAIL-LOGINS (OLD)
+## IMAPAccount logins
+## # Address to connect to
+## Host 127.0.0.1
+## Port 1143
+## User logins@gstelluto.com
+## Pass FdCWSQrGEDWEejURvfd7Ow
+## SSLType STARTTLS
+## CertificateFile /etc/ssl/certs/protonbridge.pem
+
+## IMAPStore logins-remote
+## Account logins
+
+## MaildirStore logins-local
+## Subfolders Verbatim
+## # The trailing "/" is important
+## Path ~/mail/logins/
+## Inbox ~/mail/logins/inbox
+
+## Channel logins-default
+## Far :logins-remote:
+## Near :logins-local:
+## Patterns "INBOX"
+## Create Near
+
+## Group logins
+## Channel logins-default
+
+## SyncState *
+## 
+## }}}
+
+## {{{ PROTONMAIL
+#IMAPAccount protonmail-gstell
+## Address to connect to
+#Host 127.0.0.1
+#Port 1143
+#User gstell@protonmail.com
+#Pass FdCWSQrGEDWEejURvfd7Ow
+#SSLType STARTTLS
+#CertificateFile /etc/ssl/certs/protonbridge.pem
+
+#IMAPStore protonmail-gstell-remote
+#Account logins
+
+#MaildirStore protonmail-gstell-local
+#Subfolders Verbatim
+## The trailing "/" is important
+#Path ~/mail/protonmail-gstell/
+#Inbox ~/mail/protonmail-gstell/inbox
+
+#Channel protonmail-gstell
+#Far :protonmail-gstell-remote:
+#Near :protonmail-gstell-local:
+#Patterns "INBOX"
+#Create Near
+
+#IMAPAccount citywalk
+## Address to connect to
+#Host mail.gstelluto.com
+#User info@citywalk.space
+#Pass "1eG9Bg2nlwXdQK7NNLOCrGUCJ"
+## To store the password in an encrypted file use PassCmd instead of Pass
+## PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+##
+## Use SSL
+#SSLType IMAPS
+## The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+#CertificateFile /etc/ssl/certs/ca-certificates.crt
+## }}}
+
+## {{{ CITYWALK
+#IMAPStore citywalk-remote
+#Account citywalk
+
+#MaildirStore citywalk-local
+#Subfolders Verbatim
+## The trailing "/" is important
+#Path ~/mail/citywalk/
+#Inbox ~/mail/citywalk/inbox
+
+#Channel citywalk-default
+#Far :citywalk-remote:
+#Near :citywalk-local:
+#Patterns "INBOX"
+#Create Near
+## }}}
