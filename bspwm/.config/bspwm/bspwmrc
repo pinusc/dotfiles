@@ -39,8 +39,6 @@ if [[ "$NMON" -gt 1 ]]; then
 fi
 
 # bspc monitor ^1 -s ^2
-
-# bspc config top_padding 40
 bspc config window_gap 6
 
 # Visual options
@@ -76,12 +74,13 @@ bspc rule -a qutebrowser follow=on desktop="^6"
 
 bspc rule -a gimp state=floating desktop="^1"
 bspc rule -a vlc follow=on desktop="^2"
-bspc rule -a mpv state=floating center=on\n
+bspc rule -a mpv state=floating center=on
 bspc rule -a XCalc state=floating center=on
 bspc rule -a Anki state=floating center=on
 bspc rule -a "*:urxvt-quaked" state=floating
 bspc rule -a "*:quake-tabbed" state=floating
-bspc rule -a "com-chschmid-jdotxt-Jdotxt" state=floating sticky=on
+bspc rule -a "Zathura" state=tiled
+bspc rule -a "dragon-drag-and-drop" follow=on
 
 if [ -e "$BSPWM_TREE" ] ; then
     bspc restore -T "$BSPWM_TREE" -H "$BSPWM_HISTORY" -S "$BSPWM_STACK"
@@ -93,7 +92,9 @@ bspc desktop -f \^6 &
 #=============================== VIDEO SETTINGS ================================
 
 # nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +1440+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}" &
-compton -bcG & # backhround, draw shadows, not on panel
+picom -bcG --experimental-backends --vsync
+dock_handler.sh  # can now automatically infer if docked
+setxkbmap -layout 'us(altgr-intl)'
 
 #==================================== XORG =====================================
 # Don't background this, so everything will use correct settings
@@ -103,6 +104,7 @@ xset fp+ /usr/share/fonts/X11/gohu &
 xmodmap ~/.Xmodmap
 xcape
 xsetroot -cursor_name crosshair &
+dunst &
 
 #=================================== SCREEN ====================================
 feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper &
@@ -115,6 +117,6 @@ redshift -t 6500:2000 &
 clipmenud &
 sxhkd &
 panel &
-# bspc config -m 1 top_padding 39 &
+bspc config -m primary top_padding 55 &
 music_player &
 /usr/lib/kdeconnectd &
