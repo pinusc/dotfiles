@@ -73,13 +73,6 @@ if which fortune &>/dev/null && which cowsay &>/dev/null; then
     )
 fi
 
-# ====== load aliases =======
-# *(N) is a glob qualifier so we don't get errors if there's no .alias_ files
-for file in ~/.alias_*(N); do
-    source "$file"
-done
-[ -e ~/.aliases ] && source ~/.aliases
-
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye &> /dev/null
 
@@ -112,6 +105,13 @@ if which history-substring-search-up &>dev/null; then
     bindkey '^K' history-substring-search-up
     bindkey '^J' history-substring-search-down
 fi
+
+# ====== load aliases =======
+# *(N) is a glob qualifier so we don't get errors if there's no .alias_ files
+for file in ~/.alias_*(N); do
+    source "$file"
+done
+[ -e ~/.aliases ] && source ~/.aliases
 
 wait # so we don't get a prompt before background jobs
 
