@@ -326,7 +326,11 @@ pandoc_watch () {
     pdffile="$(basename $1 .md)"
     while true; do 
         inotifywait -e close_write "$mdfile"
-        pandoc --citeproc "$1" -o "${pdffile}.pdf" --pdf-engine=xelatex
+        if [ "$2" = "--xelatex" ]; then
+            pandoc --citeproc "$1" -o "${pdffile}.pdf" --pdf-engine=xelatex
+        else
+            pandoc --citeproc "$1" -o "${pdffile}.pdf"
+        fi
     done &>>pandoc.log &
 }
 
