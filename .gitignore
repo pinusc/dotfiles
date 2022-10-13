@@ -1,5 +1,6 @@
 nvim/.config/nvim/plugged/
 nvim/.config/nvim/spell/
+nvim/.config/nvim/sessions
 nvim/.config/nvim/.netrwhist
 mpd/.config/mpd/*
 !mpd/.config/mpd/mpd.conf
@@ -9,4 +10,10 @@ mpd/.config/mpd/*
 tarsnap/.config/tarsnap/*.key
 anacron/.config/anacron/spool/
 mutt/.mutt/temp/
-qutebrowser/bookmarks/urls
+qutebrowser/.config/qutebrowser/bookmarks
+qutebrowser/.config/qutebrowser/quickmarks
+qutebrowser/.local/share
+qutebrowser/.local/lib
+mutt/.mutt/cache
+nnn/.config/nnn/plugins/other
+nnn/.config/nnn/.selection
