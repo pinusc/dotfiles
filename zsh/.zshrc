@@ -106,11 +106,12 @@ fi
 [ -e ~/.zsh_plugins.sh ] && source ~/.zsh_plugins.sh
 
 # ===== Code that MUST be run after logins. Otherwise run it before. =======
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-bindkey '^K' history-substring-search-up
-bindkey '^J' history-substring-search-down
+if which history-substring-search-up &>dev/null; then
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+    bindkey '^K' history-substring-search-up
+    bindkey '^J' history-substring-search-down
+fi
 
 wait # so we don't get a prompt before background jobs
 
