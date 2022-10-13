@@ -1,3 +1,18 @@
 #!/bin/bash
 
-~/bin/modules/add-html-to-email | sendmail "$@"
+tmpfile="$(mktemp --tmpdir mailmessage.XXXX)"
+
+# mutt will pipe email text into stdin
+~/bin/modules/add-html-to-email > "$tmpfile"
+
+{
+    # delay send by 5 minutes
+    # so I can "undo-send" if necessary
+    #sleep $(( 5 * 60 )) 
+
+    if [[ -f "$tmpfile" ]]; then
+      < "$tmpfile" sendmail "$@"
+    fi
+
+    rm "$tmpfile"
+} &
