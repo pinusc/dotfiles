@@ -17,3 +17,4 @@ qutebrowser/.local/lib
 mutt/.mutt/cache
 nnn/.config/nnn/plugins/other
 nnn/.config/nnn/.selection
+*.log
