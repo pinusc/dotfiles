@@ -10,3 +10,9 @@
 	graph = log --graph --oneline --decorate
 [color]
 	ui = auto
+[diff]
+	tool = nvimdiff3
+[http]
+	cookiefile = /home/pinusc/.local/share/gitcookies
+[diff "jupyternotebook"]
+	textconv = jupytext --from=ipynb --to=\"py:percent\" -o -
