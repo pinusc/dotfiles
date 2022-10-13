@@ -1,17 +1,7 @@
 [global]
     font = monospace
     
-    # Allow a small subset of html markup:
-    #   <b>bold</b>
-    #   <i>italic</i>
-    #   <s>strikethrough</s>
-    #   <u>underline</u>
-    # 
-    # For a complete reference see
-    # <http://developer.gnome.org/pango/stable/PangoMarkupFormat.html>.
-    # If markup is not allowed, those tags will be stripped out of the
-    # message.
-    allow_markup = yes
+    markup = full
     
     # The format of the message.  Possible variables are:
     #   %a  appname
@@ -31,13 +21,7 @@
     
     # Alignment of message text.
     # Possible values are "left", "center" and "right".
-    alignment = right
-    
-    # The frequency with wich text that is longer than the notification
-    # window allows bounces back and forth.
-    # This option conflicts with "word_wrap".
-    # Set to 0 to disable.
-    bounce_freq = 0
+    alignment = center
     
     # Show age of message if message is older than show_age_threshold
     # seconds.
@@ -64,7 +48,10 @@
     # the top and down respectevly.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "0-5+62"
+    width = 400
+    origin = top-center
+    # offset = 5x62
+    offset = 0x5
     
     # Shrink window if it's smaller than the width.  Will be ignored if
     # width is 0.
@@ -98,7 +85,7 @@
     
     # Should a notification popped up from history be sticky or timeout
     # as if it would normally do.
-    sticky_history = yes
+    sticky_history = no
     
     # Maximum amount of notifications kept in history
     history_length = 20
@@ -117,10 +104,10 @@
     separator_height = 2
     
     # Padding between text and separator.
-    padding = 10
+    padding = 15
     
     # Horizontal padding.
-    horizontal_padding = 10
+    horizontal_padding = 15
     
     # Define a color for the separator.
     # possible values are:
@@ -129,11 +116,6 @@
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
     separator_color = frame
-    
-    # Print a notification on startup.
-    # This is mainly for error detection, since dbus (re-)starts dunst
-    # automatically after a crash.
-    startup_notification = true
     
     # dmenu path.
     dmenu = /usr/bin/dmenu -p dunst:
@@ -145,32 +127,10 @@
     icon_position = off
 
     # Paths to default icons.
-    icon_folders = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
 
-[frame]
-    width = 0
-    color = "#aaaaaa"
-
-[shortcuts]
-
-    # Shortcuts are specified as [modifier+][modifier+]...key
-    # Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
-    # "mod3" and "mod4" (windows-key).
-    # Xev might be helpful to find names for keys.
-    
-    # Close notification.
-    close = mod4+space
-    
-    # Close all notifications.
-    close_all = ctrl+shift+space
-    
-    # Redisplay last message(s).
-    # On the US keyboard layout "grave" is normally above TAB and left
-    # of "1".
-    history = mod4+backslash
-
-    # Context menu.
-    context = mod4+shift+backslash
+    frame_width = 3
+    frame_color = "#2D2D2D"
 
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
@@ -185,9 +145,10 @@
     timeout = 10
 
 [urgency_critical]
-    background = "#2D2D2D"
-    foreground = "#AB4642"
-    timeout = 0
+    foreground = "#2D2D2D"
+    background = "#AB4642"
+    frame_color = "#FABD2F"
+    timeout = 20
 
 
 # Every section that isn't one of the above is interpreted as a rules to
