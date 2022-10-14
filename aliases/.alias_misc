@@ -349,3 +349,7 @@ serve_books () {
 tilderadio () {
     mpv 'https://azuracast.tilderadio.org/radio/8000/radio.ogg'
 }
+
+tea-timer-gotify () {
+    tea-timer.pl --notify-command='gotify-cli p -t "Tea-Timer" "Pu-er your tea now"' $*
+}

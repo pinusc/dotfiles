@@ -18,12 +18,14 @@ my $prestart = 3;
 my $colorbehavior = "auto";
 my $colorenabled = "auto";
 my $soundenabled = 1;
+my $notify_command = "";
 
 GetOptions(
     "time=i" => \$baseline,
     "increment=i" => \$increment,
     "prestart:i" => \$prestart,
     "sound!" => \$soundenabled,
+    "notify-command:s" => \$notify_command,
     "color:s" => \$colorbehavior,
     "help|?" => sub { pod2usage(-exitval => 0, -verbose => 1) },
 ) or pod2usage(2);
@@ -77,6 +79,9 @@ sub notify {
     say "You can pu'er that tea now";
     if ($soundenabled) {
         qx(play -q /usr/share/sounds/freedesktop/stereo/complete.oga >/dev/null 2>&1);
+    }
+    if ($notify_command) {
+        qx($notify_command)
     }
     qx(notify-send -u critical "Your tea is ready!" "You can pu'er it now" >/dev/null 2>&1);
 }
