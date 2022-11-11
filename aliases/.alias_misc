@@ -141,7 +141,7 @@ sync_dotfiles() {
     copy_dotfiles medoro
     copy_dotfiles sardanapalo
 }
-alias copy_dotfiles_all = sync_dotfiles
+alias copy_dotfiles_all=sync_dotfiles
 
 move_all_output() {
     sink="$1"
