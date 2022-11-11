@@ -10,8 +10,7 @@ mafredri/zsh-async
 changyuheng/zsh-interactive-cd
 
 /home/pinusc/builds/clean
-zsh-users/zsh-syntax-highlighting
 zsh-users/zsh-history-substring-search
 ptavares/zsh-direnv
 jreese/zsh-titles
-
+z-shell/F-Sy-H

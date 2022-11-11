@@ -85,7 +85,6 @@ if which fzf &>/dev/null; then
     source /usr/share/fzf/completion.zsh
 
     export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
-
     export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
     export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 
@@ -94,9 +93,10 @@ if which fzf &>/dev/null; then
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
-# ===== load plugins =======
 
-[ -e ~/.zsh_plugins.sh ] && source ~/.zsh_plugins.sh
+source '/usr/share/zsh-antidote/antidote.zsh'
+# initialize plugins statically 
+antidote load
 
 # ===== Code that MUST be run after logins. Otherwise run it before. =======
 if which history-substring-search-up &>/dev/null; then
@@ -105,7 +105,6 @@ if which history-substring-search-up &>/dev/null; then
     bindkey '^K' history-substring-search-up
     bindkey '^J' history-substring-search-down
 fi
-
 # ====== load aliases =======
 # *(N) is a glob qualifier so we don't get errors if there's no .alias_ files
 for file in ~/.alias_*(N); do
@@ -113,5 +112,5 @@ for file in ~/.alias_*(N); do
 done
 [ -e ~/.aliases ] && source ~/.aliases
 
-wait # so we don't get a prompt before background jobs
+# wait # so we don't get a prompt before background jobs
 
