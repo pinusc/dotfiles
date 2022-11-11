@@ -135,14 +135,13 @@ copy_dotfiles() {
 }
 
 sync_dotfiles() {
-    copy_dotfiles thalia
-    copy_dotfiles athena
     copy_dotfiles diana
-    copy_dotfiles argo
-    copy_dotfiles pandora
-    copy_dotfiles sacripante
     copy_dotfiles persephone
+    copy_dotfiles sacripante
+    copy_dotfiles medoro
+    copy_dotfiles sardanapalo
 }
+alias copy_dotfiles_all = sync_dotfiles
 
 move_all_output() {
     sink="$1"
@@ -331,7 +330,7 @@ pandoc_watch () {
         else
             pandoc --citeproc "$1" -o "${pdffile}.pdf"
         fi
-    done &>>pandoc.log &
+    done &>>!pandoc.log &
 }
 
 serve_books () {
@@ -353,3 +352,11 @@ tilderadio () {
 tea-timer-gotify () {
     tea-timer.pl --notify-command='gotify-cli p -t "Tea-Timer" "Pu-er your tea now"' $*
 }
+
+lms_reload () {
+    http "https://music.giusb.party/rest/startScan" u==admin p==$(pass show servers/medoro/lms | head -n 1) c==curl v==1.16.0
+}
+
+lms_scan=lms_reload
+music_scan=lms_reload
+scan_lms=lms_reload
