@@ -13,7 +13,7 @@ FOLDERS=(books docs downloads tmp)
 FORMATS=(-e pdf -e epub -e djvu)
 
 cd "$HOME"
-fname="$(cd "$HOME"; fd --base-directory "$HOME" -I . -e "${FORMATS[@]}" "${FOLDERS[@]}" | rofi -dmenu -i)"
+fname="$(cd "$HOME"; fd --base-directory "$HOME" -I . "${FORMATS[@]}" "${FOLDERS[@]}" | rofi -dmenu -i)"
 
 if [[ -f "$fname" ]]; then
     "$PDF_VIEWER" "$fname" &
