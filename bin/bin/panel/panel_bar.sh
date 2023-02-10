@@ -264,6 +264,10 @@ while read -r line ; do
 
             pom="%{F$color_pom}$PADDING%{A:pomodoro start:}%{A3:pomodoro stop:}${pom_icon}$PADDING_SHORT${pom_rem}%{A}%{A}%{F-}"
             ;;
+        h*)
+            # bluetooth
+            bluetooth="%{F$COLOR_BLUE}$PADDING${line#?}%{F-}"
+            ;;
         R*)
             # music info
             music="%{B$COLOR_FOCUSED_OCCUPIED_BG}%{F$COLOR_FOCUSED_OCCUPIED_FG}$PADDING${line#?}%{F-}%{B-}"
@@ -285,7 +289,7 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${cputemp}${phonebattery}${music}${volume}%{c}${wm_infos}%{r}${pom}${gpginfo}${vpn}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${phonebattery}${music}${volume}${bluetooth}%{c}${wm_infos}%{r}${pom}${gpginfo}${vpn}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
         ;;
         2)

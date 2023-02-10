@@ -24,9 +24,25 @@ calendar() {
     echo "D%{A:$dzencommand_calendar:}$IC_CALENDAR $(date +'%a %b %d')%{A}"
 }
 
+bluetooth () {
+    local bluetooth_icon=""
+    local keyboard_connected
+    keyboard_connected="$(bluetoothctl devices Connected | cut -d' ' -f2 | xargs -I{} bluetoothctl info {} | grep keyboard)"
+    if ponymix | grep --silent bluez; then
+            bluetooth_icon="$bluetooth_icon$IC_BLUETOOTH_HEADSET"
+    fi
+    if [ -n "$keyboard_connected" ]; then
+            bluetooth_icon="$bluetooth_icon $IC_BLUETOOTH$IC_KEYBOARD"
+    fi
+    if [ -z "$bluetooth_icon" ]; then
+            bluetooth_icon="$IC_BLUETOOTH_OFF"
+    fi
+    echo "h%{A:blueman-manager:}%{A3:sudo /usr/local/bin/bluetooth_restart:}$bluetooth_icon%{A}%{A}"
+}
+
 pulse_volume() {
     volume=$(ponymix get-volume)
-    ponymix | grep --silent bluez && bluetooth="$IC_BLUETOOTH "
+    local icon
     icon="$IC_VOLUME_MAX"
     if [[ $volume -ge 70 ]]; then
         icon="$IC_VOLUME_MAX"
@@ -35,7 +51,7 @@ pulse_volume() {
     elif [[ $volume -eq 0 ]]; then
         icon="$IC_VOLUME_MIN"
     fi
-    echo "V%{A:pavucontrol:}$bluetooth$icon $volume%{A}"
+    echo "V%{A:pavucontrol:}$icon $volume%{A}"
 }
 
 getip() {

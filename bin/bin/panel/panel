@@ -42,6 +42,7 @@ loop() {
         command -v gpg-connect-agent && has_gpg=1
         (command -v mpc || command -v mpris) && has_music=1
         command -v zscroll && has_zscroll=1
+        command -v bluetoothctl && has_bluetooth=1
         has_api_keys="$HAS_API"
     } >/dev/null 2>&1
     echo "$ZSCROLLFILE"
@@ -64,7 +65,7 @@ loop() {
                 fi
                 [[ -n ${has_battery+x} ]] && battery &
                 [[ -n ${has_pulse+x} ]] && pulse_volume &
-                [[ -n ${has_temp+x} ]] && cputemp &
+                [[ -n ${has_bluetooth+x} ]] && bluetooth &
             fi
             if (( i == 0 )); then
                 wallpaper &

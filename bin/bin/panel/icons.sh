@@ -1,5 +1,7 @@
 export IC_ETHERNET="\\uf6ff"
-export IC_BLUETOOTH="\\uf5af"
+export IC_BLUETOOTH='\uf294'
+export IC_BLUETOOTH_OFF="\\U000f00b2"
+export IC_BLUETOOTH_HEADSET="\\U000f00b0"
 export IC_WIFI="\\uf1eb"
 export IC_VPN="\\uf983"
 export IC_CONNECTED="\\uf0dc"
