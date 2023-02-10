@@ -16,7 +16,8 @@ export PANEL_WIDTH=$(( dimx - 2 * PANEL_GAP))
 FONT_SIZE=14
 export PANEL_HEIGHT=$(( FONT_SIZE * 35 / 10 ))
 export PANEL_FONT_FAMILY="Gohu GohuFont:size=$FONT_SIZE"
-export ICON_FONT="GohuFont Nerd Font:size=$FONT_SIZE"
+# export ICON_FONT="GohuFont Nerd Font:style=uni-14"
+export ICON_FONT="Iosevka Nerd Font:size=15"
 export dzencommand_music="$HOME/bin/panel/dzen2/scripts/mpdzen"
 export dzencommand_calendar="zsh $HOME/bin/panel/dzen2/calendar"
 export dkeyboard="$HOME/bin/dkeyboard"
