@@ -154,6 +154,10 @@ while read -r line ; do
             # temp
             cputemp="$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
             ;;
+        G*)
+            # cpufreq
+            cpufreq="$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
+            ;;
         V*)
             # alsa volume
             volume="$PADDING${line#?}"
@@ -289,7 +293,7 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${phonebattery}${music}${volume}${bluetooth}%{c}${wm_infos}%{r}${pom}${gpginfo}${vpn}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${cputemp}${cpufreq}${phonebattery}${music}${volume}${bluetooth}%{c}${wm_infos}%{r}${pom}${gpginfo}${vpn}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
         ;;
         2)

@@ -53,3 +53,4 @@ export IC_POMODORO_EMPTY="\\ue002"
 export IC_POMODORO_TICKING="\\ue003"
 
 export IC_TEMP="\\uf2c9"
+export IC_CPU="\\ufb19"

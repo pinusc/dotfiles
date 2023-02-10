@@ -467,8 +467,10 @@ gpg_info () {
     echo "g%{A:$gpg_command:}$icon%{A}"
 }
 
-cputemp() {
-    icon="$IC_TEMP"
+cpufreq() {
+    icon="$IC_CPU"
+    freq="$(cpupower frequency-info -f | awk '/frequency:/ { printf("%.1f\n", $4/(10^6)); }')"
+    idle="$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}';)"
     temp=$(sensors coretemp-isa-0000 -u | grep temp1_input | cut -d' ' -f4 | cut -d. -f1)
-    echo "T$IC_TEMP ${temp}°C"
+    echo "G$icon $idle $freq GHz $temp°C"
 }
