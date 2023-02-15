@@ -93,10 +93,12 @@ if which fzf &>/dev/null; then
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
-
-source '/usr/share/zsh-antidote/antidote.zsh'
 # initialize plugins statically 
-antidote load
+ANTIDOTE_FILE='/usr/share/zsh-antidote/antidote.zsh'
+if [ -f "$ANTIDOTE_FILE" ]; then
+    source "$ANTIDOTE_FILE"
+    antidote load
+fi
 
 # ===== Code that MUST be run after logins. Otherwise run it before. =======
 if which history-substring-search-up &>/dev/null; then
