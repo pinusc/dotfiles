@@ -33,7 +33,7 @@ blue=$(tput setaf 4)
 bold=$(tput bold)
 reset=$(tput sgr0)
 
-if [[ -n "$TMUX" ]]; then
+if [[ -z "$TMUX" ]]; then
     info='\u'
 else
     if [[ $(uname -o) = Android ]]; then 

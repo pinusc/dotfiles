@@ -36,7 +36,7 @@ zstyle ':completion:*' menu yes select search
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 zstyle :compinstall filename '/home/pinusc/.zshrc'
 
-PROMPT="%F{green}%m%f %# "
+PROMPT='%F{green}%m%f %F{blue}%~%f %# '
 
 zmodload zsh/complist
 # bindkey -M menuselect 'h' vi-backward-char
