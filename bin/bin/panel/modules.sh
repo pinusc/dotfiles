@@ -37,7 +37,7 @@ bluetooth () {
     if [ -z "$bluetooth_icon" ]; then
             bluetooth_icon="$IC_BLUETOOTH_OFF"
     fi
-    echo "h%{A:blueman-manager:}%{A3:sudo /usr/local/bin/bluetooth_restart:}$bluetooth_icon%{A}%{A}"
+    echo "h%{A:blueman-manager &:}%{A3:sudo /usr/local/bin/bluetooth_restart:}$bluetooth_icon%{A}%{A}"
 }
 
 pulse_volume() {
@@ -284,7 +284,7 @@ music() {
             fi
         fi
         if command -v mpc && [[ -z "$title" ]]; then
-            title=$(mpc -f "%title%" | head -n1)
+            title=$(mpc current -f "%title%" | head -n1)
             if [[ -z "$title" ]]; then
                 title=$(grep -B 1 -m 1 "$(mpc | head -n 1)" .youtube-mpd | head -n 1)
             fi
@@ -411,7 +411,7 @@ battery() {
         bicon="$IC_BATTERY_EMPTY"
         bcolor="e"
     fi
-    echo "B$bcolor$bicon $bcharge%"
+    echo "B$bcolor$bicon $bcharge%%"
 }
 
 phonebattery() {
@@ -445,7 +445,7 @@ keyboard() {
 
 #wallpaper
 wallpaper() {
-    echo "Q%{A:random_wallpaper.sh:}%{A3:fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
+    echo "Q%{A:$HOME/bin/util/wallpaper/random_wallpaper.sh:}%{A3:$HOME/bin/util/wallpaper/fortunewallpaper.sh:}$IC_WALLPAPER%{A}%{A}"
 }
 
 
