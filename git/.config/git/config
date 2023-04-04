@@ -1,6 +1,6 @@
 [user]
-	name = pinusc
-	email = giuseppe.stelluto@gmail.com
+	name = Giuseppe Stelluto
+	email = giuseppe@gstelluto.com
 [core]
 	editor = nvim
 	autocrlf = input
@@ -18,3 +18,5 @@
 	cookiefile = /home/pinusc/.local/share/gitcookies
 [diff "jupyternotebook"]
 	textconv = jupytext --from=ipynb --to=\"py:percent\" -o -
+[init]
+	defaultBranch = main
