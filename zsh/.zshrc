@@ -16,6 +16,7 @@ bindkey -v
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_SILENT
+setopt promptsubst
 
 set -o noclobber
 # not in alias file because security feature
@@ -114,5 +115,7 @@ for file in ~/.alias_*(N); do
 done
 [ -e ~/.aliases ] && source ~/.aliases
 
-# wait # so we don't get a prompt before background jobs
+PROMPT='${VENV_BASE:+($VENV_BASE) }'"$PROMPT"
+# PROMPT="VENV $PROMPT"
 
+# wait # so we don't get a prompt before background jobs
