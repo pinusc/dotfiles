@@ -248,9 +248,9 @@ snippet ~= "isomorphism" iA
 \cong 
 endsnippet
 
-snippet ~~ "isomorphism" iA
-\approx 
-endsnippet
+# snippet ~~ "isomorphism" iA
+# \approx 
+# endsnippet
 
 context "math()"
 snippet ceil "ceil" iA
@@ -784,6 +784,12 @@ snippet cvec "column vector" iA
 \begin{pmatrix} ${1:x}_${2:1}\\\\ \vdots\\\\ $1_${2:n} \end{pmatrix}
 endsnippet
 
+priority 15
+context "math()"
+snippet "~hat" "tilde ~ hat" riA
+\tilde{$1}$0
+endsnippet
+
 priority 10
 context "math()"
 snippet "bar" "bar" riA
@@ -808,6 +814,10 @@ snippet "([a-zA-Z])hat" "hat" riA
 \hat{`!p snip.rv=match.group(1)`}
 endsnippet
 
+
+snippet EU "E2" iA
+\mathbb{E}^2
+endsnippet
 
 snippet HH "H" iA
 \mathbb{H}
