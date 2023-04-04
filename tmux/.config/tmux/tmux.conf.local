@@ -1,0 +1,24 @@
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'fcsonline/tmux-thumbs'
+set -g @plugin 'pinusc/tmux-compass'
+
+run-shell ~/.config/tmux/plugins/tmux-thumbs/tmux-thumbs.tmux
+run-shell ~/.config/tmux/plugins/tmux-compass/tmux-compass.tmux
+
+# set -g @plugin 'sunaku/tmux-navigate'
+
+# bind -nr C-k select-window -t :-
+# bind -nr C-j select-window -t :+
+
+#unbind-key -n M-u
+#unbind-key -n M-d
+
+# bind-key -n C-j run-shell -b "tmux select-window -n"
+# bind-key -n C-k run-shell -b "tmux select-window -p"
+
+# bind-key -n M-h run-shell -b "tmux select-pane -L"
+# bind-key -n M-j run-shell -b "tmux select-pane -D"
+# bind-key -n M-k run-shell -b "tmux select-pane -U"
+# bind-key -n M-l run-shell -b "tmux select-pane -R"
+
+run '~/.config/tmux/plugins/tpm/tpm'

@@ -1,5 +1,0 @@
-bind -nr C-k select-window -t :-
-bind -nr C-j select-window -t :+
-
-unbind-key -n M-u
-unbind-key -n M-d

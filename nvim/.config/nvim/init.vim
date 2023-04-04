@@ -109,6 +109,9 @@ Plug 'mattn/emmet-vim'
 "Base16
 Plug 'pinusc/term.vim'
 
+" tmux integration
+Plug 'sunaku/tmux-navigate'
+
 "Cool start screen
 Plug 'mhinz/vim-startify'
 Plug 'justinmk/vim-sneak'
