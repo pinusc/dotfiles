@@ -4,26 +4,35 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'neomake/neomake'
 Plug 'neovim/nvim-lspconfig'
-" Plug 'ervandew/supertab'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-" Plug '~/projects/webcomplete/src/vim-plugin'
 
-" Plug 'zchee/deoplete-jedi', {'for': 'python'}
-Plug 'carlitux/deoplete-ternjs', {'for': 'javascript'}
 Plug 'Shougo/neco-syntax'
-Plug 'artur-shaik/vim-javacomplete2'
 " Plug 'airblade/vim-rooter'
 " for global config
 Plug 'editorconfig/editorconfig-vim'
 Plug 'subnut/nvim-ghost.nvim', {'do': ':call nvim_ghost#installer#install()', 'on': []}
 
+Plug 'mfussenegger/nvim-dap' " Debug Adapter Protocol
+Plug 'mfussenegger/nvim-dap-python'
+Plug 'rcarriga/nvim-dap-ui'
+
 Plug 'nvim-lua/plenary.nvim'  " telescope dependency
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'junegunn/fzf'
 
 " Commenter
 Plug 'tpope/vim-commentary'
 Plug 'mbbill/undotree'
+
+
+" Completion
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+" snippets completion
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 
 " Code snippets
 Plug 'SirVer/ultisnips'
@@ -31,14 +40,15 @@ Plug 'honza/vim-snippets'
 
 """ Clojure
 Plug 'guns/vim-clojure-static', {'for': 'clojure'}
-Plug 'tpope/vim-fireplace', {'for': 'clojure'}
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
 " Plug 'clojure-vim/async-clj-omni', {'for': 'clojure'}
 Plug 'tpope/vim-leiningen', {'for': 'clojure'}
 
 """ Android
 Plug 'hsanson/vim-android'
 
-" Plug 'jceb/vim-orgmode', {'for': 'org'}
+Plug 'nvim-orgmode/orgmode'
+
 " " wiki
 " Plug 'fcpg/vim-waikiki'
 " Plug 'mattn/calendar-vim'
@@ -54,14 +64,15 @@ Plug 'reedes/vim-textobj-quote', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-textobj-sentence', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-litecorrect', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-wordy', {'for': ['text', 'markdown', 'tex']}
-Plug 'reedes/vim-pencil', {'for': ['text', 'markdown']}
 Plug 'reedes/vim-lexical', {'for': ['text', 'markdown', 'tex']}
 Plug 'ron89/thesaurus_query.vim'
 Plug 'dbmrq/vim-ditto', {'for': ['text', 'markdown', 'tex']}
 Plug 'reedes/vim-wheel', {'for': ['text', 'markdown', 'tex']}
 
-Plug 'vim-pandoc/vim-pandoc', {'for': 'markdown'}
-Plug 'vim-pandoc/vim-pandoc-syntax', {'for': 'markdown'}
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
+Plug 'elkowar/yuck.vim', {'for': ['yuck']}
 
 
 """ Latex 
@@ -75,6 +86,7 @@ Plug 'freitass/todo.txt-vim'
 
 
 "Editing parentesi
+Plug 'windwp/nvim-autopairs'
 Plug 'guns/vim-sexp', { 'for': 'clojure' }
 Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 Plug 'p00f/nvim-ts-rainbow'
@@ -114,8 +126,12 @@ Plug 'sunaku/tmux-navigate'
 
 "Cool start screen
 Plug 'mhinz/vim-startify'
-Plug 'justinmk/vim-sneak'
+" Plug 'justinmk/vim-sneak'
+Plug 'ggandor/leap.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
+" Better recover
+Plug 'chrisbra/Recover.vim'
 
 call plug#end()    
 " }}}
@@ -197,16 +213,179 @@ set shiftwidth=4
 set expandtab
 set colorcolumn=81
 
-set title
-set titleold=urxvt
-augroup title
-    au!
-    autocmd BufEnter * let &titlestring = expand("%:t")
-augroup end
+" set title
+" set titleold=urxvt
+" augroup title
+"     au!
+"     autocmd BufEnter * let &titlestring = expand("%:t")
+" augroup end
 
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
 set fillchars=fold:\ 
+" }}}
+
+" {{{ Completion (nvim-cmp)
+
+lua <<EOF
+  -- Set up nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    },
+   mapping = {
+        ["<Tab>"] = cmp.mapping({
+            c = function()
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                else
+                    cmp.complete()
+                end
+            end,
+            i = function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                elseif vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
+                    vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
+                else
+                    fallback()
+                end
+            end,
+            s = function(fallback)
+                if vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
+                    vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
+                else
+                    fallback()
+                end
+            end
+        }),
+        ["<S-Tab>"] = cmp.mapping({
+            c = function()
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                else
+                    cmp.complete()
+                end
+            end,
+            i = function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
+                    return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
+                else
+                    fallback()
+                end
+            end,
+            s = function(fallback)
+                if vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
+                    return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
+                else
+                    fallback()
+                end
+            end
+        }),
+        ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
+        ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
+        ['<C-n>'] = cmp.mapping({
+            c = function()
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                else
+                    vim.api.nvim_feedkeys(t('<Down>'), 'n', true)
+                end
+            end,
+            i = function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                else
+                    fallback()
+                end
+            end
+        }),
+        ['<C-p>'] = cmp.mapping({
+            c = function()
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+                else
+                    vim.api.nvim_feedkeys(t('<Up>'), 'n', true)
+                end
+            end,
+            i = function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+                else
+                    fallback()
+                end
+            end
+        }),
+        ['<C-e>'] = cmp.mapping({ 
+            i = function() 
+                if vim.fn["UltiSnips#CanExpandSnippet"]() == 1 then
+                    vim.fn["UltiSnips#ExpandSnippet"]()
+                else
+                    cmp.mapping.close()
+                end
+            end
+        }),
+        ['<CR>'] = cmp.mapping({
+            i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+            -- c = function(fallback)
+            --     if cmp.visible() then
+            --         cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+            --     else
+            --         fallback()
+            --     end
+            -- end
+        }),
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'ultisnips' }, -- For ultisnips users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Set configuration for specific filetype.
+  -- cmp.setup.filetype('gitcommit', {
+  --   sources = cmp.config.sources({
+  --     { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+  --   }, {
+  --     { name = 'buffer' },
+  --   })
+  -- })
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+  --cmp.event:on(
+  --  'confirm_done',
+  --  cmp_autopairs.on_confirm_done()
+  --)
+EOF
+
 " }}}
 
 " {{{ LSP
@@ -237,19 +416,24 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space><space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space><space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>?', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap("v", '<space>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', opts)
   buf_set_keymap("n", '<space><space>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', {noremap=false})
 
 end
+
+-- LSP completions (nvim-lsp)
+-- Set up lspconfig.
+local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 local servers = { "denols", "pylsp" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
+    capabilities = cmp_capabilities,
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
@@ -258,8 +442,10 @@ for _, lsp in ipairs(servers) do
 end
 
 nvim_lsp["pylsp"].setup {
+    on_attach = on_attach,
     filetypes = { "python", "python.ipynb" }
 }
+
 local border = {
       {"┌", "FloatBorder"},
       {"─", "FloatBorder"},
@@ -303,6 +489,8 @@ EOF
 
 " {{{ Treesitter
 lua <<EOF
+require('orgmode').setup_ts_grammar()
+
 require'nvim-treesitter.configs'.setup {
     ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     highlight = {
@@ -312,7 +500,7 @@ require'nvim-treesitter.configs'.setup {
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
         -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = {'org'},
     },
     indent = {
         enable = true,
@@ -429,14 +617,15 @@ endfunction
 
 command! StartMakeView call StartMakeView()
 
-nmap ; <cmd>Telescope buffers<CR>
+nmap <Leader>; <cmd>Telescope buffers<CR>
 nmap <Leader>f <cmd>Telescope find_files<CR>
 nmap <Leader>F <cmd>Telescope git_files<CR>
 nmap <Leader>' <cmd>Telescope oldfiles<CR>
 nmap <Leader>t <cmd>Telescope current_buffer_tags<CR>
 nmap <Leader>T <cmd>Telescope tags<CR>
 nmap <Leader>p <cmd>Telescope registers<CR>
-map <leader>/ <cmd>Telescope live_grep<CR>
+map <leader>/ <cmd>Telescope current_buffer_fuzzy_find<CR>
+map <leader><leader>/ <cmd>Telescope live_grep<CR>
 lua << EOF
 local actions = require('telescope.actions')
 require('telescope').setup{
@@ -461,6 +650,11 @@ defaults = {
     }
 }
 EOF
+
+function! ListNotes()
+    :Telescope find_files search_dirs=['/home/pinusc/docs/notes/']
+endfunction
+command! Notes call ListNotes()
 
 " sessions
 let g:session_dir = $HOME . '/.config/nvim/sessions/'
@@ -505,6 +699,19 @@ end
 " {{{ Filetype specific
 "
 let g:org_heading_shade_leading_stars = 1
+lua << EOF
+require('orgmode').setup({
+  org_agenda_files = {'~/docs/notes/*'},
+  org_default_notes_file = '~/docs/notes/notes.org',
+  org_todo_keywords = {'TODO(t)', 'NEXT', 'INPROGRESS', '|', 'DONE'},
+  org_todo_keyword_faces = {
+    TODO = ':foreground red',
+    NEXT = ':foreground yellow',
+    INPROGRESS = ':foreground green',
+    DONE = ':foreground gray',
+  }
+})
+EOF
 
 augroup vimrc
     au bufwinenter setlocal foldmethod=manual
@@ -536,18 +743,14 @@ augroup java
     autocmd Filetype java call SetupJava()
 augroup END
 
-let g:pencil#conceallevel = 0
 " Prose {{{
 function! Prose()
   let g:textobj#quote#educate = 0
-  let g:pencil#wrapModeDefault = 'soft'
-  let g:pencil#conceallevel = 0
   set keywordprg=dict\ -s\ substring
   " let g:lexical#thesaurus = ['~/.config/nvim/thesaurus/mthesaur.txt',]
   " let g:lexical#dictionary_key = '<c-d>'
   " let g:lexical#dictionary = ['/usr/share/dict/words',]
   nnoremap <c-t> :OnlineThesaurusCurrentWord<CR>
-  call pencil#init()
   call lexical#init()
   call litecorrect#init()
   call textobj#quote#init()
@@ -565,24 +768,17 @@ function! Prose()
   let g:languagetool_jar = '/usr/share/java/languagetool/languagetool-commandline.jar'
 endfunction
 
-function! PandocPreview() 
-    autocmd BufWritePost <buffer> silent execute "!pandoc % -o %:r.pdf &"
-    write
-    execute "!zathura %:r.pdf &"
-endfunction
-
-command! -nargs=0 PandocPreview call PandocPreview()
 
 function! UpdateWordCount()
     let words = system("pandoc ".. expand('%') .. " --to plain | perl -ne 'print if //../Word Count/' | wc -w")
-    exe "%s/Word Count:.*/Word Count: " . words . "/"
+    exe "%s/Word Count:.*/Word Count: " . trim(words) . "/"
 endfunction
 command! -nargs=0 UpdateWordCount call UpdateWordCount()
 
 " automatically initialize buffer by file type
 " augroup prose
 "     au!
-"     autocmd FileType markdown,mkd,text,rst call Prose()
+"     autocmd FileType pandoc,markdown,mkd,text,rst call Prose()
 " augroup END
 
 " invoke manually by command for other file types
@@ -591,43 +787,45 @@ command! -nargs=0 Prose call Prose()
 
 " {{{ Clojure 
 "  Automagic Clojure folding on defn's and defmacro's
-if !exists ('*GetClojureFold')
-    function GetClojureFold()
-        if getline(v:lnum) =~? '^\s*(defn.*\s'
-            return '>1'
-        elseif getline(v:lnum) =~? '^\s*(defmacro.*\s'
-            return '>1'
-        elseif getline(v:lnum) =~? '^\s*(defmethod.*\s'
-            return '>1'
-        elseif getline(v:lnum) =~? '^\s*$'
-            let my_cljnum = v:lnum
-            let my_cljmax = line('$')
 
-            while (1)
-                let my_cljnum = my_cljnum + 1
-                if my_cljnum > my_cljmax
-                    return '<1'
-                endif
+" if !exists ('*GetClojureFold')
+"     function GetClojureFold()
+"         if getline(v:lnum) =~? '^\s*(defn.*\s'
+"             return '>1'
+"         elseif getline(v:lnum) =~? '^\s*(defmacro.*\s'
+"             return '>1'
+"         elseif getline(v:lnum) =~? '^\s*(defmethod.*\s'
+"             return '>1'
+"         elseif getline(v:lnum) =~? '^\s*$'
+"             let my_cljnum = v:lnum
+"             let my_cljmax = line('$')
 
-                let my_cljdata = getline(my_cljnum)
+"             while (1)
+"                 let my_cljnum = my_cljnum + 1
+"                 if my_cljnum > my_cljmax
+"                     return '<1'
+"                 endif
 
-                " If we match an empty line, stop folding
-                if my_cljdata =~? '^$'
-                    return '<1'
-                else
-                    return '='
-                endif
-            endwhile
-        else
-            return '='
-        endif
-    endfunction
+"                 let my_cljdata = getline(my_cljnum)
 
-    function TurnOnClojureFolding()
-        setlocal foldexpr=GetClojureFold()
-        setlocal foldmethod=expr
-    endfunction
-endif
+"                 " If we match an empty line, stop folding
+"                 if my_cljdata =~? '^$'
+"                     return '<1'
+"                 else
+"                     return '='
+"                 endif
+"             endwhile
+"         else
+"             return '='
+"         endif
+"     endfunction
+
+"     function TurnOnClojureFolding()
+"         setlocal foldexpr=GetClojureFold()
+"         setlocal foldmethod=expr
+"     endfunction
+" endif
+let g:iced_enable_default_key_mappings = v:true
 
 " }}} Clojure
 set foldmethod=expr
@@ -666,6 +864,53 @@ let g:VM_maps = {}
 let g:VM_maps["Add Cursor Down"] = '<M-Down>'
 let g:VM_maps["Add Cursor Up"] = '<M-Up>'
 
+" {{{ dap (debug adapter protocol)
+" python
+lua require('dap-python').setup('~/.local/share/virtualenvs/debugpy/bin/python')
+
+
+lua <<EOF
+local dap, dapui = require("dap"), require("dapui")
+    dapui.setup()
+    dap.listeners.after.event_initialized["dapui_config"] = function()
+      dapui.open()
+    end
+    dap.listeners.before.event_terminated["dapui_config"] = function()
+      dapui.close()
+    end
+    dap.listeners.before.event_exited["dapui_config"] = function()
+      dapui.close()
+    end
+EOF
+
+" mappings
+lua <<EOF
+vim.keymap.set('n', '<leader>dc', function() require('dap').continue() end, {desc = "DAP continue"})
+    vim.keymap.set('n', '<leader>dn', function() require('dap').step_over() end, {desc = "DAP step over"})
+    vim.keymap.set('n', '<leader>ds', function() require('dap').step_into() end, {desc = "DAP step into"})
+    vim.keymap.set('n', '<leader>du', function() require('dap').step_out() end, {desc = "DAP step up (out)"})
+    vim.keymap.set('n', '<Leader>db', function() require('dap').toggle_breakpoint() end, {desc = "DAP toggle breakpoint"})
+    vim.keymap.set('n', '<Leader>dB', function() require('dap').set_breakpoint() end, {desc = "DAP set breakpoint"})
+    vim.keymap.set('n', '<Leader>dlp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, {desc = "DAP set breakpoint & log"})
+    vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end, {desc = "DAP repl open"})
+    vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end, {desc = "DAP run last"})
+    vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
+      require('dap.ui.widgets').hover()
+    end, {desc = "DAP hover"})
+    vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
+      require('dap.ui.widgets').preview()
+    end, {desc = "DAP preview"})
+    vim.keymap.set('n', '<Leader>df', function()
+      local widgets = require('dap.ui.widgets')
+      widgets.centered_float(widgets.frames)
+    end, {desc = "DAP frames"})
+    vim.keymap.set('n', '<Leader>ds', function()
+      local widgets = require('dap.ui.widgets')
+      widgets.centered_float(widgets.scopes)
+    end, {desc = "DAP scopes"})
+EOF
+" }}}
+
 " {{{ Jupytext
 let g:jupytext_enable = 1
 let g:jupytext_fmt = 'py:percent'
@@ -701,7 +946,33 @@ augroup END
 
 " {{{ Pandoc
 let g:pandoc#syntax#conceal#use=0
-let g:pandoc#filetypes#pandoc_markdown=1
+let g:pandoc#command#prefer_pdf=1
+
+let g:pandoc_watch#default_output='pdf'
+let g:pandoc_watch#default_args=['--citeproc']
+
+function! PandocWatch(template='', bang='') 
+    " let b:my_pandoc_template = 
+    if a:template != ''
+        let b:pandoc_args = '#' . a:template
+    else
+        let b:pandoc_args = g:pandoc_watch#default_output . ' ' . join(g:pandoc_watch#default_args)
+    endif
+    call pandoc#command#Pandoc(b:pandoc_args, a:bang)
+    autocmd BufWritePost <buffer> silent call pandoc#command#Pandoc(b:pandoc_args, '')
+endfunction
+
+function! PandocWatchComplete(ArgLead, CmdLine, CursorPos)
+    return pandoc#command#GetTemplateNames()
+endfunction
+
+command! -nargs=? -bang -complete=customlist,PandocWatchComplete PandocWatch call PandocWatch('<args>', '<bang>')
+
+augroup pandoc_syntax
+    au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+augroup END
+
+
 
 " }}}
 
@@ -840,21 +1111,19 @@ let g:user_emmet_install_global = 0
 augroup Emmet
     au!
     autocmd FileType html,css,scss,vue EmmetInstall
-    autocmd FileType html,css,scss imap <buffer> <TAB> <plug>(emmet-expand-abbr)
+    autocmd FileType html,css,scss imap <buffer> <C-e> <plug>(emmet-expand-abbr)
 augroup END
 
 let g:NERDCustonDelimiters = {
             \ 'python': {'right': '# '}}
 
-call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
-
-let g:deoplete#enable_at_startup = 1
+" most ultisnips keybindings are defined in nvim-cmp lua settings
+" TLDR; dhift moves around
 let g:UltiSnipsExpandTrigger='<C-e>'
-let g:UltiSnipsJumpForwardTrigger='<tab>'
-let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
 
-inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><s-tab> pumvisible() ? "\<C-p>" : "\<TAB>"
+
+" inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<TAB>"
+" inoremap <expr><s-tab> pumvisible() ? "\<C-p>" : "\<TAB>"
 
 aug omnicomplete 
     au!
@@ -870,7 +1139,7 @@ call neomake#configure#automake('w')
 
 let g:netrw_liststyle = 3
 
-let g:sneak#s_next = 1
+lua require('leap').add_default_mappings()
 
 " {{{ GhostText
 augroup nvim_ghost_user_autocommands
@@ -904,11 +1173,11 @@ function! SetupWaikikiBuffer() abort
     setl cole=2
 endfun
 
-augroup Waikiki
-    au!
-    autocmd User setup call SetupWaikikiBuffer()
-    au FileType markdown call SetupWaikikiBuffer()
-augroup END
+" augroup Waikiki
+"     au!
+"     autocmd User setup call SetupWaikikiBuffer()
+"     au FileType markdown call SetupWaikikiBuffer()
+" augroup END
 
 " }}}
 
