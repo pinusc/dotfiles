@@ -42,3 +42,16 @@ echo "$tempdir" | xclip -i -selection clipboard
 echo "$tempdir"
 
 scantailor 
+
+img2pdf --pillow-limit-break --output "tailored-$filename" -- "$tempdir"/out/*.tif
+
+echo "Generated PDF: tailored-$filename"
+echo "Opening... (close zathura to continue)"
+zathura "tailored-$filename"
+
+if read -q "OCR? "; then
+    ocrmypdf --optimize 3 "tailored-$filename" "ocr-$filename"
+    echo "Generated PDF: ocr-$filename"
+    echo "Opening..."
+    zathura "ocr-$filename"
+fi
