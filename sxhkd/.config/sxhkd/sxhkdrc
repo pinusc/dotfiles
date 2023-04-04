@@ -65,7 +65,6 @@ super + {u,d}
 super + Tab
   bspc desktop -f last
 
-
 # @Move troughmonitors
 super + shift + {Left,Right}
 	bspc monitor -f {prev,next}
@@ -203,8 +202,12 @@ XF86AudioMute
 XF86AudioMicMute
   pamixer --source 1 -t
 
+
 XF86AudioPlay
   sh -c 'playerctl -p $(get_mpris_active_player.sh) play-pause'
+
+shift + XF86AudioPlay
+  mpc toggle
 
 XF86AudioPrev
   sh -c 'playerctl -p $(get_mpris_active_player.sh) previous'
