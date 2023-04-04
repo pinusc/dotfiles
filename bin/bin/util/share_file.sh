@@ -25,16 +25,14 @@ exit
 }
 
 check_dependencies() {
-    err=''
-    if ! which qrencoder &>/dev/null; then
+    if ! which qrencode &>/dev/null; then
         msg "${RED}ERROR:${NOFORMAT} 'qrencode' not found."
-        err=1
+        die
     fi
     if ! which python3 &>/dev/null; then
         msg "${RED}ERROR:${NOFORMAT} 'python3' not found."
-        err=1
+        die
     fi
-    [ -n "$err" ] && die "Dependencies unmet. Exiting."
 }
 
 cleanup() {
@@ -127,8 +125,12 @@ function create_qrcode() {
         qrurl="$(get_ip):$port"
     fi
     msg "${GREEN}Encoded QR for: ${NOFORMAT} http://$qrurl/$prettyname"
-    qrencode "http://$qrurl/$prettyname" -o "$qrfile"
-    echo "$qrfile"
+    if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+        qrencode "http://$qrurl/$prettyname" -t UTF8
+    else
+        qrencode "http://$qrurl/$prettyname" -o "$qrfile"
+        echo "$qrfile"
+    fi
 }
 
 function start_pyserver() {
@@ -138,7 +140,9 @@ function start_pyserver() {
 
 function open_qrcode() {
     local openwith=""
-    if which termux-open &>/dev/null; then
+    if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+        openwith="echo"
+    elif which termux-open &>/dev/null; then
         openwith="termux-open"
     elif which sxiv &>/dev/null; then
         openwith="sxiv"
