@@ -1,0 +1,16 @@
+[Desktop Entry]
+
+# The type as listed above
+Type=Application
+
+# The name of the application
+Name=VPN Menu
+
+# The path to the folder in which the executable is run
+# Path=~
+
+# The executable of the application, possibly with arguments.
+Exec=vpn_menu.sh
+
+# Describes whether this application needs to be run in a terminal or not
+Terminal=false
