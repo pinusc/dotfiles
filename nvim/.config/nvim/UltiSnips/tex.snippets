@@ -908,4 +908,26 @@ snippet "list" "a_1,...,a_n" ri
 $1_1,\ldots,$1_$0
 endsnippet
 
+snippet col2 "Two Column environment (needs \usepackage{multicol})"
+\begin{multicols*}{2}
+$1
+\columnbreak
+$2
+\end{multicols*}
+endsnippet
+
+snippet col2balanced "Two Column vertically balanced environment (needs \usepackage{multicol})"
+\begin{multicols}{2}
+$1
+\columnbreak
+$2
+\end{multicols}
+endsnippet
+
+snippet colvarewidth "N column environment with different widths (needs \usepackage{vwcol})"
+\begin{vwcol}[widths={0.$1,0.$2}]
+$0
+\end{vwcol}
+endsnippet
+
 # vim:ft=snippets

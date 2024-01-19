@@ -47,6 +47,9 @@ Plug 'tpope/vim-leiningen', {'for': 'clojure'}
 """ Android
 Plug 'hsanson/vim-android'
 
+""" Arduino
+Plug 'stevearc/vim-arduino'
+
 Plug 'nvim-orgmode/orgmode'
 
 " " wiki
@@ -492,7 +495,7 @@ lua <<EOF
 require('orgmode').setup_ts_grammar()
 
 require'nvim-treesitter.configs'.setup {
-    ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    ensure_installed = {"c", "latex", "vim", "lua", "html", "python", "clojure"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     highlight = {
         enable = true,              -- false will disable the whole extension
         disable = { "c", "rust", "markdown", "tex", "latex" },  -- list of language that will be disabled
@@ -616,6 +619,8 @@ function! StartMakeView()
 endfunction
 
 command! StartMakeView call StartMakeView()
+
+nmap <Leader>r <cmd>!%:p<CR>
 
 nmap <Leader>; <cmd>Telescope buffers<CR>
 nmap <Leader>f <cmd>Telescope find_files<CR>
@@ -981,8 +986,7 @@ let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
 let g:vimtex_fold_enabled=1
 let g:vimtex_syntax_conceal={}
-let g:vimtex_syntax_conceal_default=0
-let g:tex_flavor='xetex'
+let g:tex_flavor='xelatex'
 let g:tex_conceal=''
 let g:neomake_tex_enabled_makers=['proselint']
 let g:vimtex_doc_handlers=['Texdoc_zathura']
@@ -1000,6 +1004,7 @@ let g:vimtex_compiler_latexrun = {
 
 let g:vimtex_compiler_latexmk = {
     \ 'options' : [
+    \   '-xelatex',
     \   '-pdf',
     \   '-shell-escape',
     \   '-verbose',
