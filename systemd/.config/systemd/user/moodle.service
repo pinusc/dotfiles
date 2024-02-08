@@ -1,7 +1,0 @@
-[Unit]
-Description=Automatic Moodle Donwloader
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/moodle-dl
-WorkingDirectory=%h/docs/college/moodle/

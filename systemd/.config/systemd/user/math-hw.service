@@ -1,7 +1,0 @@
-[Unit]
-Description=Automatic Math Homework Donwloader
-
-[Service]
-Type=oneshot
-ExecStart=%h/docs/college/courses/23-MA253/homework/sync_homework.sh
-WorkingDirectory=%h/docs/college/courses/23-MA253/homework
