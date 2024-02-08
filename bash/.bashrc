@@ -11,7 +11,10 @@ umask 022
 [ -e "$HOME/.bashrc.local" ] && source "$HOME/.bashrc.local"
 
 export SHELL=bash
-if hash vim; then
+if hash nvim >/dev/null 2>&1; then
+    export EDITOR=nvim
+    export SUDO_EDITOR=nvim
+elif hash vim >/dev/null 2>&1; then
     export EDITOR=vim
     export SUDO_EDITOR=vim
 else
