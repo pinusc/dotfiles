@@ -6,6 +6,8 @@
 import subprocess
 import sys
 import os
+import re
+import re
 
 from email import policy
 from email.mime.text import MIMEText
@@ -66,6 +68,8 @@ def pandoc_plain(text):
 
 
 def to_html(text):
+    text = re.sub(r'\n-- ?\n', r'\n--  \n', text)
+    text = re.sub(r'^([^\n]+),\n', r'\1,  \n', text)
     html_data = pandoc_html(text)
     return html_data
 
