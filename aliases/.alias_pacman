@@ -10,3 +10,12 @@ alias pacu="$FRONTEND -Syu"
 alias pacrem="$FRONTEND -Rns"
 alias pacq="$FRONTEND -Qq"
 alias pacx=pacrem
+
+function pacvote() {
+    export AUR_USERNAME="giusb3.0"
+    if [ -z "$AUR_PASSWORD" ]; then
+        read -s "?AUR password: " AUR_PASSWORD
+        export AUR_PASSWORD
+    fi
+    yay --web -v "$*"
+}
