@@ -4,7 +4,15 @@ HELPER_SCRIPT="$HOME/bin/util/cloudflare-dyndns.sh"
 mkdir -p "$CACHEDIR"
 CACHE="$CACHEDIR/dyndns.cache"
 LOG="$CACHEDIR/dyndns.log"
-ip_addr="$(ip a show "$INTERFACE" | grep -Po 'inet \K[\d.]+')"
+if [[ -z "$IP" ]] && [[ -z "$INTERFACE" ]]; then
+    die "need to set env var INTERFACE (e.g. wlan0)"
+else
+    if [[ -n "$IP" ]]; then
+        ip_addr="$IP"
+    else
+        ip_addr="$(ip a show "$INTERFACE" | grep -Po 'inet \K[\d.]+')"
+    fi
+fi
 echo "$ip_addr"
 
 msg() {
@@ -19,7 +27,6 @@ die() {
 }
 
 [[ -z "$DOMAIN" ]] && die "need to set env var DOMAIN (e.g. example.com)"
-[[ -z "$INTERFACE" ]] && die "need to set env var INTERFACE (e.g. wlan0)"
 [[ -z "$CLOUDFLARE_API_KEY" ]] && die "need to set env var CLOUDFLARE_API_KEY"
 export CLOUDFLARE_API_KEY
 {
