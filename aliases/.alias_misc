@@ -1,6 +1,5 @@
-
+# vim ft=zsh
 # leave one line blank for compatibility
-#vim ft=sh
 alias upfont="sudo fc-cache -fv"
 alias cal="cal -m" # Monday it's always the first day of the week here!
 alias tmux="tmux -2"
@@ -13,6 +12,10 @@ alias d="deactivate"
 
 alias setclip='xclip -selection c'
 alias getclip='xclip -selection clipboard -o'
+alias pasteclip='getclip'
+alias copyclip='setclip'
+
+alias sxiv='nsxiv'
 
 alias screensaver_off="xset s off;xset -dpms;xset s noblank"
 moviemode() {
@@ -22,6 +25,7 @@ moviemode() {
     killall xautolock
     systemctl --user stop mbsync.service
     systemctl --user stop mbsync.timer
+    systemctl --user stop dunst.service
     killall redshift
 }
 
@@ -66,17 +70,22 @@ mdmake() {
 if hash pinfo >&/dev/null; then
     alias info='pinfo'
 fi
+
+alias l='ls'
+alias la='ll -a'
+alias ll='ls -lh'
+alias lt='ls -l --tree'
+alias ltg='ls -l --tree --git'
+
 if hash exa >&/dev/null; then
     alias ls='exa --sort=name --icons'   
     alias lt='exa -T'
     alias lg='exa --long --git'
+    alias ll='ls -lh --git'
+    if [ -n "$SSH_CONNECTION" ];  then
+        alias ls='exa --sort=name --no-icons'   
+    fi
 fi
-
-alias l='ls'
-alias ll='ls -lh --git'
-alias la='ll -a'
-alias lt='ls -l --tree'
-alias ltg='ls -l --tree --git'
 
 if [ "$SHELL" = /bin/zsh ]; then 
     if [[ "$PAGER" = 'bat' || "$PAGER" =~ ".*bat.*" ]]; then
@@ -93,6 +102,7 @@ if [ "$SHELL" = /bin/zsh ]; then
         alias -g LLC="--color=always | $PAGER"
         alias -g LLA="2>&1 | $PAGER"
     fi
+    alias -g G="| grep --ignore-case --extended-regexp"
     alias -g NNNSEL='$(nnn -p -)'
     alias -g CSVLL="| csv2table.sh"
     alias -g MRF="*(om[1])"
@@ -131,15 +141,15 @@ copy_dotfiles() {
         \rsync --timeout 3 -vh ~/dot/bash/.* "$server:"
     fi
     cat ~/dot/aliases/.* | ssh -o 'ConnectTimeout=3' "$server" "tee ~/.aliases" >/dev/null
-    \rsync --timeout 3 -vh ~/dot/tmux/.tmux.conf "$server:"
+    \rsync --timeout 3 -vh ~/dot/tmux/.config/tmux/tmux.conf "$server:.tmux.conf"
 }
 
 sync_dotfiles() {
+    copy_dotfiles medoro
     copy_dotfiles diana
     copy_dotfiles persephone
-    copy_dotfiles sacripante
-    copy_dotfiles medoro
     copy_dotfiles sardanapalo
+    copy_dotfiles sacripante
 }
 alias copy_dotfiles_all=sync_dotfiles
 
@@ -203,11 +213,11 @@ ssps() {
             close(pscomm); 
             sub("[0-9]+", "&\t", pout); 
         }
-        print $1 " " $5 "\t" pout; 
+        print $1 "\t" $5 "\t" pout; 
     }
     EOF
     awkcommand=$(echo "$awkcommand" | sed -r 's!^\s{4}!!')
-    sudo ss -tlnupH "$1" | awk "$awkcommand" | sed 's/  */ /g;' | cut -c -70 | column -s$'\t' -t
+    sudo ss -tlnupH "$1" | awk "$awkcommand" | sed 's/  */ /g;' | sed -E ' s/:([0-9]+)\t/\t:\1\t/;' | cut -c -70 | column -s$'\t' -t -R 2 -N proto,addr,port,pid,process
 }
 alias pgrep="pgrep -a -f"
 
@@ -215,11 +225,15 @@ alias pgrep="pgrep -a -f"
 # alias "lxclist"="sudo lxc list -c ns4"
 # alias lxc="sudo lxc"
 lxcsh () {
-	local oldname="$(tmux display-message -p '#W')"
-	tmux rename-window "$1"
-        local command="${2-sh}"
-	sudo lxc "exec" "$1" -- "$command"
-	tmux rename-window "$oldname"
+        local oldname="$(tmux display-message -p '#W')"
+        tmux rename-window "$1"
+        local instance="$1"
+        shift
+        if [ -z "$2" ]; then
+                set -- sh -l
+        fi
+        sudo lxc exec "$instance" -- "$@"
+        tmux rename-window "$oldname"
 }
 
 send2ebook () {
@@ -264,7 +278,8 @@ n ()
 }
 
 jog () {
-    grep -a "${PWD}   " ~/.zsh_history_ext | cat | cut -f1 -d"|" | tail
+    local N="${1:-15}"
+    grep -a "${PWD}   " ~/.zsh_history_ext | cut -f1 -d"|" | grep -E --invert-match '^jog' | tail -n "$N"
 }
 
 earthengine_notify () {
@@ -302,6 +317,8 @@ alias restart_bluetooth=bluetooth_restart
 pdfcut () {
     if [ "$1" = -h ] || [ -z "$1" ] || [ -z "$2" ]; then
         echo "Usage: pdfcut FILE RANGE"
+        echo "Replaces FILE with a pdf only containing the pages in range."
+        echo "To cut pages in half (e.g. from scans) use pdfhalf"
         return 1
     fi
     local outf
@@ -317,6 +334,73 @@ pdfcut () {
         \rm "$outf"
     fi
     kill "$zathura_pid"
+}
+
+pdfhalf() {
+    if [ "$1" = -h ] || [ -z "$1" ]; then
+        echo "Usage: pdfhalf FILE"
+        echo "Replaces FILE with a pdf with the pages from FILE vertically cut in half (both halves included)"
+        echo "Runs mutool poster -x 2 INFILE OUTFILE, for horizontal cuts use -x"
+        return 1
+    fi
+    local outf
+    local zathura_pid
+    outf="$(mktemp pdfcut-XXXX.pdf)"
+    mutool poster -x 2 "$1" "$outf"
+    \zathura "$outf" &
+    zathura_pid=$!
+    if read -q "RES?Is this okay? "; then
+        \rm "$1"
+        mv "$outf" "$1"
+    else 
+        \rm "$outf"
+    fi
+    kill "$zathura_pid"
+}
+
+pdfrotate() {
+    if [ "$1" = -h ] || [ -z "$1" ]; then
+        echo "Usage: pdfrotate FILE [DIR]"
+        echo "Replaces FILE with a pdf with pages rotated by 90 in DIR [default clockwise]"
+        return 1
+    fi
+    local outf
+    local zathura_pid
+    outf="$(mktemp pdfcut-XXXX.pdf)"
+    if [ "$2" = counterclockwise ]; then
+        pdfjam --landscape --angle 90 --outfile "$outf" "$1" 
+    else
+        pdfjam --landscape --angle 270 --outfile "$outf" "$1" 
+    fi
+    \zathura "$outf" &
+    zathura_pid=$!
+    if read -q "RES?Is this okay? "; then
+        \rm "$1"
+        mv "$outf" "$1"
+    else 
+        \rm "$outf"
+    fi
+    kill "$zathura_pid"
+}
+
+watch_file() {
+    if [ "$1" = -h -o "$1" = --help -o -z "$1" -o -z "$2" -o ! -e "$1" ]; then
+        echo "USAGE: watch_file FILE COMMAND [ARGUMENTS...]"
+        return 1
+    fi
+    local f="$1"
+    shift
+    local command_and_args="$*"
+    local now
+    while true; do 
+        inotifywait -e close_write "$f" &>/dev/null
+        now="$(date '+%H:%M:%S')"
+        echo "$now - $f was written"
+        echo "$now - Running -- eval \"$command_and_args\""
+        eval "$command_and_args"
+        now="$(date '+%H:%M:%S')"
+        echo "$now - Done. Watching for writes."
+    done
 }
 
 pandoc_watch () {
@@ -360,3 +444,47 @@ lms_reload () {
 lms_scan=lms_reload
 music_scan=lms_reload
 scan_lms=lms_reload
+alias bbr="rlwrap bb repl"
+
+bspc-rule-add () {
+    if [ "$#" -lt 1 ]; then
+        echo "USAGE: bspc-rule-add [[rule=out] ...]"
+        return 1
+    fi
+    echo "Click on a window now..."
+    local wmclass
+    local CONFIG_FILE="$XDG_CONFIG_HOME/bspwm/bspwm_rules"
+    wmclass="$(xprop | awk '/WM_CLASS/{ print $4; }' | tr -d \")"
+    echo "WMCLASS: $wmclass"
+    echo "rule: bspc rule --add \"$wmclass\"" "$@"
+    echo ""
+    echo ""
+    bspc rule --add "$wmclass" "$@"
+    echo "Committing to $CONFIG_FILE..."
+    echo bspc rule --add "$wmclass" "$@" >> "$CONFIG_FILE"
+    echo "bspc rule --list:"
+    bspc rule --list
+}
+new_bspc_rule=bspc-rule-add
+
+tilderadio="mpv https://tilderadio.org/listen"
+
+bak () {
+    file="$1"
+    mv "$file" "$file.bak"
+}
+
+wormhole-qr () {
+    local tmpfile="$(mktemp "$TMPDIR/wormhole-XXXX")"
+    echo "$tmpfile"
+    wormhole send "$1" &>! "$tmpfile" &
+    while [ -z "$code" ]; do
+        local code="$(< "$tmpfile" awk -F': ' '/code is/{ print $2; }')"
+        cat "$tmpfile"
+    done
+    # echo "Code: $code"
+    qrencode -t UTF8 'wormhole:relay.magic-wormhole.io:4000/?code='"$code"
+    fg %wormhole
+}
+
+alias gdeploy="~/builds/gdeploy/main.js"
