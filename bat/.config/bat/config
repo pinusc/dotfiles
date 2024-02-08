@@ -16,8 +16,9 @@
 # Uncomment the following line if you are using less version >= 551 and want to
 # enable mouse scrolling support in `bat` when running inside tmux. This might
 # disable text selection, unless you press shift.
---pager="less --RAW-CONTROL-CHARS --mouse -F"
+--pager="less --RAW-CONTROL-CHARS --mouse -F --chop-long-lines"
 --paging=always
+--decorations=never
 
 # Syntax mappings: map a certain filename pattern to a language.
 #   Example 1: use the C++ syntax for .ino files
