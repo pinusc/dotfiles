@@ -276,7 +276,7 @@ song_status_format = {{%a{ "%b"{ (%y)}} - }{$5%t$9}}|{%f}
 ##   not available.
 ##
 #
-song_columns_list_format = (20)[magenta]{a} (6f)[blue]{NEr} (50)[white]{t|f:Title} (20)[green]{b} (7f)[yellow]{lr}
+song_columns_list_format = (20)[magenta]{a} (6f)[blue]{NEr} (50)[white]{t|f:Title} (20)[green]{b} (7f)[yellow]{lr} (6f)[magenta]{f:Source}
 #
 ##### various settings #####
 #
@@ -302,7 +302,7 @@ playlist_display_mode = columns
 #
 #browser_display_mode = classic
 #
-#search_engine_display_mode = classic
+search_engine_display_mode = columns
 #
 #playlist_editor_display_mode = classic
 #
@@ -439,7 +439,7 @@ regular_expressions = basic
 ##
 ignore_leading_the = yes
 #
-#block_search_constraints_change_if_items_found = yes
+block_search_constraints_change_if_items_found = no
 #
 #mouse_support = yes
 #
@@ -467,7 +467,7 @@ tags_separator = ", "
 ##       in database and local one for searching in current playlist)
 ##
 #
-search_engine_default_search_mode = 2
+search_engine_default_search_mode = 1
 #
 external_editor = vim
 #
