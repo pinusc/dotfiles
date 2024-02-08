@@ -52,5 +52,11 @@ export IC_POMODORO_FULL="\\ue001"
 export IC_POMODORO_EMPTY="\\ue002"
 export IC_POMODORO_TICKING="\\ue003"
 
-export IC_TEMP="\\uf2c9"
-export IC_CPU="\\ufb19"
+export IC_TEMP="\\uf2c7"
+export IC_CPU="\\uf4bc"
+export IC_CHIP="\\ue266"
+
+export IC_BELL="\\uf0f3"
+export IC_BELL_SLASH="\\uf1f6"
+
+export IC_SUN="\\uf400"

@@ -154,6 +154,16 @@ while read -r line ; do
             # temp
             cputemp="$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
             ;;
+        f*)
+            # temp
+            usedram="${line#?}"
+            if [ "$usedram" -gt 80 ]; then
+                COLOR_RAM=$COLOR_RED
+            else
+                COLOR_RAM=$COLOR_BLUE
+            fi
+            memory="$PADDING%{F$COLOR_RAM}$usedram%%%{F-}"
+            ;;
         G*)
             # cpufreq
             cpufreq="$PADDING%{F$COLOR_DATE}${line#?}%{F-}"
@@ -272,6 +282,12 @@ while read -r line ; do
             # bluetooth
             bluetooth="%{F$COLOR_BLUE}$PADDING${line#?}%{F-}"
             ;;
+        n*)
+            notification="$PADDING%{F$COLOR_YELLOW}${line#?}%{F-}"
+            ;;
+        r*)
+            redshift="$PADDING%{F$COLOR_RED}${line#?}%{F-}"
+            ;;
         R*)
             # music info
             music="%{B$COLOR_FOCUSED_OCCUPIED_BG}%{F$COLOR_FOCUSED_OCCUPIED_FG}$PADDING${line#?}%{F-}%{B-}"
@@ -293,7 +309,7 @@ while read -r line ; do
         1)
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{c}${wm_infos}%{r}${gpginfo}${battery}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${clock}$PADDING"
             # ;;
-            echo -e "%{l}${date}${forecast}${aqi}${cputemp}${cpufreq}${phonebattery}${music}${volume}${bluetooth}%{c}${wm_infos}%{r}${pom}${gpginfo}${vpn}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${clock}$PADDING"
+            echo -e "%{l}${date}${forecast}${aqi}${memory}${cputemp}${cpufreq}${phonebattery}${volume}${bluetooth}${music}%{c}${wm_infos}%{r}${pom}${gpginfo}${vpn}${network}${mail}${keyboard_icon}${notification}${keyboard}${wallpaper}${redshift}${battery}${clock}$PADDING"
             # echo -e "%{l}${date}${forecast}${aqi}${music}${volume}%{r}${gpginfo}${network}${mail}${keyboard_icon}${keyboard}${wallpaper}${battery}${pom}${clock}$PADDING"
         ;;
         2)

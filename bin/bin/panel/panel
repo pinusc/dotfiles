@@ -43,6 +43,7 @@ loop() {
         (command -v mpc || command -v mpris) && has_music=1
         command -v zscroll && has_zscroll=1
         command -v bluetoothctl && has_bluetooth=1
+        ps -A -o comm= | grep --quiet redshift  && has_redshift=1
         has_api_keys="$HAS_API"
     } >/dev/null 2>&1
     echo "$ZSCROLLFILE"
@@ -53,6 +54,7 @@ loop() {
         bspc subscribe &
         while true; do
             keyboard &
+            notifications &
             pcheck_pomodoro # do not use &, needs local state
             clock "$CLOCKFILE" # Has to stay in 1s cycle for interactivity
             if (( i % 3 == 0 )); then
@@ -69,12 +71,14 @@ loop() {
             fi
             if (( i == 0 )); then
                 wallpaper &
+                p_redshift &
             fi
             if (( i % 10 == 0 )); then
                 vpn &
                 network &
                 [[ -n ${has_gpg+x} ]] && gpg_info "gnome-keyring-daemon -r -d" &
                 [[ -n ${has_freq+x} ]] && cpufreq &
+                usedmemory &
             fi
             if (( i % 60 == 0 )); then
                 phonebattery &
@@ -82,7 +86,7 @@ loop() {
                 mailinfo &
             fi
             if (( i % 400 == 0 )); then
-                test "$has_api_keys" && pollution &
+                # test "$has_api_keys" && pollution &
                 test "$has_api_keys" && weather &
             fi
             i=$((i+1))

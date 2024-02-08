@@ -109,7 +109,7 @@ pollution() {
 weather() {
     >&2 echo "WEATHER"
     location=$(geolocate)
-    weather_response=$(curl -s "https://api.darksky.net/forecast/$API_DARKSKY/$location?units=si&exclude=minutely,hourly,daily,alerts.flags")
+    weather_response=$(curl -s "https://api.pirateweather.net/forecast/$API_PIRATEWEATHER/$location?units=si&exclude=minutely,hourly,daily,alerts.flags")
     url_comm="firefox darksky.net/forecast/changshu/si12/en"
     apiicon=$(echo "$weather_response" | jq -r .currently.icon)
     temp=$(echo "$weather_response" | jq -r .currently.temperature)
@@ -467,10 +467,30 @@ gpg_info () {
     echo "g%{A:$gpg_command:}$icon%{A}"
 }
 
+notifications() {
+    icon="$IC_BELL"
+    if [ "$(dunstctl is-paused)" = 'true' ]; then
+        icon="$IC_BELL_SLASH"
+    fi
+    echo "n%{A3:dunstctl set-paused toggle:}%{A:dunstctl history-pop:}$icon%{A}%{A}"
+}
+
+usedmemory() {
+    icon="$IC_CHIP"
+    used="$(free | awk '/Mem/{ printf("%d", $3/$2*100); }')"
+    echo "f$icon $used"
+}
+
+p_redshift () {
+    icon="$IC_SUN"
+    echo "r%{A:killall -s USR1 redshift:}$icon%{A}"
+}
+
 cpufreq() {
     icon="$IC_CPU"
-    freq="$(cpupower frequency-info -f | awk '/frequency:/ { printf("%.1f\n", $4/(10^6)); }')"
+    icon_temp="$IC_TEMP"
+    freq="$(grep MHz /proc/cpuinfo | awk -F: 'BEGIN{max=0} { if ($2 > max){ max = $2}; } END { printf "%.1f\n", max / 1000 }')"
     idle="$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}';)"
     temp=$(sensors coretemp-isa-0000 -u | grep temp1_input | cut -d' ' -f4 | cut -d. -f1)
-    echo "G$icon $idle $freq GHz $temp°C"
+    echo "G$icon${freq}GHz $idle $icon_temp$temp°C"
 }
