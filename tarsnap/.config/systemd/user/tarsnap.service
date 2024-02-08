@@ -1,10 +1,10 @@
 [Unit]
 Description=Tarsnap Backup for docs
+StartLimitIntervalSec=1000
 
 [Service]
 Type=oneshot
 ExecStart=%h/.config/tarsnap/tarsnap-backup.sh
 Restart=on-failure
-RestartSec=120
+RestartSec=1200
 StartLimitBurst=2
-StartLimitIntervalSec=1000
