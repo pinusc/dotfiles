@@ -1,4 +1,4 @@
--- vim: foldmethod=marker
+-- vim: foldmethod=marker tabstop=4 expandtab
 
 -- {{{ Plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -20,7 +20,6 @@ require("lazy").setup({
     -- essentials
     "neovim/nvim-lspconfig",
     {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
-    "editorconfig/editorconfig-vim",
     -- {{{ completion
     { 
         "hrsh7th/nvim-cmp", 
@@ -30,135 +29,68 @@ require("lazy").setup({
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-cmdline",
+            "hrsh7th/cmp-vsnip",
 
         },
         config = function()
-            local cmp = require'cmp'
-            cmp.setup({
+            local has_words_before = function()
+                unpack = unpack or table.unpack
+                local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+                return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+            end
+
+            local feedkey = function(key, mode)
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+            end
+
+            local cmp = require('cmp')
+            cmp.setup {
                 snippet = {
                     expand = function(args)
-                        vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+                        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
                     end,
                 },
                 window = {
-                    completion = cmp.config.window.bordered(),
-                    documentation = cmp.config.window.bordered(),
+                    -- completion = cmp.config.window.bordered(),
+                    -- documentation = cmp.config.window.bordered(),
                 },
-                mapping = {
-                    ["<Tab>"] = cmp.mapping({
-                        c = function()
-                            if cmp.visible() then
-                                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                            else
-                                cmp.complete()
-                            end
-                        end,
-                        i = function(fallback)
-                            if cmp.visible() then
-                                print("visible")
-                                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                            elseif vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
-                                vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
-                            else
-                                print("fallback")
-                                print(fallback)
-                                fallback()
-                            end
-                        end,
-                        s = function(fallback)
-                            if vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
-                                vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
-                            else
-                                fallback()
-                            end
-                        end
-                    }),
-                    ["<S-Tab>"] = cmp.mapping({
-                        c = function()
-                            if cmp.visible() then
-                                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                            else
-                                cmp.complete()
-                            end
-                        end,
-                        i = function(fallback)
-                            if cmp.visible() then
-                                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                            elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                                return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
-                            else
-                                fallback()
-                            end
-                        end,
-                        s = function(fallback)
-                            if vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                                return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
-                            else
-                                fallback()
-                            end
-                        end
-                    }),
-                    ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-                    ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-                    ['<C-n>'] = cmp.mapping({
-                        c = function()
-                            if cmp.visible() then
-                                cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                            else
-                                vim.api.nvim_feedkeys(t('<Down>'), 'n', true)
-                            end
-                        end,
-                        i = function(fallback)
-                            if cmp.visible() then
-                                cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                            else
-                                fallback()
-                            end
-                        end
-                    }),
-                    ['<C-p>'] = cmp.mapping({
-                        c = function()
-                            if cmp.visible() then
-                                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                            else
-                                vim.api.nvim_feedkeys(t('<Up>'), 'n', true)
-                            end
-                        end,
-                        i = function(fallback)
-                            if cmp.visible() then
-                                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                            else
-                                fallback()
-                            end
-                        end
-                    }),
-                    ['<C-e>'] = cmp.mapping({ 
-                        i = function() 
-                            if vim.fn["UltiSnips#CanExpandSnippet"]() == 1 then
-                                vim.fn["UltiSnips#ExpandSnippet"]()
-                            else
-                                cmp.mapping.close()
-                            end
-                        end
-                    }),
-                    ['<CR>'] = cmp.mapping({
-                        i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
-                        -- c = function(fallback)
-                        --     if cmp.visible() then
-                        --         cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-                        --     else
-                        --         fallback()
-                        --     end
-                        -- end
-                    }),
-                },
+
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
-                    -- { name = 'ultisnips' }, -- For ultisnips users.
-                }, {
-                        { name = 'buffer' },
-                    })
-            })
+                    { name = 'buffer' },
+                    { name = 'vsnip' }, -- For vsnip users.
+                }, { { name = 'buffer' }, }),
+
+                mapping = {
+
+                    -- ... Your other mappings ...
+
+                    ["<Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                        elseif vim.fn["vsnip#available"](1) == 1 then
+                            feedkey("<Plug>(vsnip-expand-or-jump)", "")
+                        elseif has_words_before() then
+                            cmp.complete()
+                        else
+                            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+                        end
+                    end, { "i", "s" }),
+
+                    ["<S-Tab>"] = cmp.mapping(function()
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+                            feedkey("<Plug>(vsnip-jump-prev)", "")
+                        end
+                    end, { "i", "s" }),
+
+                    -- ... Your other mappings ...
+
+                }
+
+
+            }
 
             -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
             cmp.setup.cmdline({ '/', '?' }, {
@@ -186,15 +118,39 @@ require("lazy").setup({
     },
     -- }}}
     -- theme
-    {
-        "pinusc/term.vim",
-        lazy = false, -- make sure we load this during startup if it is your main colorscheme
-        priority = 1000, -- make sure to load this before all the other start plugins
-        config = function()
-            -- load the colorscheme here
-            vim.cmd([[colorscheme term]])
-        end,
+    -- {
+    --     "pinusc/term.vim",
+    --     lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    --     priority = 1000, -- make sure to load this before all the other start plugins
+    --     config = function()
+    --         -- load the colorscheme here
+    --         -- vim.cmd([[colorscheme term]])
+    --     end,
+    -- },
+    -- {
+    --     'eddyekofo94/gruvbox-flat.nvim',
+    --     lazy = false,
+    --     priority = 1000,
+    --     enabled = true,
+    --     config = function()
+    --         vim.g.gruvbox_flat_style = "hard"
+    --         vim.g.gruvbox_flat_style = "dark"
+    --         vim.cmd([[
+    --         colorscheme gruvbox-flat
+    --         ]])
+    --     end,
+    -- },
+    { 
+        "ellisonleao/gruvbox.nvim", 
+        priority = 1000, 
+        lazy = false,
     },
+    -- {
+    --     "folke/tokyonight.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    --     opts = {},
+    -- },
     "mhinz/vim-startify",
     -- debugging
     "mfussenegger/nvim-dap", -- Debug Adapter Protocol
@@ -203,6 +159,7 @@ require("lazy").setup({
     -- utils
     "mbbill/undotree",
     "tpope/vim-commentary",
+    "tpope/vim-vinegar",
     "mbbill/undotree",
     "nvim-lua/plenary.nvim", --telescope dependency
     "nvim-telescope/telescope.nvim",
@@ -215,6 +172,20 @@ require("lazy").setup({
     "tpope/vim-surround",
     "tpope/vim-repeat",
     "tpope/vim-sensible",
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+            vim.keymap.set('n', '<Leader>?', ':WhichKey<CR>')
+        end,
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+        }
+    },
     -- lispy parenthesis
     "windwp/nvim-autopairs",
     "guns/vim-sexp", -- { 'for': 'clojure" }
@@ -243,7 +214,7 @@ require("lazy").setup({
         dependencies = {
             "rafamadriz/friendly-snippets"
         }
-    }
+    },
     "hsanson/vim-android",
     "stevearc/vim-arduino",
     "nvim-orgmode/orgmode",
@@ -258,7 +229,11 @@ require("lazy").setup({
         dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
         opts = {},
     },
-
+    {
+        "folke/todo-comments.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {}
+    },
     -- prose
     "junegunn/goyo.vim",
     "junegunn/limelight.vim",
@@ -274,6 +249,20 @@ require("lazy").setup({
     "reedes/vim-wheel",
 })
 
+local palette = require('gruvbox').palette
+require("gruvbox").setup({
+    contrast = "hard";
+    transparent_mode = true,
+    overrides = {
+        SignColumn = {bg = palette.dark0_hard},
+        StatusLine = {fg = palette.dark1, bold = true},
+        StatusLineNC = {fg = palette.dark0_soft},
+        Folded = {bg = palette.dark0_soft},
+        ["@method.call"] = {bold = false},
+    }
+})
+vim.o.background = "dark" -- or "light" for light mode
+vim.cmd([[colorscheme gruvbox]])
 
 --[[
 "neomake/neomake"
@@ -324,10 +313,10 @@ require("lazy").setup({
 -- }}}
 
 -- {{{ Basic Config
-vim.o.t_Co = 16
-vim.o.background = dark
+-- vim.o.t_Co = 16
+-- vim.o.background = dark
 vim.o.number = true
-vim.o.filetype = false
+-- vim.o.filetype = false
 -- vim.filetype plugin indent on
 vim.o.ignorecase = true
 vim.o.smartcase = true
@@ -338,12 +327,14 @@ vim.o.undofile = true
 
 vim.o.conceallevel=0
 vim.o.concealcursor=""
+vim.o.foldtext = ""
 
 vim.cmd.syntax("enable")
 -- vim.o.errorformat = '%A%f:%l:\ %m,%-Z%p^,%-C%.%#'
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
-vim.o.colorcolumn = 81
+-- vim.o.colorcolumn = 81
+
 
 -- let &t_ZH="\e[3m"
 -- let &t_ZR="\e[23m"
@@ -357,6 +348,7 @@ vim.o.foldmethod = "expr"
 vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 
 vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 15
 
 -- {{{ Statusline 
 vim.cmd([[
@@ -376,168 +368,6 @@ vim.cmd([[
 -- }}}
 -- }}}
 
--- {{{ Completion (nvim-cmp)
--- Set up nvim-cmp.
-local cmp = require'cmp'
-
-cmp.setup({
-    snippet = {
-        expand = function(args)
-            vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-        end,
-    },
-    window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-    },
-    mapping = {
-        ["<Tab>"] = cmp.mapping({
-            c = function()
-                if cmp.visible() then
-                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                else
-                    cmp.complete()
-                end
-            end,
-            i = function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                elseif vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
-                    vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
-                else
-                    fallback()
-                end
-            end,
-            s = function(fallback)
-                if vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
-                    vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
-                else
-                    fallback()
-                end
-            end
-        }),
-        ["<S-Tab>"] = cmp.mapping({
-            c = function()
-                if cmp.visible() then
-                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                else
-                    cmp.complete()
-                end
-            end,
-            i = function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                    return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
-                else
-                    fallback()
-                end
-            end,
-            s = function(fallback)
-                if vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                    return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
-                else
-                    fallback()
-                end
-            end
-        }),
-        ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-        ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-        ['<C-n>'] = cmp.mapping({
-            c = function()
-                if cmp.visible() then
-                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                else
-                    vim.api.nvim_feedkeys(t('<Down>'), 'n', true)
-                end
-            end,
-            i = function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                else
-                    fallback()
-                end
-            end
-        }),
-        ['<C-p>'] = cmp.mapping({
-            c = function()
-                if cmp.visible() then
-                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                else
-                    vim.api.nvim_feedkeys(t('<Up>'), 'n', true)
-                end
-            end,
-            i = function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                else
-                    fallback()
-                end
-            end
-        }),
-        ['<C-e>'] = cmp.mapping({ 
-            i = function() 
-                if vim.fn["UltiSnips#CanExpandSnippet"]() == 1 then
-                    vim.fn["UltiSnips#ExpandSnippet"]()
-                else
-                    cmp.mapping.close()
-                end
-            end
-        }),
-        ['<CR>'] = cmp.mapping({
-            i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
-            -- c = function(fallback)
-            --     if cmp.visible() then
-            --         cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-            --     else
-            --         fallback()
-            --     end
-            -- end
-        }),
-    },
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'ultisnips' }, -- For ultisnips users.
-    }, {
-            { name = 'buffer' },
-        })
-})
-
--- Set configuration for specific filetype.
--- cmp.setup.filetype('gitcommit', {
---   sources = cmp.config.sources({
---     { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
---   }, {
---     { name = 'buffer' },
---   })
--- })
-
-
--- Use buffer source for `/`.
-cmp.setup.cmdline('/', {
-    completion = { autocomplete = false },
-    sources = {
-        -- { name = 'buffer' }
-        { name = 'buffer', opts = { keyword_pattern = [=[[^[:blank:]].*]=] } }
-    }
-})
-
--- Use cmdline & path source for ':'.
-cmp.setup.cmdline(':', {
-    completion = { autocomplete = false },
-    sources = cmp.config.sources({
-        { name = 'path' }
-        }, {
-        { name = 'cmdline' }
-    })
-})
-
---cmp.event:on(
---  'confirm_done',
---  cmp_autopairs.on_confirm_done()
---)
--- }}}
-
 -- {{{ LSP
 local nvim_lsp = require('lspconfig')
 
@@ -548,7 +378,7 @@ local on_attach = function(client, bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
   --Enable completion triggered by <c-x><c-o>
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
   local opts = { noremap=true, silent=false }
@@ -556,19 +386,46 @@ local on_attach = function(client, bufnr)
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space><space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space><space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space><space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>?', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap("v", '<space>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', opts)
-  buf_set_keymap("n", '<space><space>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', {noremap=false})
 
+  require("which-key").register({
+      ["<leader><leader>"] = {
+          name = "+lsp",
+      }
+  })
+  buf_set_keymap('n', '<leader><leader>D', '<Cmd>lua vim.lsp.buf.declaration()<CR>', 
+    {noremap=true,silent=false,desc="declaration"})
+  buf_set_keymap('n', '<leader><leader>d', '<Cmd>lua vim.lsp.buf.definition()<CR>', 
+    {noremap=true,silent=false,desc="definition"})
+  buf_set_keymap('n', '<leader><leader>r', '<cmd>lua vim.lsp.buf.references()<CR>', 
+    {noremap=true,silent=false,desc="references"})
+  buf_set_keymap('n', '<leader><leader>i', '<cmd>lua vim.lsp.buf.implementation()<CR>', 
+    {noremap=true,silent=false,desc="implementation"})
+  buf_set_keymap('n', '<leader><leader>K', '<Cmd>lua vim.lsp.buf.hover()<CR>', 
+    {noremap=true,silent=false,desc="hover"})
+  buf_set_keymap('n', '<leader><leader>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>', 
+    {noremap=true,silent=false,desc="signature help"})
+  buf_set_keymap('n', '<leader><leader>]d', '<cmd>lua vim.diagnostic.goto_next()<CR>', 
+    {noremap=true,silent=false,desc="next diagnostic"})
+  buf_set_keymap('n', '<leader><leader>[d', '<cmd>lua vim.diagnostic.goto_next()<CR>', 
+    {noremap=true,silent=false,desc="previous diagnostic"})
+  buf_set_keymap("n", '<leader><leader>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', 
+    {noremap=false,silent=false,desc="range formatting"})
+  buf_set_keymap("v", '<leader><leader>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', 
+    {noremap=false,silent=false,desc="range formatting"})
+  buf_set_keymap('n', '<leader><leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', 
+    {noremap=true,silent=false,desc="type definition"})
+  buf_set_keymap('n', '<leader><leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', 
+    {noremap=true,silent=false,desc="rename"})
+  buf_set_keymap('n', '<leader><leader>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', 
+    {noremap=true,silent=false,desc="code action"})
 end
 
 -- LSP completions (nvim-lsp)
@@ -577,7 +434,7 @@ local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = {"pylsp" }
+local servers = {"pylsp", "typescript-tools" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     capabilities = cmp_capabilities,
@@ -590,8 +447,19 @@ end
 
 nvim_lsp["pylsp"].setup {
     on_attach = on_attach,
-    filetypes = { "python", "python.ipynb" }
+    filetypes = { "python", "python.ipynb" },
+    settings = {
+        pylsp = {
+            plugins = {
+                pyflakes = { enabled = false, },
+                pycodestyle = { enabled = false, },
+                flake8 = { enabled = true, },
+                pylint = { enabled = true, }
+            }
+        }
+    }
 }
+vim.lsp.set_log_level("debug")
 
 local border = {
       {"┌", "FloatBorder"},
@@ -669,7 +537,7 @@ require'nvim-treesitter.configs'.setup {
 
 -- {{{ Startify
 vim.cmd([[
-let g:startify_bookmarks = [{'v': '~/.config/nvim/init.vim'}, {'t': '~/docs/notes/todo.txt'}, {'n': '~/docs/notes/QuickNote.md'}]
+let g:startify_bookmarks = [{'v': '~/.config/nvim/init.lua'}, {'t': '~/docs/notes/todo.txt'}, {'n': '~/docs/notes/QuickNote.md'}]
 let g:startify_list_order = [
             \ ['   Bookmarks:'],
             \ 'bookmarks',
@@ -697,6 +565,33 @@ let g:startify_custom_header = s:filter_header(startify#fortune#cowsay())
 
 -- {{{ DAP 
 require('dap-python').setup('~/.local/share/virtualenvs/debugpy/bin/python')
+
+local dap = require('dap')
+dap.adapters.firefox = {
+  type = 'executable',
+  command = 'node',
+  args = {os.getenv('HOME') .. '/build/vscode-firefox-debug/dist/adapter.bundle.js'},
+}
+
+dap.configurations.typescript = {
+  {  
+  name = 'Debug with Firefox',
+  type = 'firefox',
+  request = 'attach',
+  -- reAttach = true,
+url = 'http://localhost:3000',
+webRoot = '${workspaceFolder}',
+log= {
+    fileName= "${workspaceFolder}/log.txt",
+    fileLevel= {
+        default= "Debug"
+    }
+}
+  -- firefoxExecutable = '/usr/bin/firefox'
+  }
+}
+dap.configurations.typescriptreact = dap.configurations.typescript
+
 local dap, dapui = require("dap"), require("dapui")
 dapui.setup()
 dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -708,6 +603,11 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
 end
+require("which-key").register({
+    ["<leader>d"] = {
+        name = "+debug",
+    }
+})
 
 vim.keymap.set('n', '<leader>dc', function() require('dap').continue() end, {desc = "DAP continue"})
 vim.keymap.set('n', '<leader>dn', function() require('dap').step_over() end, {desc = "DAP step over"})
@@ -732,6 +632,8 @@ vim.keymap.set('n', '<Leader>ds', function()
 	local widgets = require('dap.ui.widgets')
 	widgets.centered_float(widgets.scopes)
 end, {desc = "DAP scopes"})
+
+
 -- }}}
 
 -- {{{ Plugins
@@ -741,6 +643,11 @@ require('leap').add_default_mappings()
 
 -- {{{ Telescope
 local actions = require('telescope.actions')
+require("which-key").register({
+    ["<leader>t"] = {
+        name = "+telescope",
+    }
+})
 require('telescope').setup{
 defaults = {
     mappings = {
@@ -763,17 +670,27 @@ defaults = {
     }
 }
 
+
+-- remember to edit which-key bindings too!
 vim.cmd([[
 nmap <Leader>; <cmd>Telescope buffers<CR>
 nmap <Leader>f <cmd>Telescope find_files<CR>
 nmap <Leader>F <cmd>Telescope git_files<CR>
 nmap <Leader>' <cmd>Telescope oldfiles<CR>
-nmap <Leader>t <cmd>Telescope current_buffer_tags<CR>
-nmap <Leader>T <cmd>Telescope tags<CR>
 nmap <Leader>p <cmd>Telescope registers<CR>
 map <leader>/ <cmd>Telescope current_buffer_fuzzy_find<CR>
-map <leader><leader>/ <cmd>Telescope live_grep<CR>
 
+nmap <Leader>th <cmd>Telescope oldfiles<CR>
+nmap <Leader>tT <cmd>Telescope tags<CR>
+nmap <Leader>tt <cmd>Telescope lsp_document_symbols<CR>
+nmap <Leader>tq <cmd>Telescope quickfix<CR>
+nmap <Leader>td <cmd>Telescope diagnostics<CR>
+nmap <Leader>tr <cmd>Telescope lsp_references<CR>
+" git
+nmap <Leader>tgc <cmd>Telescope git_commits<CR>
+nmap <Leader>tgs <cmd>Telescope git_status<CR>
+nmap <Leader>tgS <cmd>Telescope git_stash<CR>
+map <leader>t/ <cmd>Telescope live_grep<CR>
 
 function! ListNotes()
 :Telescope find_files search_dirs=['/home/pinusc/docs/notes/']
@@ -800,6 +717,12 @@ require('orgmode').setup({
 })
 -- }}}
 -- }}}
+--
+-- Neovide
+if vim.g.neovide then
+    vim.o.guifont = "GohuFont:h14"
+    vim.g.neovide_scale_factor = 0.5
+end
 
 -- Load other stuff
 
