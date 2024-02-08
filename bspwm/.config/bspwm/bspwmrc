@@ -70,12 +70,12 @@ bspc rule -a Emacs state=tiled
 bspc rule -a Pavucontrol state=floating center=on
 bspc rule -a libreoffice-writer state=tiled follow=on desktop="^5"
 
-bspc rule -a Firefox follow=on desktop="^6"
-bspc rule -a qutebrowser follow=on desktop="^6"
+# bspc rule -a Firefox follow=on desktop="^6"
+# bspc rule -a qutebrowser follow=on desktop="^6"
 
 bspc rule -a gimp state=floating desktop="^1"
 bspc rule -a vlc follow=on desktop="^2"
-bspc rule -a mpv state=floating center=on
+bspc rule -a mpv follow=on desktop="^2"
 bspc rule -a XCalc state=floating center=on
 bspc rule -a Anki state=floating center=on
 bspc rule -a "*:urxvt-quaked" state=floating
@@ -97,7 +97,7 @@ fi
 #=============================== VIDEO SETTINGS ================================
 
 # nvidia-settings --assign CurrentMetaMode="HDMI-0: nvidia-auto-select +1440+0 {ForceFullCompositionPipeline = On}, DVI-I-0: nvidia-auto-select +0+0 {ForceFullCompositionPipeline = On}" &
-picom -bcG --experimental-backends --vsync
+picom --vsync -cb
 dock_handler.sh  # can now automatically infer if docked
 setxkbmap -layout 'us(altgr-intl)'
 
@@ -116,7 +116,7 @@ feh --recursive --randomize --bg-fill /home/pinusc/.wallpaper &
 
 # disable screensaver
 xautolock -time 15 -locker lock &
-redshift -t 6500:2000 &
+redshift -t 6500:2000 -l $(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq -r '"\(.location.lat):\(.location.lng)"') &>~/tmp/redshift.log &
 
 #==================================== APPS =====================================
 clipmenud &
@@ -126,3 +126,4 @@ bspc config -m primary top_padding 55 &
 music_player &
 /usr/lib/kdeconnectd &
 blueman-applet &
+jellyfin-mpv-shim &>~/tmp/jellyfin-mpv-shim.log &
