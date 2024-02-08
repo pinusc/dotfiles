@@ -58,13 +58,15 @@ if [[ "$DOCKED" = 1 ]]; then
                 xrandr --output LVDS1 --right-of DP2
                 ;;
             HDMI2)
-                xrandr --newmode "1366x768"x0.0   69.30  1366 1404 1426 1436  768 771 777 803 -hsync -vsync
-                xrandr --addmode HDMI2 "1366x768"x0.0
-                xrandr --output HDMI2 --right-of LVDS1 --mode "1366x768"x0.0 --gamma 1 --output LVDS1 --primary
+                echo "HDMI2 found"
+                # xrandr --newmode "1366x768"x0.0   69.30  1366 1404 1426 1436  768 771 777 803 -hsync -vsync
+                # xrandr --addmode HDMI2 "1366x768"x0.0
+                # xrandr --output HDMI2 --right-of LVDS1 --mode "1366x768"x0.0 --gamma 1 --output LVDS1 --primary
+                xrandr --output HDMI2 --left-of LVDS1 --mode 1920x1080 --output HDMI2 --primary
                 ;;
             VGA1)
                 echo "VGA"
-                xrandr --output VGA1 --right-of LVDS1 --output LVDS1 --primary
+                xrandr --output VGA1 --left-of LVDS1 --output LVDS1 --primary
                 ;;
         esac
     fi
