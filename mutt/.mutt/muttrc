@@ -25,16 +25,16 @@ set realname="Giuseppe Stelluto"
 set from="giuseppe@gstelluto.com"
 
 folder-hook . set from="giuseppe@gstelluto.com"
-folder-hook . set copy=no
 folder-hook . set record="+gstelluto/sent"
+folder-hook . set copy=yes
 
 # folder-hook +colby* set from="gstell23@colby.edu"
-folder-hook +colby* set from="giuseppe.stelluto@colby.edu"
-folder-hook +colby* set copy=no
-folder-hook +logins* set from="logins@gstelluto.com"
 folder-hook +logins* set copy=yes
+folder-hook +logins* set from="logins@gstelluto.com"
+folder-hook +logins* set record="+logins/sent"
+folder-hook +gstelluto* set copy=yes
 folder-hook +gstelluto* set from="giuseppe@gstelluto.com"
-folder-hook . set copy=no
+folder-hook +gstelluto* set record="+gstelluto/sent"
 
 
 set edit_headers=yes
