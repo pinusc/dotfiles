@@ -48,19 +48,19 @@
     # the top and down respectevly.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    width = 400
-    origin = top-center
+    width = 250
+    origin = top-right
     # offset = 5x62
-    offset = 0x5
+    offset = 5x42
     
     # Shrink window if it's smaller than the width.  Will be ignored if
     # width is 0.
-    shrink = no
+    shrink = yes
     
     # The transparency of the window.  Range: [0; 100].
     # This option will only work if a compositing windowmanager is
     # present (e.g. xcompmgr, compiz, etc.).
-    transparency = 0
+    transparency = 10
     
     # Don't remove messages, if the user is idle (no mouse or keyboard input)
     # for longer than idle_threshold seconds.
@@ -85,7 +85,7 @@
     
     # Should a notification popped up from history be sticky or timeout
     # as if it would normally do.
-    sticky_history = no
+    sticky_history = yes
     
     # Maximum amount of notifications kept in history
     history_length = 20
@@ -104,10 +104,10 @@
     separator_height = 2
     
     # Padding between text and separator.
-    padding = 15
+    padding = 5
     
     # Horizontal padding.
-    horizontal_padding = 15
+    horizontal_padding = 5
     
     # Define a color for the separator.
     # possible values are:
@@ -115,16 +115,16 @@
     #  * foreground: use the same color as the foreground;
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
-    separator_color = frame
+    separator_color = auto
     
     # dmenu path.
     dmenu = /usr/bin/dmenu -p dunst:
     
     # Browser for opening urls in context menu.
-    browser = /usr/bin/firefox -new-tab
+    browser = qutebrowser
 
     # Align icons left/right/off
-    icon_position = off
+    icon_position = right
 
     # Paths to default icons.
     icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
