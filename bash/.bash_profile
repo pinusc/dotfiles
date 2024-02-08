@@ -36,24 +36,24 @@ fi
 
 unset append
 
-declare TMUX
 # safe to start tmux, won't result in a loop
 # because only run on remote interactive login shells
 if [[ -z "$TMUX" ]]; then
+    # send hostname (for tmux & terminal window names)
+    printf '\033]0;%s\007' "$(hostname -s)"
+    printf '\ek%s\e\\' "$(hostname -s)"
+    reset_title () {
+        printf '\033]0;\007'
+        printf '\ek\e\\'
+    }
+    trap reset_title EXIT
+
     if tmux ls; then
-        exec tmux attach
+    	tmux_msg="$(tmux attach)"
     else
-        exec tmux new
+	tmux_msg="$(tmux new)"
     fi
-fi
-
-MOTD="/etc/motd"
-ISSUE="/etc/issue"
-
-if [[ ! -z "$TMUX" ]]; then
-  if [[ -f "$MOTD" ]]; then
-    cat "$MOTD"
-  elif [[ -f "$ISSUE" ]]; then
-    cat "$ISSUE"
-  fi
+    if [[ "$tmux_msg" != "[exited]" ]]; then
+	    exit 0
+    fi
 fi

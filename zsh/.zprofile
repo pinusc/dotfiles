@@ -41,9 +41,18 @@ else
 fi
 
 if [[ "$SESSION_TYPE" = "remote/ssh" && -z "$TMUX" ]]; then 
+    # send window name as hostname (for tmux & terminal window names)
+    printf '\033]0;%s\007' "$(hostname -s)"
+    printf '\ek%s\e\\' "$(hostname -s)"
     if tmux ls; then
-        exec tmux attach
+    	tmux_msg="$(tmux attach)"
     else
-        exec tmux new
+	tmux_msg="$(tmux new)"
+    fi
+    # reset window title
+    printf '\033]0;\007'
+    printf '\ek\e\\'
+    if [[ "$tmux_msg" != "[exited]" ]]; then
+	    exit 0
     fi
 fi
