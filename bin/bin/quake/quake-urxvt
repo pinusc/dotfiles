@@ -2,12 +2,12 @@
 
 IFS='' read -r -d '' helpstring <<EOF
 quake-rxvt: manage quaked windows
-USAGE: quake-rxvt [-e EXEC_COMMAND WMNAME] [WMNAME CREATE_COMMAND]
+USAGE: quake-rxvt [-e exec_command wmname] [wmname create_command]
 
 Args:
-    WMNAME              The X WMNAME of the window to manage
-    CREATE_COMMAND      The command to run to create a window with class WMNAME, taking a WIDFILE as \$1
-    -e EXEC_COMMAND     If supplied, a TERM window executing EXEC_COMMAND will be created
+    wmname              The X wmname of the window to manage
+    create_command      The command to run to create a window with class wmname, taking a WIDFILE as \$1
+    -e exec_command     If supplied, a TERM window executing exec_command will be created
 
 Defaults to creating urxvt windows.
 
@@ -31,15 +31,15 @@ usage() {
 
 parse_params() {
   # default values of variables set from params
-  EXEC_COMMAND=""
-  CREATE_COMMAND=""
+  exec_command=""
+  create_command=""
 
   while :; do
     case "${1-}" in
     -h | --help) usage ;;
     -v | --verbose) set -x ;;
     -e)
-      EXEC_COMMAND="${2-}"
+      exec_command="${2-}"
       shift
       ;;
     -?*) die "Unknown option: $1" ;;
@@ -54,12 +54,12 @@ parse_params() {
   [[ ${#args[@]} -gt 2 ]] && die "Incorrect arguments passed. Try --help"
 
   if [[ "${#args[@]}" -gt 0 ]]; then
-      WMNAME="${args[0]}"
+      wmname="${args[0]}"
       if [[ "${#args[@]}" -eq 2 ]]; then
-          CREATE_COMMAND="${args[1]}"
+          create_command="${args[1]}"
       fi
   fi
-  if [[ -n "$WMNAME" && -z "$EXEC_COMMAND" && -z "$CREATE_COMMAND" ]]; then
+  if [[ -n "$wmname" && -z "$exec_command" && -z "$create_command" ]]; then
       die "Incorrect arguments passed. Try --help"
   fi
 
@@ -68,21 +68,21 @@ parse_params() {
 
 parse_params "$@"
 
-[[ -z "$WMNAME" ]] && WMNAME="quake-tab"
-[[ -z "$CREATE_COMMAND" ]] && CREATE_COMMAND="quake-urxvt-newtab"
-WIDFILE="/tmp/quake-tabbed-$WMNAME.wid"
+[[ -z "$wmname" ]] && wmname="quake-tab"
+[[ -z "$create_command" ]] && create_command="quake-urxvt-newtab"
+WIDFILE="/tmp/quake-tabbed-$wmname.wid"
 echo "$WIDFILE"
-wid=$(xdotool search --classname "$WMNAME")
+wid=$(xdotool search --classname "$wmname")
 
 GEOMETRY=1366x768
 
 if [[ -z "$wid" ]]; then
-    wid=$(tabbed -n "$WMNAME" -d -g "$GEOMETRY" )
+    wid=$(tabbed -n "$wmname" -d -g "$GEOMETRY" )
     echo "$wid" > "$WIDFILE"
-    if [[ -n "$EXEC_COMMAND" ]]; then
-        "$CREATE_COMMAND" "$WIDFILE" "$EXEC_COMMAND"
+    if [[ -n "$exec_command" ]]; then
+        "$create_command" "$WIDFILE" "$exec_command"
     else
-        "$CREATE_COMMAND" "$WIDFILE"
+        "$create_command" "$WIDFILE"
     fi
     exit 0
 fi
@@ -93,9 +93,9 @@ state="$(xprop -id "$wid" | awk -F: '/window state/{print $2;}' \
 echo $state
 
 if [ "$state" = "normal" ]; then
-    xdotool search --classname "$WMNAME" windowunmap
+    xdotool search --classname "$wmname" windowunmap
 elif [ "$state" = iconic ]; then
     bspc node "$wid" -d focused
 else
-    xdotool search --classname "$WMNAME" windowmap
+    xdotool search --classname "$wmname" windowmap
 fi
