@@ -1,0 +1,11 @@
+[Unit]
+Description=Syncthing Conflict Monitor
+After=network.target
+
+[Service]
+; Environment="AUTOSSH_GATETIME=0"
+Type=oneshot
+ExecStart=%h/bin/util/syncthing_conflict_monitor.sh --config-file %E/syncthing/config.xml
+
+[Install]
+WantedBy=multi-user.target
