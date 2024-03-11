@@ -35,21 +35,3 @@ type = "caldav"
 url = "https://dav.gstelluto.com/radicale/pinusc/"
 username = "pinusc"
 password.fetch = ["command", "sh", "-c", "pass servers/dav.gstelluto.com | head -n  1"]
-
-[pair gcal]
-a = "gcal_local"
-b = "gcal_remote"
-collections = ["from a", "from b"]
-
-[storage gcal_local]
-type = "filesystem"
-path = "~/.calendar-gcal/"
-fileext = ".ics"
-
-[storage gcal_remote]
-type = "caldav"
-# We can simplify this URL here as well. In theory it shouldn't matter.
-url = "https://www.google.com/calendar/dav/gstell23@colby.edu/events"
-username = "gstell23@colby.edu"
-password.fetch = ["command", "sh", "-c", "pass school/colby.edu | head -n  1"]
-
