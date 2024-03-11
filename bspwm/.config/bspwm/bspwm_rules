@@ -1,0 +1,1 @@
+bspc rule --add Blueman-manager state=floating center
