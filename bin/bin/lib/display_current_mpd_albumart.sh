@@ -23,14 +23,22 @@ do_display() {
         MUSIC_ROOT="$HOME/music"
         song_path="$MUSIC_ROOT/$(mpc -f '%file%' | head -n 1)"
         album_path="${song_path%/*}"
-        echo "$album_path"
-        if [[ -e "${album_path}/cover.jpg" ]]; then
-            cp "$album_path/cover.jpg" "$fname"
+        echo "Album path: $album_path"
+        images_in_albumdir="$(find "$album_path" -name '*.jp*g' -o -name '*.png')"
+        cover_in_albumdir="$(find "$album_path" -name 'cover.jp*g' -o -name 'cover.png')"
+        if [[ -n "$cover_in_albumdir" ]]; then
+            cp "$(echo "$cover_in_albumdir" | head -n 1)" "$fname"
+        elif [[ -n "$images_in_albumdir" ]]; then
+            # hope for the best, the image is not named "cover" but hopefully the first
+            # image in the directory is an album cover
+            cp "$(echo "$images_in_albumdir" | head -n 1)" "$fname"
         else
             echo "$artist" 
             echo "$album"
             echo "$stub"
-            ~/bin/panel/dzen2/scripts/cover_fetcher "$artist" "$album" "$stub" &> /dev/null
+            echo "############################################"
+            echo "############################################"
+            ~/bin/panel/dzen2/scripts/cover_fetcher "$artist" "$album" "$stub" # &> /dev/null
         fi
 
         # if [[ ! -e "$fname" ]]; then
