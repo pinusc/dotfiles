@@ -1,5 +1,5 @@
 # to update git_plugins.sh, run:
-# antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
+# antidote bundle <~/.zsh_plugins.txt >~/.zsh_plugins.zsh
 # djui/alias-tips
 robbyrussell/oh-my-zsh path:lib/git.zsh
 robbyrussell/oh-my-zsh path:plugins/git
@@ -12,5 +12,5 @@ changyuheng/zsh-interactive-cd
 /home/pinusc/builds/clean
 zsh-users/zsh-history-substring-search
 ptavares/zsh-direnv
-jreese/zsh-titles
+# jreese/zsh-titles
 z-shell/F-Sy-H
