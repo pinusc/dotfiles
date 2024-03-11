@@ -48,6 +48,8 @@ alias usysr="systemctl --user restart"
 alias usyse="systemctl --user enable --now"
 alias usys="systemctl --user"
 
+alias ujoxe="journalctl -e --user"
+alias ujoxeu="journalctl -e --user --unit"
 alias joxe="sudo journalctl -xe"
 alias joxeu="sudo journalctl -xe --unit"
 
