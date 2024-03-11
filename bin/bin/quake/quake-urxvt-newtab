@@ -5,7 +5,7 @@ if [ -z "$WIDFILE" ]; then
     WIDFILE="/tmp/quake-tabbed-quake-tab.wid"
 fi
 wid=$(<"$WIDFILE")
-xdotool windowmap "$(wid)"  # make sure window is visible
+#xdotool windowmap "$(wid)"  # make sure window is visible
 to_exec="$2"
 
 color="$(grep background "$HOME/.Xresources" | cut -d'#' -f2)"

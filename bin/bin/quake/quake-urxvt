@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 IFS='' read -r -d '' helpstring <<EOF
 quake-rxvt: manage quaked windows
@@ -66,17 +67,41 @@ parse_params() {
   return 0
 }
 
+hide_window() {
+    wid="$1"
+    if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+        xdotool windowunmap "$wid"
+    elif [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
+        hyprctl dispatch movetoworkspacesilent 88,pid:$wid
+    fi
+}
+
+show_window() {
+    wid="$1"
+    if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+        xdotool windowmap "$wid"
+    elif [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
+        current_workspace=$(hyprctl activeworkspace -j | jq '.id')	
+        hyprctl dispatch movetoworkspacesilent $current_workspace,pid:$pid
+    fi
+}
+
+    # pid=$(tail -1 $stack_file && sed -i '$d' $stack_file)
+    # [ -z $pid ] && exit
+
+
 parse_params "$@"
+
+GEOMETRY=1366x768
 
 [[ -z "$wmname" ]] && wmname="quake-tab"
 [[ -z "$create_command" ]] && create_command="quake-urxvt-newtab"
 WIDFILE="/tmp/quake-tabbed-$wmname.wid"
+wid=""
 echo "$WIDFILE"
-wid=$(xdotool search --classname "$wmname")
-
-GEOMETRY=1366x768
-
-if [[ -z "$wid" ]]; then
+if [ -f "$WIDFILE" ]; then
+    wid="$(cat "$WIDFILE")"
+else
     wid=$(tabbed -n "$wmname" -d -g "$GEOMETRY" )
     echo "$wid" > "$WIDFILE"
     if [[ -n "$exec_command" ]]; then
@@ -87,15 +112,16 @@ if [[ -z "$wid" ]]; then
     exit 0
 fi
 
+
 state="$(xprop -id "$wid" | awk -F: '/window state/{print $2;}' \
     | tr -d ' ' | tr '[:upper:]' '[:lower:]')" 
 
 echo $state
 
 if [ "$state" = "normal" ]; then
-    xdotool search --classname "$wmname" windowunmap
+    hide_window "$wid"
 elif [ "$state" = iconic ]; then
     bspc node "$wid" -d focused
 else
-    xdotool search --classname "$wmname" windowmap
+    show_window "$wid"
 fi
