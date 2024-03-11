@@ -77,7 +77,7 @@ hdr_order from: to: cc: date: subject:  # and in this order
 # Account Settings -----------------------------------
 
 # Default inbox.
-set spoolfile = "+colby/inbox"
+set spoolfile = "+logins/inbox"
 # virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
 # set virtual_spoolfile=yes
 # set folder=~/.notmuch
@@ -106,30 +106,26 @@ macro index \Cl "<limit>~A<enter>"
 # Alternate email addresses.
 alternates giuseppe@gstelluto.com giuseppe.stelluto@gmail.com gstell@protonmail.com gstelluto@uwcchina.org logins@gstelluto.com gstell23@colby.edu giuseppe.stelluto@colby.edu
 
-mailboxes  +colby \
+mailboxes  +gstelluto \
+           +gstelluto/inbox \
+           +gstelluto/sent \
+           +logins \
+           +logins/inbox \
+           +logins/archive \
+           +gmail \
+           +gmail/inbox \
+           +gmail/sent \
+           +gmail/spam \
+           +local \
+           +colby \
            +colby/inbox \
            +colby/logins \
            +colby/classes \
            +colby/gdrive \
            +colby/sent \
            +colby/spam \
-           +gstelluto \
-           +gstelluto/inbox \
-           +logins \
-           +logins/inbox \
-           +logins/archive \
            +protonmail-gstell \
-           +protonmail-gstell/inbox \
-           +bak-relay \
-           +bak-relay/logins \
-           +bak-relay/giuseppe \
-           +local \
-           +gmail \
-           +gmail/inbox \
-           +gmail/sent \
-           +gmail/spam \
-           +citywalk \
-           +citywalk/inbox
+           +protonmail-gstell/inbox
 
 # by default, deleted mail will go in ~/mail/trash
 folder-hook . set trash = +trash
@@ -218,7 +214,6 @@ score '~f colbynow@colby.edu' -10
 score '~f nobody@colby.edu' -10
 
 folder-hook . "macro index S '<shell-escape>mbsync -a; notmuch new<enter>'"
-folder-hook +colby* "macro index S '<shell-escape>mbsync colby; notmuch new<enter>'"
 folder-hook +gstelluto* "macro index S '<shell-escape>mbsync gstelluto; notmuch new<enter>'"
 folder-hook +logins* "macro index S '<shell-escape>mbsync logins; notmuch new<enter>'"
 folder-hook +gmail* "macro index S '<shell-escape>mbsync gmail; notmuch new<enter>'"
