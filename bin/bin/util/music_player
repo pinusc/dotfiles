@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# kill zombie processes...
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
 DESKTOP="^3"
 MAX_WIDTH=960
 HEIGHT=360
@@ -27,21 +30,21 @@ if [[ "$1" -ne "-nk" ]]; then
     pkill ${VISUALIZER_COMMAND% *}
 fi
 
-bspc rule -a URxvt:"$PLAYER_NAME" -o desktop=$DESKTOP state=floating;
-urxvt -name "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &
+bspc rule -a "$PLAYER_NAME" -o desktop=$DESKTOP state=floating;
+st -c "$PLAYER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$PLAYER_COMMAND &
 
 sleep 0.5
-bspc rule -a URxvt:"$VISUALIZER_NAME" -o desktop=$DESKTOP state=floating split_dir=south;
-urxvt -name "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
+bspc rule -a "$VISUALIZER_NAME" -o desktop=$DESKTOP state=floating split_dir=south;
+st -c "$VISUALIZER_NAME" -e zsh -c 'source /home/pinusc/.zshrc;'$VISUALIZER_COMMAND &
 
 bspc rule -a Sxiv:$ALBUMART_NAME -o desktop=$DESKTOP state=floating split_dir=south;
 sxiv -s f -b -N "$ALBUMART_NAME" "$HOME/.cache/covers/current" &
 display_current_mpd_albumart.sh -c &
 
 sleep 0.5;
-xdotool search --classname "$PLAYER_NAME" windowsize $MAX_WIDTH $HEIGHT
-xdotool search --classname "$PLAYER_NAME" windowmove $x1 $y1
-xdotool search --classname "$VISUALIZER_NAME" windowsize $VISUALIZER_WIDTH $HEIGHT
-xdotool search --classname "$VISUALIZER_NAME" windowmove $(( x1 + ALBUMART_WIDTH + GAP)) $(( y1 + HEIGHT + GAP ))
+xdotool search --class "$PLAYER_NAME" windowsize $MAX_WIDTH $HEIGHT
+xdotool search --class "$PLAYER_NAME" windowmove $x1 $y1
+xdotool search --class "$VISUALIZER_NAME" windowsize $VISUALIZER_WIDTH $HEIGHT
+xdotool search --class "$VISUALIZER_NAME" windowmove $(( x1 + ALBUMART_WIDTH + GAP)) $(( y1 + HEIGHT + GAP ))
 xdotool search --classname "$ALBUMART_NAME" windowsize $ALBUMART_WIDTH $HEIGHT
 xdotool search --classname "$ALBUMART_NAME" windowmove $x1 $(( y1 + HEIGHT + GAP ))
