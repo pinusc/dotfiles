@@ -186,6 +186,8 @@ bind pager G  bottom
 # bind pager gk noop
 # bind pager gj noop
 bind index g noop
+bind index gg first-entry
+bind index G last-entry
 bind index gj next-entry
 bind index gk previous-entry
 bind index \cu half-up
@@ -193,6 +195,7 @@ bind index \cd half-down
 
 macro index gc "<change-folder> =colby/inbox<enter>"
 macro index gl "<change-folder> =logins/inbox<enter>"
+macro index gs "<change-folder> =gstelluto/inbox<enter>"
 macro index gm "<change-folder> =gmail/inbox<enter>"
 
 bind pager R  group-reply
