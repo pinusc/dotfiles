@@ -65,6 +65,17 @@ bindkey -a 'H' run-help # press H in command mode to see manpage
 bindkey '^R' history-incremental-search-backward
 bindkey '^e' push-line-or-edit
 
+# === make <C-L> scroll instead of clearing
+function scroll-top() {
+    local esc
+    local -i ROW COL OFFSET
+    IFS='[;' read -sdR $'esc?\e[6n' ROW COL <$TTY
+    OFFSET="${#${(@Af)PREBUFFER%$'\n'}}"+"${#${(@Af)LBUFFER:-1}}"
+    (( ROW-OFFSET )) && printf '\e[%1$dS\e[%1$dA' ROW-OFFSET
+    zle redisplay
+}
+zle -N clear-screen scroll-top
+
 spaces=$(printf " %.0s" {1..$(( (COLUMNS - 40) / 2 ))})
 if which fortune &>/dev/null && which cowsay &>/dev/null; then
     # must run in separate shell so that we hide job control's output
