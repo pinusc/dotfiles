@@ -23,10 +23,10 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 #export PATH="$HOME/bin:/home/pinusc/.gem/ruby/2.2.0/bin:$PATH"
 # export PATH="/usr/local/heroku/bin:$HOME/.dotfiles:$PATH"
 
-if [[ ! $DISPLAY && XDG_VTNR -eq 3 ]]; then
+if [[ ! $DISPLAY && XDG_VTNR -eq 1 ]]; then
     # logverbose 20 is useful for detecting Modelines
     # startx -logverbose 100 &> X.log
-    exec startx
+    exec Hyprland
 fi
 
 # start tmux IFF the shell is remote 
