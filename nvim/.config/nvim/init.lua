@@ -191,8 +191,19 @@ require("lazy").setup({
     "guns/vim-sexp", -- { 'for': 'clojure" }
     "tpope/vim-sexp-mappings-for-regular-people", -- { 'for': 'clojure" }
     -- git
-    "tpope/vim-fugitive",
+    {
+        "NeogitOrg/neogit",
+        dependencies = {
+            "nvim-lua/plenary.nvim",         -- required
+            "sindrets/diffview.nvim",        -- optional - Diff integration
+
+            -- Only one of these is needed, not both.
+            "nvim-telescope/telescope.nvim", -- optional
+        },
+        config = true
+    },
     "airblade/vim-gitgutter",
+
     -- snippets
     
     -- ultisnips has a performance issue with nvim-cmp
@@ -352,6 +363,14 @@ vim.g.netrw_winsize = 15
 
 -- {{{ Statusline 
 vim.cmd([[
+  function! GitBranch()
+    return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+  endfunction
+  
+  function! StatuslineGit()
+    let l:branchname = GitBranch()
+    return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+  endfunction
   set laststatus=2
   set statusline=
   " set statusline+=\ %*
@@ -362,7 +381,7 @@ vim.cmd([[
   set statusline+=%=
   " set statusline+=\ %{LinterStatus()}
   set statusline+=\ [%l:%c\ %p%%]
-  set statusline+=\ %{FugitiveHead()}
+  set statusline+=\ %{StatuslineGit()}
 ]])
 
 -- }}}
