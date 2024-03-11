@@ -493,3 +493,30 @@ wormhole-qr () {
 }
 
 alias gdeploy="~/builds/gdeploy/main.js"
+
+chatblade() {
+  if [[ -z "$OPENAI_API_KEY" ]]; then
+    if [[ -f "$HOME/.local/share/OPENAI_API_KEY" ]]; then
+      export OPENAI_API_KEY=$(cat "$HOME/.local/share/OPENAI_API_KEY")
+    else
+      echo "ERROR: OPENAI_API_KEY file not found."
+      return 1
+    fi
+  fi
+                                                                           
+  /usr/bin/chatblade "$@"                                                  
+}
+
+alias gpt=" chatblade"
+alias gptc="gpt --last"  # continue
+alias gpti="gpt --interactive"
+alias gptic="gpt --interactive --last"
+alias gpte="gpt --extract"
+alias gptce="gpt --last --extract"
+
+alias gpt4=" chatblade -c 4t"
+alias gpt4c="gpt4 --last"  # continue
+alias gpt4i="gpt4 --interactive"
+alias gpt4e="gpt4 --extract"
+alias gpt4ic="gpt4 --interactive --last"
+alias gpt4ce="gpt4 --last --extract"
