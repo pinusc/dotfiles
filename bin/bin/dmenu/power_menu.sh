@@ -22,7 +22,11 @@ if [[ "${command}" = "lock" ]]; then
     lock
 elif [[ "${command}" = "screen-off" ]]; then
     sleep 1
-    xset dpms force off
+    if [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
+        hyprctl dispatch dpms off
+    else
+        xset dpms force off
+    fi
 else
     systemctl $command
 fi
