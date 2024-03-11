@@ -96,11 +96,14 @@ if [ "$SHELL" = /bin/zsh ]; then
         alias -g BB="| $PAGER --style auto"
         alias -g BBC="--color=always | $PAGER --style auto"
         alias -g BBA="2>&1 | $PAGER --style auto"
+        alias -g JQ="| jq | $PAGER --language=json"
+        alias -g LLJ="| $PAGER --language=json"
     else
         alias -g LL="| $PAGER"
         alias -g LLH="--help | $PAGER"
         alias -g LLC="--color=always | $PAGER"
         alias -g LLA="2>&1 | $PAGER"
+        alias -g JQ="| jq | $PAGER"
     fi
     alias -g G="| grep --ignore-case --extended-regexp"
     alias -g NNNSEL='$(nnn -p -)'
