@@ -1,4 +1,4 @@
-# vim ft=zsh
+# vim: ft=zsh
 # leave one line blank for compatibility
 alias upfont="sudo fc-cache -fv"
 alias cal="cal -m" # Monday it's always the first day of the week here!
