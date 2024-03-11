@@ -537,7 +537,7 @@ vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {
 require('orgmode').setup_ts_grammar()
 
 require'nvim-treesitter.configs'.setup {
-    ensure_installed = {"c", "latex", "vim", "lua", "html", "python", "clojure"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    ensure_installed = {"c", "latex", "vim", "lua", "html", "python", "clojure", "markdown", "bash", "scheme"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     highlight = {
         enable = true,              -- false will disable the whole extension
         disable = { "c", "rust", "markdown", "tex", "latex" },  -- list of language that will be disabled
