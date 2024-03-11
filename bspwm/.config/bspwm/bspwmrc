@@ -65,7 +65,7 @@ bspc config urgent_border_color $c_red
 bspc config pointer-modifier mod4
 
 # Rules
-bspc rule -a sxiv state=floating center=on
+bspc rule -a Nsxiv state=floating center=on layer=above
 bspc rule -a Emacs state=tiled
 bspc rule -a Pavucontrol state=floating center=on
 bspc rule -a libreoffice-writer state=tiled follow=on desktop="^5"
