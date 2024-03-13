@@ -114,4 +114,581 @@ if os.path.exists('/home/pinusc/.local/share/colors'):
     c.colors.tabs.pinned.selected.even.fg = colors['base00']
     c.colors.tabs.pinned.selected.even.bg = colors['base0D']
 
-# config.source('qutenyan/nyan.py')
+
+# Aliases for commands. The keys of the given dictionary are the
+# aliases, while the values are the commands they map to.
+# Type: Dict
+c.aliases = {'q': 'close', 'qa': 'quit', 'w': 'session-save --current --only-active-window', 'wq': 'quit --save', 'wqa': 'quit --save'}
+
+# Load a restored tab as soon as it takes focus.
+# Type: Bool
+c.session.lazy_restore = True
+
+# Always restore open sites when qutebrowser is reopened. Without this
+# option set, `:wq` (`:quit --save`) needs to be used to save open tabs
+# (and restore them), while quitting qutebrowser in any other way will
+# not save/restore the session. By default, this will save to the
+# session which was last loaded. This behavior can be customized via the
+# `session.default_name` setting.
+# Type: Bool
+c.auto_save.session = True
+
+# Automatically start playing `<video>` elements.
+# Type: Bool
+c.content.autoplay = False
+
+# Allow websites to read canvas elements. Note this is needed for some
+# websites to work properly. On QtWebEngine < 6.6, this setting requires
+# a restart and does not support URL patterns, only the global setting
+# is applied.
+# Type: Bool
+c.content.canvas_reading = False
+
+# Which cookies to accept. With QtWebEngine, this setting also controls
+# other features with tracking capabilities similar to those of cookies;
+# including IndexedDB, DOM storage, filesystem API, service workers, and
+# AppCache. Note that with QtWebKit, only `all` and `never` are
+# supported as per-domain values. Setting `no-3rdparty` or `no-
+# unknown-3rdparty` per-domain on QtWebKit will have the same effect as
+# `all`. If this setting is used with URL patterns, the pattern gets
+# applied to the origin/first party URL of the page making the request,
+# not the request URL. With QtWebEngine 5.15.0+, paths will be stripped
+# from URLs, so URL patterns using paths will not match. With
+# QtWebEngine 5.15.2+, subdomains are additionally stripped as well, so
+# you will typically need to set this setting for `example.com` when the
+# cookie is set on `somesubdomain.example.com` for it to work properly.
+# To debug issues with this setting, start qutebrowser with `--debug
+# --logfilter network --debug-flag log-cookies` which will show all
+# cookies being set.
+# Type: String
+# Valid values:
+#   - all: Accept all cookies.
+#   - no-3rdparty: Accept cookies from the same origin only. This is known to break some sites, such as GMail.
+#   - no-unknown-3rdparty: Accept cookies from the same origin only, unless a cookie is already set for the domain. On QtWebEngine, this is the same as no-3rdparty.
+#   - never: Don't accept cookies at all.
+c.content.cookies.accept = 'no-3rdparty'
+
+# Store cookies.
+# Type: Bool
+c.content.cookies.store = True
+
+
+# Value to send in the `Accept-Language` header. Note that the value
+# read from JavaScript is always the global value.
+# Type: String
+c.content.headers.accept_language = 'en-US,en;q=0.5'
+
+# Value to send in the `DNT` header. When this is set to true,
+# qutebrowser asks websites to not track your identity. If set to null,
+# the DNT header is not sent at all.
+# Type: Bool
+c.content.headers.do_not_track = True
+
+# User agent to send.  The following placeholders are defined:  *
+# `{os_info}`: Something like "X11; Linux x86_64". * `{webkit_version}`:
+# The underlying WebKit version (set to a fixed value   with
+# QtWebEngine). * `{qt_key}`: "Qt" for QtWebKit, "QtWebEngine" for
+# QtWebEngine. * `{qt_version}`: The underlying Qt version. *
+# `{upstream_browser_key}`: "Version" for QtWebKit, "Chrome" for
+# QtWebEngine. * `{upstream_browser_version}`: The corresponding
+# Safari/Chrome version. * `{qutebrowser_version}`: The currently
+# running qutebrowser version.  The default value is equal to the
+# unchanged user agent of QtWebKit/QtWebEngine.  Note that the value
+# read from JavaScript is always the global value. With QtWebEngine
+# between 5.12 and 5.14 (inclusive), changing the value exposed to
+# JavaScript requires a restart.
+# Type: FormatString
+c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
+
+# Enable the ad/host blocker
+# Type: Bool
+c.content.blocking.enabled = True
+
+# List of URLs to host blocklists for the host blocker.  Only used when
+# the simple host-blocker is used (see `content.blocking.method`).  The
+# file can be in one of the following formats:  - An `/etc/hosts`-like
+# file - One host per line - A zip-file of any of the above, with either
+# only one file, or a file   named `hosts` (with any extension).  It's
+# also possible to add a local file or directory via a `file://` URL. In
+# case of a directory, all files in the directory are read as adblock
+# lists.  The file `~/.config/qutebrowser/blocked-hosts` is always read
+# if it exists.
+# Type: List of Url
+c.content.blocking.hosts.lists = ['https://easylist.to/easylist/easylist.txt', 'https://easylist.to/easylist/easyprivacy.txt', 'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt', 'https://secure.fanboy.co.nz/fanboy-annoyance.txt', 'https://easylist.to/easylist/fanboy-social.txt', 'https://easylist-downloads.adblockplus.org/easylistitaly.txt']
+
+# Which method of blocking ads should be used.  Support for Adblock Plus
+# (ABP) syntax blocklists using Brave's Rust library requires the
+# `adblock` Python package to be installed, which is an optional
+# dependency of qutebrowser. It is required when either `adblock` or
+# `both` are selected.
+# Type: String
+# Valid values:
+#   - auto: Use Brave's ABP-style adblocker if available, host blocking otherwise
+#   - adblock: Use Brave's ABP-style adblocker
+#   - hosts: Use hosts blocking
+#   - both: Use both hosts blocking and Brave's ABP-style adblocker
+c.content.blocking.method = 'adblock'
+
+# Allow JavaScript to read from or write to the clipboard. With
+# QtWebEngine, writing the clipboard as response to a user interaction
+# is always allowed.
+# Type: String
+# Valid values:
+#   - none: Disable access to clipboard.
+#   - access: Allow reading from and writing to the clipboard.
+#   - access-paste: Allow accessing the clipboard and pasting clipboard content.
+c.content.javascript.clipboard = 'access'
+
+# Allow JavaScript to open new tabs without user interaction.
+# Type: Bool
+c.content.javascript.can_open_tabs_automatically = True
+
+# Enable JavaScript.
+# Type: Bool
+c.content.javascript.enabled = False
+
+# Allow locally loaded documents to access remote URLs.
+# Type: Bool
+c.content.local_content_can_access_remote_urls = True
+
+# Allow websites to record audio.
+# Type: BoolAsk
+# Valid values:
+#   - true
+#   - false
+#   - ask
+c.content.media.audio_capture = 'ask'
+
+# Allow websites to record video.
+# Type: BoolAsk
+# Valid values:
+#   - true
+#   - false
+#   - ask
+c.content.media.video_capture = 'ask'
+
+
+# Allow websites to show notifications.
+# Type: BoolAsk
+# Valid values:
+#   - true
+#   - false
+#   - ask
+c.content.notifications.enabled = 'ask'
+
+# What notification presenter to use for web notifications. Note that
+# not all implementations support all features of notifications: - The
+# `qt` and `systray` options only support showing one notification at
+# the time   and ignore the `tag` option to replace existing
+# notifications. - The `herbe` option only supports showing one
+# notification at the time and doesn't   show icons. - The `messages`
+# option doesn't show icons and doesn't support the `click` and
+# `close` events.
+# Type: String
+# Valid values:
+#   - auto: Tries `libnotify`, `systray` and `messages`, uses the first one available without showing error messages.
+#   - qt: Use Qt's native notification presenter, based on a system tray icon. Switching from or to this value requires a restart of qutebrowser.
+#   - libnotify: Shows messages via DBus in a libnotify-compatible way. If DBus isn't available, falls back to `systray` or `messages`, but shows an error message.
+#   - systray: Use a notification presenter based on a systray icon. Falls back to `libnotify` or `messages` if not systray is available. This is a reimplementation of the `qt` setting value, but with the possibility to switch to it at runtime.
+#   - messages: Show notifications as qutebrowser messages. Most notification features aren't available.
+#   - herbe: (experimental!) Show notifications using herbe (github.com/dudik/herbe). Most notification features aren't available.
+c.content.notifications.presenter = 'auto'
+
+# Display PDF files via PDF.js in the browser without showing a download
+# prompt. Note that the files can still be downloaded by clicking the
+# download button in the pdf.js viewer. With this set to `false`, the
+# `:prompt-open-download --pdfjs` command (bound to `<Ctrl-p>` by
+# default) can be used in the download prompt.
+# Type: Bool
+c.content.pdfjs = False
+
+# Enable plugins in Web pages.
+# Type: Bool
+c.content.plugins = True
+
+# Proxy to use. In addition to the listed values, you can use a
+# `socks://...` or `http://...` URL. Note that with QtWebEngine, it will
+# take a couple of seconds until the change is applied, if this value is
+# changed at runtime. Authentication for SOCKS proxies isn't supported
+# due to Chromium limitations.
+# Type: Proxy
+# Valid values:
+#   - system: Use the system wide proxy.
+#   - none: Don't use any proxy
+c.content.proxy = 'none'
+
+# List of user stylesheet filenames to use.
+# Type: List of File, or File
+c.content.user_stylesheets = []
+
+# Enable WebGL.
+# Type: Bool
+c.content.webgl = True
+
+# Directory to save downloads to. If unset, a sensible OS-specific
+# default is used.
+# Type: Directory
+c.downloads.location.directory = '~/downloads'
+
+# Remember the last used download directory.
+# Type: Bool
+c.downloads.location.remember = True
+
+# What to display in the download filename input.
+# Type: String
+# Valid values:
+#   - path: Show only the download path.
+#   - filename: Show only download filename.
+#   - both: Show download path and filename.
+c.downloads.location.suggestion = 'both'
+
+# Which categories to show (in which order) in the :open completion.
+# Type: FlagList
+# Valid values:
+#   - searchengines
+#   - quickmarks
+#   - bookmarks
+#   - history
+#   - filesystem
+c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history']
+
+# Default program used to open downloads. If null, the default internal
+# handler is used. Any `{}` in the string will be expanded to the
+# filename, else the filename will be appended.
+# Type: String
+c.downloads.open_dispatcher = 'xdg-open'
+
+# Duration (in milliseconds) to wait before removing finished downloads.
+# If set to -1, downloads are never removed.
+# Type: Int
+c.downloads.remove_finished = 30000
+
+# Editor (and arguments) to use for the `edit-*` commands. The following
+# placeholders are defined:  * `{file}`: Filename of the file to be
+# edited. * `{line}`: Line in which the caret is found in the text. *
+# `{column}`: Column in which the caret is found in the text. *
+# `{line0}`: Same as `{line}`, but starting from index 0. * `{column0}`:
+# Same as `{column}`, but starting from index 0.
+# Type: ShellCommand
+c.editor.command = ['st', '-e', 'sh', '-c', 'nvim {file}']
+
+# Handler for selecting file(s) in forms. If `external`, then the
+# commands specified by `fileselect.single_file.command`,
+# `fileselect.multiple_files.command` and `fileselect.folder.command`
+# are used to select one file, multiple files, and folders,
+# respectively.
+# Type: String
+# Valid values:
+#   - default: Use the default file selector.
+#   - external: Use an external command.
+c.fileselect.handler = 'external'
+
+# Command (and arguments) to use for selecting a single file in forms.
+# The command should write the selected file path to the specified file
+# or stdout. The following placeholders are defined: * `{}`: Filename of
+# the file to be written to. If not contained in any argument, the
+# standard output of the command is read instead.
+# Type: ShellCommand
+c.fileselect.single_file.command = ['foot', '-e', 'nnn', '-p', '{}']
+
+# Command (and arguments) to use for selecting multiple files in forms.
+# The command should write the selected file paths to the specified file
+# or to stdout, separated by newlines. The following placeholders are
+# defined: * `{}`: Filename of the file to be written to. If not
+# contained in any argument, the   standard output of the command is
+# read instead.
+# Type: ShellCommand
+c.fileselect.multiple_files.command = ['st', '-e', 'nnn', '-p', '{}']
+
+# When a hint can be automatically followed without pressing Enter.
+# Type: String
+# Valid values:
+#   - always: Auto-follow whenever there is only a single hint on a page.
+#   - unique-match: Auto-follow whenever there is a unique non-empty match in either the hint string (word mode) or filter (number mode).
+#   - full-match: Follow the hint when the user typed the whole hint (letter, word or number mode) or the element's text (only in number mode).
+#   - never: The user will always need to press Enter to follow a hint.
+c.hints.auto_follow = 'unique-match'
+
+# Duration (in milliseconds) to ignore normal-mode key bindings after a
+# successful auto-follow.
+# Type: Int
+c.hints.auto_follow_timeout = 0
+
+# Mode to use for hints.
+# Type: String
+# Valid values:
+#   - number: Use numeric hints. (In this mode you can also type letters from the hinted element to filter and reduce the number of elements that are hinted.)
+#   - letter: Use the characters in the `hints.chars` setting.
+#   - word: Use hints words based on the html elements and the extra words.
+c.hints.mode = 'letter'
+
+# Enable Opera-like mouse rocker gestures. This disables the context
+# menu.
+# Type: Bool
+c.input.mouse.rocker_gestures = True
+
+# Position of the status bar.
+# Type: VerticalPosition
+# Valid values:
+#   - top
+#   - bottom
+c.statusbar.position = 'top'
+
+# Open new tabs (middleclick/ctrl+click) in the background.
+# Type: Bool
+c.tabs.background = True
+
+# Position of new tabs opened from another tab. See
+# `tabs.new_position.stacking` for controlling stacking behavior.
+# Type: NewTabPosition
+# Valid values:
+#   - prev: Before the current tab.
+#   - next: After the current tab.
+#   - first: At the beginning.
+#   - last: At the end.
+c.tabs.new_position.related = 'next'
+
+# Padding (in pixels) around text for tabs.
+# Type: Padding
+c.tabs.padding = {'bottom': 0, 'left': 5, 'right': 5, 'top': 0}
+
+# Position of the tab bar.
+# Type: Position
+# Valid values:
+#   - top
+#   - bottom
+#   - left
+#   - right
+c.tabs.position = 'left'
+
+# When to show the tab bar.
+# Type: String
+# Valid values:
+#   - always: Always show the tab bar.
+#   - never: Always hide the tab bar.
+#   - multiple: Hide the tab bar if only one tab is open.
+#   - switching: Show the tab bar when switching tabs.
+c.tabs.show = 'always'
+
+# Alignment of the text inside of tabs.
+# Type: TextAlignment
+# Valid values:
+#   - left
+#   - right
+#   - center
+c.tabs.title.alignment = 'left'
+
+# Position of ellipsis in truncated title of tabs.
+# Type: ElidePosition
+# Valid values:
+#   - left
+#   - right
+#   - middle
+#   - none
+c.tabs.title.elide = 'none'
+
+# Format to use for the tab title. The following placeholders are
+# defined:  * `{perc}`: Percentage as a string like `[10%]`. *
+# `{collapsed}`: If children tabs are hidden, the string `[...]`, empty
+# otherwise * `{tree}`: The ASCII tree prefix of current tab. *
+# `{perc_raw}`: Raw percentage, e.g. `10`. * `{current_title}`: Title of
+# the current web page. * `{title_sep}`: The string `" - "` if a title
+# is set, empty otherwise. * `{index}`: Index of this tab. *
+# `{aligned_index}`: Index of this tab padded with spaces to have the
+# same   width. * `{relative_index}`: Index of this tab relative to the
+# current tab. * `{id}`: Internal tab ID of this tab. * `{scroll_pos}`:
+# Page scroll position. * `{host}`: Host of the current web page. *
+# `{backend}`: Either `webkit` or `webengine` * `{private}`: Indicates
+# when private mode is enabled. * `{current_url}`: URL of the current
+# web page. * `{protocol}`: Protocol (http/https/...) of the current web
+# page. * `{audio}`: Indicator for audio/mute status.
+# Type: FormatString
+c.tabs.title.format = '{tree}{audio}{collapsed}{index}: {current_title}'
+
+# Format to use for the tab title for pinned tabs. The same placeholders
+# like for `tabs.title.format` are defined.
+# Type: FormatString
+c.tabs.title.format_pinned = '{tree}{audio}{collapsed}{index}: {current_title}'
+
+# Width (in pixels or as percentage of the window) of the tab bar if
+# it's vertical.
+# Type: PercOrInt
+c.tabs.width = '15%'
+
+# Enable tree-tabs mode.
+# Type: Bool
+c.tabs.tree_tabs = True
+
+# Open base URL of the searchengine if a searchengine shortcut is
+# invoked without parameters.
+# Type: Bool
+c.url.open_base_url = True
+
+# Search engines which can be used via the address bar.  Maps a search
+# engine name (such as `DEFAULT`, or `ddg`) to a URL with a `{}`
+# placeholder. The placeholder will be replaced by the search term, use
+# `{{` and `}}` for literal `{`/`}` braces.  The following further
+# placeholds are defined to configure how special characters in the
+# search terms are replaced by safe characters (called 'quoting'):  *
+# `{}` and `{semiquoted}` quote everything except slashes; this is the
+# most   sensible choice for almost all search engines (for the search
+# term   `slash/and&amp` this placeholder expands to `slash/and%26amp`).
+# * `{quoted}` quotes all characters (for `slash/and&amp` this
+# placeholder   expands to `slash%2Fand%26amp`). * `{unquoted}` quotes
+# nothing (for `slash/and&amp` this placeholder   expands to
+# `slash/and&amp`). * `{0}` means the same as `{}`, but can be used
+# multiple times.  The search engine named `DEFAULT` is used when
+# `url.auto_search` is turned on and something else than a URL was
+# entered to be opened. Other search engines can be used by prepending
+# the search engine name to the search term, e.g. `:open google
+# qutebrowser`.
+# Type: Dict
+c.url.searchengines = {
+    '!amazon': 'https://www.amazon.com/s/?tag=duc0c-20&search-alias%3Daps&field-keywords={}',
+    '!lb': 'https://letterboxd.com/search/{}/',
+    'DEFAULT': 'ddg.gg/?q={}',
+    'aa': 'https://annas-archive.org/search?q={}',
+    'aw': 'https://wiki.archlinux.org/index.php/{}',
+    'bgg': 'https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q={}&B1=Go',
+    'd': 'https://thefreedictionary.com/{}',
+    'ddg': 'https://duckduckgo.com/?t=h_&q={}',
+    'enit': 'https://www.wordreference.com/enit/{}',
+    'gh': 'https://github.com/search?q={}&type=Repositories',
+    'hn': 'https://duckduckgo.com/?q=site:news.ycombinator.com+{}',
+    'iten': 'https://www.wordreference.com/iten/{}',
+    'ostm': 'https://www.openstreetmap.org/search?query={}',
+    'plato': 'https://plato.stanford.edu/search/searcher.py?query={}',
+    're': 'https://duckduckgo.com/?q=site%3Areddit.com+{}',
+    'sx': 'https://searx.bar/search?q={}',
+    't': 'https://freethesaurus.com/{}',
+    'tre': 'www.treccani.it/vocabolario/ricerca/{}/',
+    'tresin': 'www.treccani.it/vocabolario/{}/Sinonimi_e_Contrari/',
+    'w': 'https://wikipedia.org/w/index.php?search={}',
+    'wit': 'https://it.wikipedia.org/w/index.php?search={}',
+    'yt': 'https://yewtu.be/search?q={}'
+}
+
+# Hide the window decoration.  This setting requires a restart on
+# Wayland.
+# Type: Bool
+c.window.hide_decoration = True
+
+# Format to use for the window title. The same placeholders like for
+# `tabs.title.format` are defined.
+# Type: FormatString
+c.window.title_format = 'zoom'
+
+# Set the main window background to transparent.  This allows having a
+# transparent tab- or statusbar (might require a compositor such as
+# picom). However, it breaks some functionality such as dmenu embedding
+# via its `-w` option. On some systems, it was additionally reported
+# that main window transparency negatively affects performance.  Note
+# this setting only affects windows opened after setting it.
+# Type: Bool
+c.window.transparent = True
+
+# Default font families to use. Whenever "default_family" is used in a
+# font setting, it's replaced with the fonts listed here. If set to an
+# empty value, a system-specific monospace default is used.
+# Type: List of Font, or Font
+c.fonts.default_family = 'terminus'
+
+# Default font size to use. Whenever "default_size" is used in a font
+# setting, it's replaced with the size listed here. Valid values are
+# either a float value with a "pt" suffix, or an integer value with a
+# "px" suffix.
+# Type: String
+c.fonts.default_size = '14pt'
+
+# Font used in the completion widget.
+# Type: Font
+c.fonts.completion.entry = '14pt default_family'
+
+# Font used in the completion categories.
+# Type: Font
+c.fonts.completion.category = '14pt default_family'
+
+# Font used for the debugging console.
+# Type: Font
+c.fonts.debug_console = '14pt default_family'
+
+# Font used for the downloadbar.
+# Type: Font
+c.fonts.downloads = '14pt default_family'
+
+# Font used for the hints.
+# Type: Font
+c.fonts.hints = '14pt default_family'
+
+# Font used in the keyhint widget.
+# Type: Font
+c.fonts.keyhint = '14pt default_family'
+
+# Font used for error messages.
+# Type: Font
+c.fonts.messages.error = '14pt default_family'
+
+# Font used for info messages.
+# Type: Font
+c.fonts.messages.info = '14pt default_family'
+
+# Font used for warning messages.
+# Type: Font
+c.fonts.messages.warning = '14pt default_family'
+
+# Font used for prompts.
+# Type: Font
+c.fonts.prompts = '14pt default_family'
+
+# Font used in the statusbar.
+# Type: Font
+c.fonts.statusbar = '14pt GohuFont'
+
+# Font used for selected tabs.
+# Type: Font
+c.fonts.tabs.selected = '14pt default_family'
+
+# Font used for unselected tabs.
+# Type: Font
+c.fonts.tabs.unselected = '14pt default_family'
+
+# Font family for fixed fonts.
+# Type: FontFamily
+c.fonts.web.family.fixed = 'Gohu GohuFont'
+
+# Hard minimum font size (in pixels).
+# Type: Int
+c.fonts.web.size.minimum = 14
+
+# Bindings for normal mode
+config.bind(',A', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass --password-only')
+config.bind(',a', ':open -tr http://archive.is/newest/{url}')
+config.bind(',lb', "jseval --quiet -w main imdbu = $('.itemExternalLinks').children()[0].href; window.open('https://letterboxd.com/imdb/' + imdbu.substring(imdbu.lastIndexOf('/') + 1))")
+config.bind(',m', 'spawn qmpv {url}')
+config.bind(',otp', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383 --totp')
+config.bind(',r', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/readability')
+config.bind(',w', ':open -tr http://web.archive.org/web/*/{url}')
+config.bind(';m', 'hint links spawn qmpv {hint-url}')
+config.bind(';o', 'hint links spawn url_opener.sh "{hint-url}"')
+config.bind('<Ctrl+Shift+c>', ':yank selection')
+config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383')
+config.bind('`', 'config-cycle tabs.show always never')
+config.bind('insert', '<Ctrl+Shift+C> :yank selection')
+config.bind('tSH', 'spawn -u domcycle content.javascript.enabled')
+config.bind('ti', 'spawn --userscript tor_identity')
+config.bind('tn', 'set content.proxy none')
+config.bind('tt', 'set -p content.proxy socks://localhost:9050/ ;; later 1000 open -t check.torproject.org')
+config.bind('xs', 'set-cmd-text -s :open site:{url:host}')
+
+# Bindings for command mode
+config.bind('<Ctrl+h>', ':rl-backward-char', mode='command')
+config.bind('<Ctrl+j>', ':completion-item-focus next', mode='command')
+config.bind('<Ctrl+k>', ':completion-item-focus prev', mode='command')
+config.bind('<Ctrl+l>', ':rl-forward-char', mode='command')
+
+# Bindings for insert mode
+config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383', mode='insert')
+
+# Bindings for prompt mode
+config.bind('<Ctrl+j>', ':prompt-item-focus-next', mode='prompt')
+config.bind('Ctrl-J', ':prompt-item-focus-next', mode='prompt')

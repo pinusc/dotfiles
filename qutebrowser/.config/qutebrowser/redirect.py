@@ -8,6 +8,7 @@ REDIRECT_MAP = {
     "reddit.com": operator.methodcaller('setHost', 'old.reddit.com'),
     "www.reddit.com": operator.methodcaller('setHost', 'old.reddit.com'),
     "youtube.com": operator.methodcaller('setHost', 'yewtu.be'),
+    "hckrnews.com": operator.methodcaller('setHost', 'news.ycombinator.com'),
     "www.youtube.com": operator.methodcaller('setHost', 'yewtu.be'),
     "youtu.be": operator.methodcaller('setHost', 'yewtu.be'),
     "twitter.com": operator.methodcaller('setHost', 'nitter.net'),
