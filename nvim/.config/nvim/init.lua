@@ -93,7 +93,7 @@ require("lazy").setup({
                             end
                         end,
                         s = cmp.mapping.confirm({ select = true }),
-                        c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+                        -- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
                     }),
 
                     -- ... Your other mappings ...
