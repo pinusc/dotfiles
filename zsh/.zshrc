@@ -29,7 +29,7 @@ function zshaddhistory() {
 }
 
 # ====== theming & style =======
-zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+zstyle ':completion:*' completer _expand _expand_alias _complete _ignored _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]} m:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
