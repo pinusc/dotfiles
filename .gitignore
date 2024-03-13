@@ -1,5 +1,8 @@
 nvim/.config/nvim/*
+!nvim/.config/nvim/init.lua
 !nvim/.config/nvim/init.vim
+!nvim/.config/nvim/vimrc.vim
+!nvim/.config/nvim/mappings.vim
 !nvim/.config/nvim/UltiSnips
 !nvim/.config/nvim/spell/*.add
 mpd/.config/mpd/*
@@ -12,12 +15,20 @@ anacron/.config/anacron/spool/
 mutt/.mutt/temp/
 qutebrowser/.config/qutebrowser/bookmarks
 qutebrowser/.config/qutebrowser/quickmarks
+/qutebrowser/.config/qutebrowser/__pycache__
+/qutebrowser/.config/qutebrowser/pdfjs
 qutebrowser/.local/share
 qutebrowser/.local/lib
 mutt/.mutt/cache
-nnn/.config/nnn/plugins/other
+nnn/.config/nnn/plugins
 nnn/.config/nnn/.selection
 *.log
 
 # credentials
 mpd/.config/mpdasrc
+bin/bin/panel/api_keys.sh
+/qutebrowser/.config/qutebrowser/autoconfig.yml
+/mpv/.config/mpv/fonts
+/nnn/.config/nnn/bookmarks
+/cava/.config/cava/shaders
+/bin/bin/lib/geolocate
