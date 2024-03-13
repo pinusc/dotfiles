@@ -1,0 +1,75 @@
+#!/bin/bash
+
+original_file="$1"
+original_basename="$(basename -- "$original_file")"
+original_extension="${original_basename##*.}"
+original_path="${original_file%/*}"
+
+filename="$(mktemp --tmpdir "autoebookmeta-book.XXXX.$original_extension")"
+cp "$original_file" "$filename"
+
+metafile="$(mktemp --tmpdir autoebookmeta.XXXX.txt)"
+ebook-meta "$filename" > "$metafile"
+"${EDITOR:-vi}" "$metafile"
+
+
+metadata_list=()
+
+while IFS="" read -r line || [ -n "$p" ]
+do
+    case "$line" in
+        Title*)
+            title="${line#*: }"
+            metadata_list+=(--title="$title")
+            ;;
+        Author*)
+            line="${line#*: }"
+            echo "AUTHORLINE: $line"
+
+            author_sort="$(echo "$line" | sed 's/[^[]*\[\?//;s/\].*//')"
+            echo "AUTHORSORT: $line"
+
+            authors="$(echo "$line" | sed 's/ \?\[.*\]//')"
+            metadata_list+=(--authors="$authors")
+            if [ -n "$author_sort" ]; then
+                metadata_list+=(--author-sort="$author_sort")
+            fi
+            ;;
+        Publisher*)
+            metadata_list+=(--publisher="${line##*: }")
+            ;;
+    esac
+done < "$metafile"
+
+
+echo ebook-meta "$filename" "${metadata_list[@]}"
+ebook-meta "$filename" "${metadata_list[@]}"
+result="$(ebook-meta "$filename")"
+
+# We HAVE to re-read the data, because author_sort might have been automagically set
+title=""
+author_sort=""
+while IFS="" read -r line || [ -n "$p" ]
+do
+    case "$line" in
+        Title*)
+            title="${line##*: }"
+            ;;
+        Author*)
+            authors="${line##*: }"
+            author_sort="$(echo "$authors" | sed 's/.*\[\(.*\)\].*/\1/')"
+    esac
+done < <(echo "$result")
+
+new_filename="$original_path/$author_sort - $title.$original_extension"
+
+echo
+echo "Writing this to: $new_filename"
+read -p "Is this okay? " -n 1 -r
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    echo mv "$filename" "$new_filename"
+    mv "$filename" "$new_filename"
+    rm -i "$original_file"
+fi
+
+rm "$metafile"
