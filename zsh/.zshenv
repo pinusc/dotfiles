@@ -41,11 +41,13 @@ path=(
   # $(ruby -rubygems -e "puts Gem.user_dir")/bin
   $HOME/.emacs.d/bin
   $HOME/.local/lib/perl5/bin
+  $HOME/.local/share/cargo/bin
   $HOME/.config/nvim/plugged/vim-iced/bin
   $path
 )
 
 export GOPATH="$HOME/.local/share/go"
+export CARGO_HOME="$HOME/.local/share/cargo"
 export COOKIECUTTER_CONFIG="$XDG_CONFIG_HOME/cookiecutter"
 
 export BUP_DIR="$XDG_DATA_HOME/bup"
