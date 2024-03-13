@@ -725,6 +725,8 @@ nmap <Leader>tgs <cmd>Telescope git_status<CR>
 nmap <Leader>tgS <cmd>Telescope git_stash<CR>
 map <leader>t/ <cmd>Telescope live_grep<CR>
 
+nmap <Leader>g <cmd>Neogit<CR>
+
 function! ListNotes()
 :Telescope find_files search_dirs=['/home/pinusc/docs/notes/']
 endfunction
