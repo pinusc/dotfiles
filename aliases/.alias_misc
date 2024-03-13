@@ -513,16 +513,13 @@ chatblade() {
   /usr/bin/chatblade "$@"                                                  
 }
 
-alias gpt=" chatblade"
-alias gptc="gpt --last"  # continue
-alias gpti="gpt --interactive"
-alias gptic="gpt --interactive --last"
-alias gpte="gpt --extract"
-alias gptce="gpt --last --extract"
+alias ai=" aichat"
+alias aic=" ai --code"
+alias air=" ai --role"
+alias airun=" ai --execute --role shell"
 
-alias gpt4=" chatblade -c 4t"
-alias gpt4c="gpt4 --last"  # continue
-alias gpt4i="gpt4 --interactive"
-alias gpt4e="gpt4 --extract"
-alias gpt4ic="gpt4 --interactive --last"
-alias gpt4ce="gpt4 --last --extract"
+sortbooks() {
+    for book in ~/books/unsorted/*; do
+        autoebookmeta "$book"
+    done
+}
