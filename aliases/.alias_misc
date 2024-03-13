@@ -10,10 +10,16 @@ alias rsync="rsync --info=progress2"
 alias v="source venv/bin/activate"
 alias d="deactivate"
 
-alias setclip='xclip -selection c'
-alias getclip='xclip -selection clipboard -o'
+if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+    alias setclip='xclip -selection c'
+    alias getclip='xclip -selection clipboard -o'
+else
+    alias setclip='wl-copy'
+    alias getclip='wl-paste'
+fi
 alias pasteclip='getclip'
 alias copyclip='setclip'
+alias -g COPY='| tee /dev/stderr | copyclip'
 
 alias sxiv='nsxiv'
 
