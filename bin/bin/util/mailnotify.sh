@@ -13,4 +13,4 @@ function notify-send() {
     sudo -u $user DISPLAY=$display DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus notify-send "$@"
 }
 
-journalctl --unit smtpd --follow --since "now" --grep 'delivery' | xargs -I{} sh -c 's="{}"; res="$(echo "$s" | sed "s/.*result=\(\S\+\).*/\1/")"; to="$(echo "$s" | sed "s/.*to=<\([^>]\+\)>.*/\1/")"; stat="$(echo "$s" | sed "s/.*stat=//")"; if [ "$res" = "Ok" ]; then  urgency="normal"; else not="NOT "; urgency="critical"; fi; notify-send -u "$urgency" "Email to $to ${not}sent" "Status: $stat"'
+journalctl --unit smtpd --follow --since "now" --grep 'delivery|failed-command' | xargs -I{} sh -c 's="{}"; res="$(echo "$s" | sed "s/.*result=\(\S\+\).*/\1/")"; to="$(echo "$s" | sed "s/.*to=<\([^>]\+\)>.*/\1/")"; stat="$(echo "$s" | sed "s/.*stat=//")"; if [ "$res" = "Ok" ]; then  urgency="normal"; else not="NOT "; urgency="critical"; fi; notify-send -u "$urgency" "Email to $to ${not}sent" "Status: $stat"'

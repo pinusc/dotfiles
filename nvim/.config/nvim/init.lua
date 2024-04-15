@@ -737,6 +737,12 @@ command! Notes call ListNotes()
 
 -- {{{ Filetype specific
 
+vim.cmd([[
+augroup mail
+    autocmd FileType mail setlocal textwidth=0 spell
+augroup END
+    ]])
+
 -- {{{ Orgmode
 vim.g.org_heading_shade_leading_stars = 1
 require('orgmode').setup({

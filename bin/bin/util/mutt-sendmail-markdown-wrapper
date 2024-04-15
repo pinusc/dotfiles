@@ -1,8 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+trap cleanup SIGINT SIGTERM ERR
+
+cleanup() {
+  trap - SIGINT SIGTERM ERR
+  # script cleanup here
+  notify-send "MAIL SEND FAILED"
+}
 
 tmpfile="$(mktemp --tmpdir mailmessage.XXXX)"
 
-# mutt will pipe email text into stdin
+# mutt will pipe email text into 
 ~/bin/modules/add-html-to-email > "$tmpfile"
 
 {
@@ -12,6 +21,8 @@ tmpfile="$(mktemp --tmpdir mailmessage.XXXX)"
 
     if [[ -f "$tmpfile" ]]; then
       < "$tmpfile" sendmail "$@"
+    else
+      cleanup
     fi
 
     rm "$tmpfile"

@@ -7,7 +7,6 @@ import subprocess
 import sys
 import os
 import re
-import re
 
 from email import policy
 from email.mime.text import MIMEText
@@ -48,13 +47,16 @@ def add_html(msg):
     return msg
 
 def pandoc_html(text):
-    args = ['-f', 'markdown', '--to', 'html']
+    args = ['-f', 'markdown+hard_line_breaks', '--to', 'html']
     completedproc = subprocess.run(['pandoc'] + args,
         capture_output=True,
         input=text,
         text=True
     )
-    return completedproc.stdout
+    if completedproc.returncode == 0:
+        return completedproc.stdout
+    else:
+        sys.exit(1)
 
 def pandoc_plain(text):
     args = ['-f', 'markdown', '--to', 'plain']
@@ -64,12 +66,16 @@ def pandoc_plain(text):
         input=text,
         text=True
     )
-    return completedproc.stdout
+    if completedproc.returncode == 0:
+        return completedproc.stdout
+    else:
+        sys.exit(1)
 
 
 def to_html(text):
-    text = re.sub(r'\n-- ?\n', r'\n--  \n', text)
-    text = re.sub(r'^([^\n]+),\n', r'\1,  \n', text)
+    text = re.sub(r'\n-- ?\n', r'\n--  \n', text)  # Fixes signature
+    # text = re.sub(r'^([^\n]+),\n', r'\1,  \n', text)  # ^ only matches first line, so "Dear ...,"
+    print(text, file=sys.stderr)
     html_data = pandoc_html(text)
     return html_data
 

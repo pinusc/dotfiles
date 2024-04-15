@@ -19,6 +19,7 @@ set mailcap_path     = ~/.mutt/mailcap       # entries for filetypes
 set tmpdir           = ~/.mutt/temp          # where to keep temp files
 set signature        = ~/.mutt/sig           # my signature file
 set abort_noattach   = ask-yes
+set attribution      = "On %d, %n wrote:\n"  # adding a newline fixes pandoc blockquote
 set abort_noattach_regex = "^[^>].*attach(|ed|ments?)"
 set sendmail = "~/bin/util/mutt-sendmail-markdown-wrapper"
 
