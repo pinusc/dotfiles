@@ -14,6 +14,16 @@
 	tool = nvimdiff
 [difftool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+    prompt = false
+[merge]
+    tool = nvimdiff
+    conflictstyle = diff3
+[mergetool]
+	keepBackup = false
+	trustExitCode = false
+	prompt = true
+[mergetool "nvimdiff"]
+	layout = LOCAL,MERGED,REMOTE
 [http]
 	cookiefile = /home/pinusc/.local/share/gitcookies
 [diff "jupyternotebook"]
