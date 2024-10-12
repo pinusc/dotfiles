@@ -112,6 +112,18 @@ if [ -f "$ANTIDOTE_FILE" ]; then
     antidote load
 fi
 
+# ssh-agent (snippet from arch wiki)
+# Ensure only one global ssh-agent is running
+# In ~/.ssh/config, put
+# AddKeysToAgent yes
+# for automatic key adding
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+fi
+if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
+    source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
+fi
+
 # ===== Code that MUST be run after logins. Otherwise run it before. =======
 if which history-substring-search-up &>/dev/null; then
     bindkey '^[[A' history-substring-search-up
