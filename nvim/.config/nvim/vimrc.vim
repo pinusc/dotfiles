@@ -212,12 +212,12 @@ let g:jupytext_filetype_map = {
         \ }
 " let g:jupyter_highlight_cells = 0
 
-call textobj#user#map('hydrogen', {
-\  '-': {
-\    'move-n': '}',   
-\    'move-p': '{',   
-\    }
-\  })
+" call textobj#user#map('hydrogen', {
+" \  '-': {
+" \    'move-n': '}',   
+" \    'move-p': '{',   
+" \    }
+" \  })
 
 let g:pymode_motion = 0
 augroup Jupytext

@@ -1,5 +1,70 @@
 -- vim: foldmethod=marker tabstop=4 expandtab
 
+-- {{{ Basic Config
+vim.g.python3_host_prog = '/usr/bin/python' -- so that pynvim not necessary in venvs
+-- vim.o.t_Co = 16
+-- vim.o.background = dark
+vim.o.number = true
+-- vim.o.filetype = false
+-- vim.filetype plugin indent on
+vim.o.ignorecase = true
+vim.o.smartcase = true
+
+vim.o.undolevels = 10000
+vim.o.history = 10000
+vim.o.undofile = true
+
+vim.o.conceallevel=0
+vim.o.concealcursor=""
+vim.o.foldtext = ""
+
+vim.cmd.syntax("enable")
+-- vim.o.errorformat = '%A%f:%l:\ %m,%-Z%p^,%-C%.%#'
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
+-- vim.o.colorcolumn = 81
+
+
+-- let &t_ZH="\e[3m"
+-- let &t_ZR="\e[23m"
+-- vim.o.fillchars = "fold:="
+
+-- command completion
+vim.o.wildmode = "longest,list,full"
+vim.o.wildmenu = true
+
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+
+vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 15
+
+-- {{{ Statusline 
+vim.cmd([[
+  function! GitBranch()
+    return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+  endfunction
+  
+  function! StatuslineGit()
+    let l:branchname = GitBranch()
+    return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+  endfunction
+  set laststatus=2
+  set statusline=
+  " set statusline+=\ %*
+  set statusline+=%(\ %y%)%(\ %h%)\ [%{&ff}\/%{&fenc}]
+  set statusline+=\ %f
+  set statusline+=%(\ %m%)
+  set statusline+=%(\ %r%)
+  set statusline+=%=
+  " set statusline+=\ %{LinterStatus()}
+  set statusline+=\ [%l:%c\ %p%%]
+  set statusline+=\ %{StatuslineGit()}
+]])
+
+-- }}}
+-- }}}
+
 -- {{{ Plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -29,7 +94,8 @@ require("lazy").setup({
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-cmdline",
-            "hrsh7th/cmp-vsnip",
+            -- "hrsh7th/cmp-vsnip",
+            "quangnguyen30192/cmp-nvim-ultisnips"
 
         },
         config = function()
@@ -44,63 +110,34 @@ require("lazy").setup({
             end
 
             local cmp = require('cmp')
+            local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
             cmp.setup {
                 snippet = {
                     expand = function(args)
-                        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+                        vim.fn["UltiSnips#Anon"](args.body)
                     end,
                 },
-                window = {
-                    -- completion = cmp.config.window.bordered(),
-                    -- documentation = cmp.config.window.bordered(),
-                },
-
-                sources = cmp.config.sources({
+                sources = {
                     { name = 'nvim_lsp' },
                     { name = 'buffer' },
-                    { name = 'vsnip' }, -- For vsnip users.
-                }, { { name = 'buffer' }, }),
-
+                    { name = "ultisnips" },
+                    -- more sources
+                },
+                -- recommended configuration for <Tab> people:
                 mapping = {
-
-                    -- ... Your other mappings ...
-
-                    ["<Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_next_item()
-                        elseif vim.fn["vsnip#available"](1) == 1 then
-                            feedkey("<Plug>(vsnip-expand-or-jump)", "")
-                        elseif has_words_before() then
-                            cmp.complete()
-                        else
-                            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
-                        end
-                    end, { "i", "s" }),
-
-                    ["<S-Tab>"] = cmp.mapping(function()
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-                            feedkey("<Plug>(vsnip-jump-prev)", "")
-                        end
-                    end, { "i", "s" }),
-                    ["<CR>"] = cmp.mapping({
-                        i = function(fallback)
-                            if cmp.visible() and cmp.get_active_entry() then
-                                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-                            else
-                                fallback()
-                            end
+                    ["<Tab>"] = cmp.mapping(
+                        function(fallback)
+                            cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
                         end,
-                        s = cmp.mapping.confirm({ select = true }),
-                        -- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
-                    }),
-
-                    -- ... Your other mappings ...
-
-                }
-
-
+                        { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+                    ),
+                    ["<S-Tab>"] = cmp.mapping(
+                        function(fallback)
+                            cmp_ultisnips_mappings.jump_backwards(fallback)
+                        end,
+                        { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+                    ),
+                },
             }
 
             -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
@@ -166,7 +203,7 @@ require("lazy").setup({
     -- debugging
     "mfussenegger/nvim-dap", -- Debug Adapter Protocol
     "mfussenegger/nvim-dap-python",
-    "rcarriga/nvim-dap-ui",
+    {"rcarriga/nvim-dap-ui", dependencies = {"nvim-neotest/nvim-nio"}},
     -- utils
     "mbbill/undotree",
     "tpope/vim-commentary",
@@ -217,26 +254,26 @@ require("lazy").setup({
 
     -- snippets
     
+    {
+        lazy = false,
+        "SirVer/ultisnips", 
+        dependencies = {
+            "honza/vim-snippets",
+        },
+        init = function()
+            vim.g.UltiSnipsExpandTrigger='<C-e>'
+        end
+    },
     -- ultisnips has a performance issue with nvim-cmp
     -- until it is solved, I will use vsnip
     -- and forgo my custom tex snippets in the ultisnips folder
     -- {
-    --     lazy = false,
-    --     "SirVer/ultisnips", 
+    --     "hrsh7th/vim-vsnip",
     --     dependencies = {
-    --         "honza/vim-snippets",
-    --     },
-    --     init = function()
-    --         vim.g.UltiSnipsExpandTrigger='<C-e>'
-    --     end
+    --         "rafamadriz/friendly-snippets"
+    --     }
     -- },
     -- language support
-    {
-        "hrsh7th/vim-vsnip",
-        dependencies = {
-            "rafamadriz/friendly-snippets"
-        }
-    },
     "hsanson/vim-android",
     "stevearc/vim-arduino",
     "nvim-orgmode/orgmode",
@@ -246,6 +283,15 @@ require("lazy").setup({
     "guns/vim-clojure-static",
     "liquidz/vim-iced",
     "tpope/vim-leiningen",
+    {
+        "lervag/vimtex",
+        lazy = false,     -- we don't want to lazy load VimTeX
+        -- tag = "v2.15", -- uncomment to pin to a specific release
+        init = function()
+            -- VimTeX configuration goes here, e.g.
+            vim.g.vimtex_view_method = "zathura"
+        end
+    },
     {
         "pmizio/typescript-tools.nvim",
         dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
@@ -269,7 +315,85 @@ require("lazy").setup({
     "ron89/thesaurus_query.vim",
     "dbmrq/vim-ditto",
     "reedes/vim-wheel",
+
+    -- papis/citations
+    {
+        "jghauser/papis.nvim",
+        dependencies = {
+            "kkharji/sqlite.lua",
+            "MunifTanjim/nui.nvim",
+            "pysan3/pathlib.nvim",
+            "nvim-neotest/nvim-nio",
+            -- if not already installed, you may also want:
+            -- "nvim-telescope/telescope.nvim",
+            -- "hrsh7th/nvim-cmp",
+
+        },
+        config = function()
+            require("papis").setup({
+                -- Your configuration goes here
+            })
+        end,
+    },
+
+    -- org and more
+    "dhruvasagar/vim-table-mode",
+
+
+    -- Jupyter
+    -- This setup requires `pip install --user jupytext qtconsole`
+    -- Afterwards, just opening .ipynb files should convert them correctly
+    -- To execute cells, run `jupytext qtconsole` in a terminal (disown it too)
+    -- Then run :JupyterConnect in vim
+    -- Now pressing alt+Enter on a cell will run it and move to the next one
+    {
+        'jupyter-vim/jupyter-vim',
+        init = function()
+            vim.cmd([[
+            let g:jupytext_enable = 1
+            let g:jupytext_fmt = 'py:percent'
+            let g:jupytext_filetype_map = {
+            \    'py:percent': 'python.ipynb',
+            \    'R:percent': 'R.ipynb'
+            \ }
+            let g:jupyter_highlight_cells = 0
+            augroup Jupytext
+                au! 
+                autocmd Bufenter *.ipynb let b:jupyter_kernel_type = 'python'
+                autocmd Bufenter *.ipynb call jupyter#load#MakeStandardCommands()
+                autocmd BufEnter *.ipynb nnoremap <buffer> <A-CR> :JupyterSendCell<CR> <bar> :call search('^# %%\( \=\[markdown]\)\@!', 'W') <bar> :norm j<CR>
+                autocmd BufEnter *.ipynb nnoremap <buffer> <A-\> :JupyterSendCell<CR>
+                autocmd Bufenter *.r.ipynb let g:jupytext_fmt = 'R:percent'
+                autocmd Bufenter *.r.ipynb let b:jupyter_kernel_type = 'R'
+                autocmd Bufenter *.r.ipynb set ft=R.ipynb
+                autocmd Bufenter *.R call jupyter#load#MakeStandardCommands()
+                autocmd BufEnter *.R nnoremap <buffer> <A-CR> :JupyterSendCell<CR> <bar> :call search('^# %%\( \=\[markdown]\)\@!', 'W') <bar> :norm j<CR>
+                autocmd BufEnter *.R nnoremap <buffer> <A-\> :JupyterSendCell<CR>
+            augroup END
+            ]])
+        end,
+    },
+    -- '~/.config/nvim/plugged/jupyter-vim',
+    'goerz/jupytext.vim',
+    -- '~/.config/nvim/plugged/vim-textobj-hydrogen',
+    'jpalardy/vim-slime',
+    'hanschen/vim-ipython-cell',
 })
+
+--[[
+" {{{ Jupytext
+
+call textobj#user#map('hydrogen', {
+\  '-': {
+\    'move-n': '}',   
+\    'move-p': '{',   
+\    }
+\  })
+
+let g:pymode_motion = 0
+
+" }}}
+--]]
 
 local palette = require('gruvbox').palette
 require("gruvbox").setup({
@@ -334,69 +458,6 @@ vim.cmd([[colorscheme gruvbox]])
 
 -- }}}
 
--- {{{ Basic Config
--- vim.o.t_Co = 16
--- vim.o.background = dark
-vim.o.number = true
--- vim.o.filetype = false
--- vim.filetype plugin indent on
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
-vim.o.undolevels = 10000
-vim.o.history = 10000
-vim.o.undofile = true
-
-vim.o.conceallevel=0
-vim.o.concealcursor=""
-vim.o.foldtext = ""
-
-vim.cmd.syntax("enable")
--- vim.o.errorformat = '%A%f:%l:\ %m,%-Z%p^,%-C%.%#'
-vim.o.shiftwidth = 4
-vim.o.expandtab = true
--- vim.o.colorcolumn = 81
-
-
--- let &t_ZH="\e[3m"
--- let &t_ZR="\e[23m"
--- vim.o.fillchars = "fold:="
-
--- command completion
-vim.o.wildmode = "longest,list,full"
-vim.o.wildmenu = true
-
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-
-vim.g.netrw_liststyle = 3
-vim.g.netrw_winsize = 15
-
--- {{{ Statusline 
-vim.cmd([[
-  function! GitBranch()
-    return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-  endfunction
-  
-  function! StatuslineGit()
-    let l:branchname = GitBranch()
-    return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
-  endfunction
-  set laststatus=2
-  set statusline=
-  " set statusline+=\ %*
-  set statusline+=%(\ %y%)%(\ %h%)\ [%{&ff}\/%{&fenc}]
-  set statusline+=\ %f
-  set statusline+=%(\ %m%)
-  set statusline+=%(\ %r%)
-  set statusline+=%=
-  " set statusline+=\ %{LinterStatus()}
-  set statusline+=\ [%l:%c\ %p%%]
-  set statusline+=\ %{StatuslineGit()}
-]])
-
--- }}}
--- }}}
 
 -- {{{ LSP
 local nvim_lsp = require('lspconfig')
@@ -534,8 +595,6 @@ vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {
 -- }}}
 
 -- {{{ TreeSitter
-require('orgmode').setup_ts_grammar()
-
 require'nvim-treesitter.configs'.setup {
     ensure_installed = {"c", "latex", "vim", "lua", "html", "python", "clojure", "markdown", "bash", "scheme"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     highlight = {
@@ -636,10 +695,8 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
 end
-require("which-key").register({
-    ["<leader>d"] = {
-        name = "+debug",
-    }
+require("which-key").add({
+    {"<leader>d", group = "debug"}
 })
 
 vim.keymap.set('n', '<leader>dc', function() require('dap').continue() end, {desc = "DAP continue"})
@@ -676,10 +733,8 @@ require('leap').add_default_mappings()
 
 -- {{{ Telescope
 local actions = require('telescope.actions')
-require("which-key").register({
-    ["<leader>t"] = {
-        name = "+telescope",
-    }
+require("which-key").add({
+    {"<leader>t", group = "telescope"}
 })
 require('telescope').setup{
 defaults = {
