@@ -18,7 +18,7 @@ vim.o.conceallevel=0
 vim.o.concealcursor=""
 vim.o.foldtext = ""
 
-vim.cmd.syntax("enable")
+-- vim.cmd.syntax("enable")
 -- vim.o.errorformat = '%A%f:%l:\ %m,%-Z%p^,%-C%.%#'
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
@@ -119,8 +119,27 @@ require("lazy").setup({
                 },
                 sources = {
                     { name = 'nvim_lsp' },
-                    { name = 'buffer' },
                     { name = "ultisnips" },
+                    { name = "papis" },
+                    {
+                        name = 'buffer',
+                        option = {
+                            get_bufnrs = function()
+                                return vim.api.nvim_list_bufs()
+                            end
+                        }
+                        -- if above is too slow, only load from visible buffers
+                        -- option = {
+                        --     get_bufnrs = function()
+                        --         local bufs = {}
+                        --         for _, win in ipairs(vim.api.nvim_list_wins()) do
+                        --             bufs[vim.api.nvim_win_get_buf(win)] = true
+                        --         end
+                        --         return vim.tbl_keys(bufs)
+                        --     end
+                        -- }
+
+                    },
                     -- more sources
                 },
                 -- recommended configuration for <Tab> people:
