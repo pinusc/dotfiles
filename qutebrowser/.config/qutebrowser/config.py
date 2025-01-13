@@ -118,7 +118,14 @@ if os.path.exists('/home/pinusc/.local/share/colors'):
 # Aliases for commands. The keys of the given dictionary are the
 # aliases, while the values are the commands they map to.
 # Type: Dict
-c.aliases = {'q': 'close', 'qa': 'quit', 'w': 'session-save --current --only-active-window', 'wq': 'quit --save', 'wqa': 'quit --save'}
+c.aliases = {'q': 'close', 
+             'qa': 'quit', 
+             'w': 'session-save --current --only-active-window', 
+             'wq': 'quit --save', 
+             'wqa': 'quit --save',
+             'bk': 'spawn --userscript buku',
+             'bukumark-add': 'bookmark-add;;spawn --userscript buku add',
+             'wallabag': "jseval (function(){var url=location.href||url;var wllbg=window.open('https://bag.g3l.org/bookmarklet?url=' + encodeURIComponent(url),'_blank');})();"}
 
 # Load a restored tab as soon as it takes focus.
 # Type: Bool
@@ -548,6 +555,7 @@ c.url.searchengines = {
     '!lb': 'https://letterboxd.com/search/{}/',
     'DEFAULT': 'ddg.gg/?q={}',
     'aa': 'https://annas-archive.org/search?q={}',
+    'aasci': 'https://annas-archive.org/scidb/{}',
     'aw': 'https://wiki.archlinux.org/index.php/{}',
     'bgg': 'https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q={}&B1=Go',
     'd': 'https://thefreedictionary.com/{}',
@@ -559,13 +567,17 @@ c.url.searchengines = {
     'ostm': 'https://www.openstreetmap.org/search?query={}',
     'plato': 'https://plato.stanford.edu/search/searcher.py?query={}',
     're': 'https://duckduckgo.com/?q=site%3Areddit.com+{}',
+    '/r': 'https://old.reddit.com/r/{}',
     'sx': 'https://searx.bar/search?q={}',
     't': 'https://freethesaurus.com/{}',
     'tre': 'www.treccani.it/vocabolario/ricerca/{}/',
     'tresin': 'www.treccani.it/vocabolario/{}/Sinonimi_e_Contrari/',
     'w': 'https://wikipedia.org/w/index.php?search={}',
     'wit': 'https://it.wikipedia.org/w/index.php?search={}',
-    'yt': 'https://yewtu.be/search?q={}'
+    'yt': 'https://yewtu.be/search?q={}',
+    'core': 'https://core.ac.uk/search?q={}',
+    'scholar': 'https://scholar.google.com/scholar?q={}',
+    'philp': 'https://philpapers.org/s/{}'
 }
 
 # Hide the window decoration.  This setting requires a restart on
@@ -591,86 +603,87 @@ c.window.transparent = True
 # font setting, it's replaced with the fonts listed here. If set to an
 # empty value, a system-specific monospace default is used.
 # Type: List of Font, or Font
-c.fonts.default_family = 'terminus'
+c.fonts.default_family = 'Terminus'
 
 # Default font size to use. Whenever "default_size" is used in a font
 # setting, it's replaced with the size listed here. Valid values are
 # either a float value with a "pt" suffix, or an integer value with a
 # "px" suffix.
 # Type: String
-c.fonts.default_size = '14pt'
+c.fonts.default_size = '10pt'
 
 # Font used in the completion widget.
 # Type: Font
-c.fonts.completion.entry = '14pt default_family'
+c.fonts.completion.entry = 'default_size default_family'
 
 # Font used in the completion categories.
 # Type: Font
-c.fonts.completion.category = '14pt default_family'
+c.fonts.completion.category = 'default_size default_family'
 
 # Font used for the debugging console.
 # Type: Font
-c.fonts.debug_console = '14pt default_family'
+c.fonts.debug_console = 'default_size default_family'
 
 # Font used for the downloadbar.
 # Type: Font
-c.fonts.downloads = '14pt default_family'
+c.fonts.downloads = 'default_size default_family'
 
 # Font used for the hints.
 # Type: Font
-c.fonts.hints = '14pt default_family'
+c.fonts.hints = 'default_size default_family'
 
 # Font used in the keyhint widget.
 # Type: Font
-c.fonts.keyhint = '14pt default_family'
+c.fonts.keyhint = 'default_size default_family'
 
 # Font used for error messages.
 # Type: Font
-c.fonts.messages.error = '14pt default_family'
+c.fonts.messages.error = 'default_size default_family'
 
 # Font used for info messages.
 # Type: Font
-c.fonts.messages.info = '14pt default_family'
+c.fonts.messages.info = 'default_size default_family'
 
 # Font used for warning messages.
 # Type: Font
-c.fonts.messages.warning = '14pt default_family'
+c.fonts.messages.warning = 'default_size default_family'
 
 # Font used for prompts.
 # Type: Font
-c.fonts.prompts = '14pt default_family'
+c.fonts.prompts = 'default_size default_family'
 
 # Font used in the statusbar.
 # Type: Font
-c.fonts.statusbar = '14pt GohuFont'
+c.fonts.statusbar = 'default_size default_family'
 
 # Font used for selected tabs.
 # Type: Font
-c.fonts.tabs.selected = '14pt default_family'
+c.fonts.tabs.selected = 'default_size default_family'
 
 # Font used for unselected tabs.
 # Type: Font
-c.fonts.tabs.unselected = '14pt default_family'
+c.fonts.tabs.unselected = 'default_size default_family'
 
 # Font family for fixed fonts.
 # Type: FontFamily
-c.fonts.web.family.fixed = 'Gohu GohuFont'
+c.fonts.web.family.fixed = 'default_family'
 
 # Hard minimum font size (in pixels).
 # Type: Int
 c.fonts.web.size.minimum = 14
 
 # Bindings for normal mode
-config.bind(',A', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/qute-pass --password-only')
 config.bind(',a', ':open -tr http://archive.is/newest/{url}')
+config.bind(',A', ':open -tr http://web.archive.org/web/*/{url}')
+config.bind(',w', ':wallabag')
 config.bind(',lb', "jseval --quiet -w main imdbu = $('.itemExternalLinks').children()[0].href; window.open('https://letterboxd.com/imdb/' + imdbu.substring(imdbu.lastIndexOf('/') + 1))")
 config.bind(',m', 'spawn qmpv {url}')
 config.bind(',otp', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383 --totp')
 config.bind(',r', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/readability')
-config.bind(',w', ':open -tr http://web.archive.org/web/*/{url}')
 config.bind(';m', 'hint links spawn qmpv {hint-url}')
 config.bind(';o', 'hint links spawn url_opener.sh "{hint-url}"')
 config.bind('<Ctrl+Shift+c>', ':yank selection')
+config.bind('<Ctrl+c>', ':yank selection')
 config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383')
 config.bind('`', 'config-cycle tabs.show always never')
 config.bind('insert', '<Ctrl+Shift+C> :yank selection')
@@ -679,6 +692,10 @@ config.bind('ti', 'spawn --userscript tor_identity')
 config.bind('tn', 'set content.proxy none')
 config.bind('tt', 'set -p content.proxy socks://localhost:9050/ ;; later 1000 open -t check.torproject.org')
 config.bind('xs', 'set-cmd-text -s :open site:{url:host}')
+config.bind('tkh', 'config-cycle -p -t -u *://{url:host}/* content.canvas_reading ;; reload')
+config.bind('tKh', 'config-cycle -p -u *://{url:host}/* content.canvas_reading ;; reload')
+config.bind('tkH', 'config-cycle -p -t -u *://*.{url:host}/* content.canvas_reading ;; reload')
+config.bind('tKH', 'config-cycle -p -u *://*.{url:host}/* content.canvas_reading ;; reload')
 
 # Bindings for command mode
 config.bind('<Ctrl+h>', ':rl-backward-char', mode='command')
@@ -686,9 +703,19 @@ config.bind('<Ctrl+j>', ':completion-item-focus next', mode='command')
 config.bind('<Ctrl+k>', ':completion-item-focus prev', mode='command')
 config.bind('<Ctrl+l>', ':rl-forward-char', mode='command')
 
+config.bind('<Ctrl+shift+w>', ':rl-rubout " "', mode='command')
+config.bind('<Ctrl+w>', ':rl-filename-rubout', mode='command')
+config.bind('<Ctrl+shift+w>', ':rl-rubout " "', mode='prompt')
+config.bind('<Ctrl+w>', ':rl-filename-rubout', mode='prompt')
+
+
 # Bindings for insert mode
 config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383', mode='insert')
 
 # Bindings for prompt mode
 config.bind('<Ctrl+j>', ':prompt-item-focus-next', mode='prompt')
 config.bind('Ctrl-J', ':prompt-item-focus-next', mode='prompt')
+
+# buku stuff
+config.bind('M', ':bukumark-add')
+config.bind('B', ':spawn buku_run')

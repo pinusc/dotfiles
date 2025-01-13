@@ -2,7 +2,7 @@
 # leave one line blank for compatibility
 #vim ft=sh
 #pacman
-FRONTEND="yay"
+FRONTEND="paru"
 alias pac="$FRONTEND"
 alias paci="$FRONTEND -S"
 alias pacs="$FRONTEND -Ss"

@@ -3,7 +3,7 @@
 original_file="$1"
 original_basename="$(basename -- "$original_file")"
 original_extension="${original_basename##*.}"
-original_path="${original_file%/*}"
+original_path="$(dirname "$original_file")/"
 
 filename="$(mktemp --tmpdir "autoebookmeta-book.XXXX.$original_extension")"
 cp "$original_file" "$filename"
@@ -61,7 +61,7 @@ do
     esac
 done < <(echo "$result")
 
-new_filename="$original_path/$author_sort - $title.$original_extension"
+new_filename="$original_path$author_sort - $title.$original_extension"
 
 echo
 echo "Writing this to: $new_filename"

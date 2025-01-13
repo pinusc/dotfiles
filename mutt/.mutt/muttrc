@@ -32,16 +32,14 @@ set realname="Giuseppe Stelluto"
 set from="giuseppe@gstelluto.com"
 
 folder-hook . set from="giuseppe@gstelluto.com"
-folder-hook . set copy=no
 folder-hook . set record="+gstelluto/sent"
+folder-hook . set copy=yes
 
-folder-hook +colby* set from="gstell23@colby.edu"
+# folder-hook +colby* set from="gstell23@colby.edu"
 # folder-hook +colby* set from="giuseppe.stelluto@colby.edu"
-folder-hook +colby* set copy=no
+# folder-hook +colby* set copy=no
 folder-hook +logins* set from="logins@gstelluto.com"
-folder-hook +logins* set copy=yes
 folder-hook +gstelluto* set from="giuseppe@gstelluto.com"
-folder-hook . set copy=no
 
 
 set edit_headers=yes
@@ -84,7 +82,7 @@ hdr_order from: to: cc: date: subject:  # and in this order
 # Account Settings -----------------------------------
 
 # Default inbox.
-set spoolfile = "+colby/inbox"
+set spoolfile = "+logins/inbox"
 # virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
 # set virtual_spoolfile=yes
 # set folder=~/.notmuch
@@ -113,25 +111,38 @@ macro index \Cl "<limit>~A<enter>"
 # Alternate email addresses.
 alternates giuseppe@gstelluto.com giuseppe.stelluto@gmail.com gstell@protonmail.com gstelluto@uwcchina.org logins@gstelluto.com gstell23@colby.edu giuseppe.stelluto@colby.edu
 
-mailboxes  +colby \
+mailboxes  +gstelluto \
+           +gstelluto/inbox \
+           +gstelluto/sent \
+           +logins \
+           +logins/inbox \
+           +logins/sent \
+           +logins/archive \
+           +gmail \
+           +gmail/inbox \
+           +gmail/sent \
+           +gmail/spam \
+           +local \
+           +colby \
            +colby/inbox \
-           +colby/all \
            +colby/logins \
            +colby/classes \
            +colby/gdrive \
            +colby/sent \
            +colby/spam \
-           +logins \
-           +logins/inbox \
-           +local \
+           +protonmail-gstell \
+           +protonmail-gstell/inbox
 
 # by default, deleted mail will go in ~/mail/trash
 folder-hook . set trash = +trash
 # but for these accounts, it will go in the correct trash folder
+folder-hook +gstelluto* set trash = +gstelluto/trash
 folder-hook +logins* set trash = +gstelluto/trash
 folder-hook +colby* set trash = +gstelluto/trash
+folder-hook +gmail* set trash = +gmail/trash
 
 set postponed = "+drafts"
+folder-hook +gstelluto* set postponed = "+gstelluto/drafts"
 folder-hook +logins* set postponed = "+gstelluto/drafts"
 folder-hook +colby* set postponed = "+colby/drafts"
 
@@ -176,11 +187,14 @@ bind pager k  previous-line
 bind pager j  next-line
 bind pager gg top
 bind pager G  bottom
+bind pager U  list-unsubscribe
 
 # I shadowed J and K
 # bind pager gk noop
 # bind pager gj noop
 bind index g noop
+bind index gg first-entry
+bind index G last-entry
 bind index gj next-entry
 bind index gk previous-entry
 bind index \cu half-up
@@ -188,6 +202,7 @@ bind index \cd half-down
 
 macro index gc "<change-folder> =colby/inbox<enter>"
 macro index gl "<change-folder> =logins/inbox<enter>"
+macro index gs "<change-folder> =gstelluto/inbox<enter>"
 macro index gm "<change-folder> =gmail/inbox<enter>"
 
 bind pager R  group-reply
@@ -209,14 +224,20 @@ score '~f colbynow@colby.edu' -10
 score '~f nobody@colby.edu' -10
 
 folder-hook . "macro index S '<shell-escape>mbsync -a; notmuch new<enter>'"
-folder-hook +colby* "macro index S '<shell-escape>mbsync colby; notmuch new<enter>'"
+folder-hook +gstelluto* "macro index S '<shell-escape>mbsync gstelluto; notmuch new<enter>'"
 folder-hook +logins* "macro index S '<shell-escape>mbsync logins; notmuch new<enter>'"
 folder-hook +gmail* "macro index S '<shell-escape>mbsync gmail; notmuch new<enter>'"
 
 color status black green
+
+uncolor index
+color index color15 default "~A"
 color index yellow default "~N"
-color index magenta default "~O"
+color index bold default default "~O"
+color index color7 default "~R"
+
 color index color14 default "~b zoom.us"
+color index color13 default "~X 1-"
 color index color242 default "~n 0"
 uncolor index "~D"
 color index black red "~D"

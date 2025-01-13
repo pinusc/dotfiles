@@ -10,10 +10,12 @@ REDIRECT_MAP = {
     "youtube.com": operator.methodcaller('setHost', 'yewtu.be'),
     "hckrnews.com": operator.methodcaller('setHost', 'news.ycombinator.com'),
     "www.youtube.com": operator.methodcaller('setHost', 'yewtu.be'),
-    "youtu.be": operator.methodcaller('setHost', 'yewtu.be'),
-    "twitter.com": operator.methodcaller('setHost', 'nitter.net'),
-    "www.twitter.com": operator.methodcaller('setHost', 'nitter.net'),
-    "termbin.com": operator.methodcaller('setHost', 'l.termbin.com'),
+    "twitter.com": operator.methodcaller('setHost', 'nitter.poast.org'),
+    "www.twitter.com": operator.methodcaller('setHost', 'nitter.poast.org'),
+    "x.com": operator.methodcaller('setHost', 'nitter.poast.org'),
+    "www.x.com": operator.methodcaller('setHost', 'nitter.poast.org'),
+    # "termbin.com": operator.methodcaller('setHost', 'l.termbin.com'),
+    # "youtu.be": operator.methodcaller('setHost', 'yewtu.be'),
     "medium.com": operator.methodcaller('setHost', 'scribe.rip'),
 }  # type: typing.Dict[str, typing.Callable[..., typing.Optional[bool]]]
 
@@ -26,6 +28,7 @@ def int_fn(info: interceptor.Request):
     url = info.request_url
     redir = REDIRECT_MAP.get(url.host())
     if redir is not None and redir(url) is not False:
+        # __import__('pdb').set_trace()
         message.info("Redirecting to " + url.toString())
         info.redirect(url)
 

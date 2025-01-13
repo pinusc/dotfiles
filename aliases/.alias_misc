@@ -13,9 +13,11 @@ alias d="deactivate"
 if [ "$XDG_SESSION_TYPE" = "x11" ]; then
     alias setclip='xclip -selection c'
     alias getclip='xclip -selection clipboard -o'
+    alias dmenu="rofi -dmenu"
 else
     alias setclip='wl-copy'
     alias getclip='wl-paste'
+    alias dmenu="wofi --dmenu"
 fi
 alias pasteclip='getclip'
 alias copyclip='setclip'
@@ -91,7 +93,7 @@ if hash exa >&/dev/null; then
     alias lg='exa --long --git'
     alias ll='ls -lh --git'
     if [ -n "$SSH_CONNECTION" ];  then
-        alias ls='exa --sort=name --no-icons'   
+        alias ls='exa --sort=name'   
     fi
 fi
 
@@ -118,6 +120,7 @@ if [ "$SHELL" = /bin/zsh ]; then
     alias -g CSVLL="| csv2table.sh"
     alias -g MRF="*(om[1])"
     alias -g LASTF="*(om[1])"
+    alias -g PASTE='"$(pasteclip)"'
 fi
 if hash rg &>/dev/null;then 
     alias rgc='rg --color always'
@@ -195,7 +198,6 @@ alias m="source ~/bin/college/m"
 alias mcd="source ~/bin/college/ccd --moodle"
 alias syl="~/bin/college/syllabus"
 
-alias dmenu="rofi -dmenu"
 
 alias ksac="kdeconnect-cli -n sacripante"
 
@@ -523,3 +525,8 @@ sortbooks() {
         autoebookmeta "$book"
     done
 }
+
+alias b='buku --suggest'
+
+alias mount='sudo mount -o uid=1000,gid=1000'
+alias ncdu="echo You probably want gdu instead"

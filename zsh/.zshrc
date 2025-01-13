@@ -3,6 +3,7 @@
 # ======== zsh options =========
 fpath=(~/.completions $fpath)
 setopt AUTO_CD
+setopt NO_CLOBBER APPEND_CREATE  # will complain on > for existing file, but not >> on non-existing
 zmodload zsh/zprof
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -64,6 +65,8 @@ alias help=run-help
 bindkey -a 'H' run-help # press H in command mode to see manpage
 bindkey '^R' history-incremental-search-backward
 bindkey '^e' push-line-or-edit
+bindkey -M vicmd 'K' run-help
+bindkey -M vicmd '_' vi-beginning-of-line
 
 # === make <C-L> scroll instead of clearing
 function scroll-top() {

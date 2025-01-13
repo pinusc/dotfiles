@@ -2,4 +2,4 @@
 
 url="$1"
 
-mpv "$url" --ytdl-raw-options=write-auto-sub= --ytdl-raw-options-append=sub-lang=en,it
+mpv "$url" --ytdl-raw-options=write-auto-sub= --ytdl-raw-options-append=sub-lang=en,it --force-window=immediate

@@ -1,2 +1,14 @@
 #!/bin/bash
-curl -s ipinfo.io | jq -r .loc
+
+# returns GPS coordinates 
+# if connected to a known wifi network, using hard-coded places 
+# otherwise uses an ip geolocation service
+case "$(iw dev wlp3s0 link | awk '/SSID/{ print $2; }')" in
+    "ColpaD'Alfredo" )
+        echo 41.4620482,15.5432595
+        exit 0
+        ;;
+    *)
+        curl -s ipinfo.io | jq -r .loc
+        ;;
+esac

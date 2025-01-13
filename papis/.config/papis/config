@@ -1,15 +1,14 @@
 [papers]
-dir = ~/docs/papers
-
-[philosophy]
-dir = ~/docs/papers/philosophy
+dir = ~/papers
 
 [settings]
-opentool = nuke
+opentool = zathura --fork
 file-browser = nnn
 picktool = fzf
 fzf-binary = /usr/bin/fzf
-editor = vim
+editor = nvim
 add-folder-name = {doc[author]}-{doc[year]}-{doc[title]}
 add-file-name = {doc[author]}-{doc[year]}-{doc[title]}
+add-subfolder = misc
 add-edit = True
+ref-format = '{doc[author_list][0][family]} {doc[year]}'
