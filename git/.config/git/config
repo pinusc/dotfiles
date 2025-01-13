@@ -23,7 +23,7 @@
 	trustExitCode = false
 	prompt = true
 [mergetool "nvimdiff"]
-	layout = LOCAL,MERGED,REMOTE
+	layout = "LOCAL,BASE,REMOTE / MERGED"
 [http]
 	cookiefile = /home/pinusc/.local/share/gitcookies
 [diff "jupyternotebook"]
