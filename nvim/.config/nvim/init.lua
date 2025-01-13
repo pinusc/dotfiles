@@ -656,7 +656,8 @@ let g:startify_custom_header = s:filter_header(startify#fortune#cowsay())
 -- }}}
 
 -- {{{ DAP 
-require('dap-python').setup('~/.local/share/virtualenvs/debugpy/bin/python')
+-- require('dap-python').setup('~/.local/share/virtualenvs/debugpy/bin/python')
+require('dap-python').setup('python3')
 
 local dap = require('dap')
 dap.adapters.firefox = {
