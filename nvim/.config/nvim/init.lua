@@ -554,6 +554,9 @@ for _, lsp in ipairs(servers) do
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
+    },
+    diagnostics = {
+        update_in_insert = false,
     }
   }
 end
@@ -609,8 +612,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 -- show diagnostics on hover only
-vim.o.updatetime = 250
-vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, border=border})]]
+vim.o.updatetime = 300
+vim.cmd [[autocmd! CursorHold * lua vim.diagnostic.open_float(nil, {focus=false, border=border})]]
 -- }}}
 
 -- {{{ TreeSitter
