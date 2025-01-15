@@ -225,7 +225,6 @@ require("lazy").setup({
     {"rcarriga/nvim-dap-ui", dependencies = {"nvim-neotest/nvim-nio"}},
     -- utils
     "mbbill/undotree",
-    "tpope/vim-commentary",
     "tpope/vim-vinegar",
     "mbbill/undotree",
     "nvim-lua/plenary.nvim", --telescope dependency
@@ -239,6 +238,7 @@ require("lazy").setup({
     "tpope/vim-surround",
     "tpope/vim-repeat",
     "tpope/vim-sensible",
+    "echasnovski/mini.icons",
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
@@ -251,10 +251,19 @@ require("lazy").setup({
             -- your configuration comes here
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
+        },
+        dependencies = {
+            "echasnovski/mini.icons"
         }
     },
     -- lispy parenthesis
-    "windwp/nvim-autopairs",
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true
+        -- use opts = {} for passing setup options
+        -- this is equivalent to setup({}) function
+    },
     "guns/vim-sexp", -- { 'for': 'clojure" }
     "tpope/vim-sexp-mappings-for-regular-people", -- { 'for': 'clojure" }
     -- git
