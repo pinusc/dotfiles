@@ -541,10 +541,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>?', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap("v", '<space>f', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<CR>', opts)
 
-  require("which-key").register({
-      ["<leader><leader>"] = {
-          name = "+lsp",
-      }
+  require("which-key").register(
+  {
+    { "<leader><leader>", group = "lsp" }
   })
   buf_set_keymap('n', '<leader><leader>D', '<Cmd>lua vim.lsp.buf.declaration()<CR>', 
     {noremap=true,silent=false,desc="declaration"})
