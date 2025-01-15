@@ -47,8 +47,6 @@ nnoremap <leader>cd :lcd %:p:h<CR>:pwd<CR>
 nnoremap <leader>cD :cd %:p:h<CR>:pwd<CR>
 
 " find bindings
-map <leader>e :Lexplore<cr><cr>
-map <leader>s :Sexplore<cr><cr>
 map <leader>u :UndotreeToggle<CR>
 map <leader>h :nohlsearch<CR>
 map <leader>ji :call cursor(0, 1)<cr>:call search("import")<cr>
