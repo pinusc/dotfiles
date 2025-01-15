@@ -328,7 +328,14 @@ require("lazy").setup({
     {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {}
+        opts = {
+            keywords = {
+                TODO = { color = "warning" },
+            },
+            highlight = {
+                pattern = [[.*<(KEYWORDS)\s*]],
+            }
+        }
     },
     -- prose
     "junegunn/goyo.vim",
@@ -428,6 +435,8 @@ require("gruvbox").setup({
     contrast = "hard";
     transparent_mode = true,
     overrides = {
+
+        Search = { bg = palette.dark0, fg = palette.light2 },
         SignColumn = {bg = palette.dark0_hard},
         StatusLine = {fg = palette.dark1, bold = true},
         StatusLineNC = {fg = palette.dark0_soft},
