@@ -1,0 +1,15 @@
+keybindings: vi
+model: claude:claude-3-5-haiku-latest
+prelude: 'role:default'
+clients:
+- type: claude
+- type: openai
+  api_base: https://api.openai.com/v1
+- type: gemini
+# Define document loaders to control how RAG and `.file`/`--file` load files of specific formats.
+document_loaders:
+  # You can add custom loaders using the following syntax:
+  #   <file-extension>: <command-to-load-the-file>
+  # Note: Use `$1` for input file and `$2` for output file. If `$2` is omitted, use stdout as output.
+  pdf: 'pdftotext $1 -'                         # Load .pdf file, see https://poppler.freedesktop.org to set up pdftotext
+  docx: 'pandoc --to plain $1'                  # Load .docx file, see https://pandoc.org to set up pandoc
