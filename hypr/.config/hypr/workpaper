@@ -1,0 +1,35 @@
+#!/bin/bash
+
+wallpapers="$(find "$HOME/.wallpaper" | sort --random-sort)"
+preloaded=1
+
+function nth_wallpaper {
+    echo "$wallpapers" | sed "${1}q;d"
+}
+
+function preload {
+    echo "Preloading: $(nth_wallpaper $preloaded)"
+    hyprctl hyprpaper preload "$(nth_wallpaper $preloaded)"
+    preloaded="$(( preloaded + 1 ))"
+}
+
+preload
+preload
+
+MON=LVDS-1
+
+function handle {
+    line="$1"
+    type="${line%%>>*}"
+    if [[ "$type" = workspace ]]; then
+        workspace="${line##*>>}"
+        echo "$workspace"
+        if [[ "$((workspace + 1))" -gt preloaded ]]; then
+            preload
+        fi
+        echo "Setting: $(nth_wallpaper $workspace)"
+        hyprctl hyprpaper wallpaper "$MON","$(nth_wallpaper "$workspace")"
+    fi
+}
+
+socat - UNIX-CONNECT:/tmp/hypr/"$(echo "$HYPRLAND_INSTANCE_SIGNATURE")/.socket2.sock" | while read line; do handle "$line"; done
