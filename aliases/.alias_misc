@@ -349,6 +349,22 @@ pdfcut () {
     kill "$zathura_pid"
 }
 
+pdf_scalecenter() {
+    if [ "$1" = -h ] || [ -z "$1" ]; then
+        echo "Usage: pdf_scalecenter FILE SCALE"
+        echo "Creates {FILE}-{SCALE}.pdf"
+        echo "Runs pdfjam --a4paper --scale SCALE"
+        return 1
+    fi
+    local outf
+    local zathura_pid
+    local FILENAME="$1"
+    local SCALE="$2"
+    outf="${FILENAME%%.pdf}-$SCALE.pdf"
+    pdfjam --outfile "$outf" --a4paper --scale "$SCALE" "$FILENAME"
+    # \zathura "$outf" &
+}
+
 pdfhalf() {
     if [ "$1" = -h ] || [ -z "$1" ]; then
         echo "Usage: pdfhalf FILE"
@@ -394,6 +410,22 @@ pdfrotate() {
         \rm "$outf"
     fi
     kill "$zathura_pid"
+}
+
+pdf_scantailor() {
+    echo "Are you sure you don't wanna make a djvu instead? try djvu_scantailor"
+    mkdir img
+    gs -dNOPAUSE -sDEVICE=jpeg -r300 -sOutputFile=img/p%03d.jpg "$1"
+    scantailor
+
+}
+
+djvu_scantailor() {
+    mkdir img
+    gs -dNOPAUSE -sDEVICE=jpeg -r300 -sOutputFile=img/p%03d.jpg "$1"
+    scantailor
+    cd out
+    djvubind
 }
 
 watch_file() {
@@ -530,3 +562,5 @@ alias b='buku --suggest'
 
 alias mount='sudo mount -o uid=1000,gid=1000'
 alias ncdu="echo You probably want gdu instead"
+
+alias whitespace="sed 's/ /·/g;s/\t/￫/g;s/\r/§/g;s/$/¶/g'"
