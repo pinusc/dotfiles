@@ -1,11 +1,30 @@
 keybindings: vi
-model: claude:claude-3-5-haiku-latest
+model: deepseek:deepseek-chat
 prelude: 'role:default'
 clients:
 - type: claude
 - type: openai
   api_base: https://api.openai.com/v1
 - type: gemini
+- type: openai-compatible
+  name: deepseek
+  api_base: https://api.deepseek.com
+# - type: openai-compatible
+#   name: deepseek
+#   api_base: https://api.deepseek.com
+#   models:
+#     - name: deepseek-chat
+#       max_input_tokens: 64000
+#       max_output_tokens: 8192
+#       input_price: 0.14
+#       output_price: 0.28
+#       supports_function_calling: true
+#     - name: deepseek-reasoner
+#       max_input_tokens: 64000
+#       max_output_tokens: 8192
+#       input_price: 0.55
+#       output_price: 2.19
+
 # Define document loaders to control how RAG and `.file`/`--file` load files of specific formats.
 document_loaders:
   # You can add custom loaders using the following syntax:
