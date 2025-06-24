@@ -1,0 +1,274 @@
+
+@define-color dark0_hard #121212;
+@define-color dark0 #282828;
+@define-color dark0_soft #32302f;
+@define-color dark1 #3c3836;
+@define-color dark2 #504945;
+@define-color dark3 #665c54;
+@define-color dark4 #7c6f64;
+@define-color dark4_256 #7c6f64;
+@define-color gray_245 #928374;
+@define-color gray_244 #928374;
+@define-color light0_hard #f9f5d7;
+@define-color light0 #fbf1c7;
+@define-color light0_soft #f2e5bc;
+@define-color light1 #ebdbb2;
+@define-color light2 #d5c4a1;
+@define-color light3 #bdae93;
+@define-color light4 #a89984;
+@define-color light4_256 #a89984;
+@define-color bright_red #fb4934;
+@define-color bright_green #b8bb26;
+@define-color bright_yellow #fabd2f;
+@define-color bright_blue #83a598;
+@define-color bright_purple #d3869b;
+@define-color bright_aqua #8ec07c;
+@define-color bright_orange #fe8019;
+@define-color neutral_red #cc241d;
+@define-color neutral_green #98971a;
+@define-color neutral_yellow #d79921;
+@define-color neutral_blue #458588;
+@define-color neutral_purple #b16286;
+@define-color neutral_aqua #689d6a;
+@define-color neutral_orange #d65d0e;
+@define-color faded_red #9d0006;
+@define-color faded_green #79740e;
+@define-color faded_yellow #b57614;
+@define-color faded_blue #076678;
+@define-color faded_purple #8f3f71;
+@define-color faded_aqua #427b58;
+@define-color faded_orange #af3a03;
+
+@define-color color_bg @dark0_hard;
+@define-color color_fg @light0_hard;
+/* 
+vim:ft=css
+*/
+* {
+    border: none;
+    border-radius: 0 0 5px 5px;
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: "monospace";
+    font-size: 14px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: @color_bg;
+    color: @color_fg;
+    border-bottom: 3px solid @dark1;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/*
+window#waybar.empty {
+}
+window#waybar.solo {
+}
+*/
+
+window#waybar.termite {
+}
+
+window#waybar.chromium {
+    border: none;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    color: @light4;
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button.active {
+    box-shadow: inset 0 1px @bright_purple;
+    color: @bright_purple;
+}
+
+#workspaces button.urgent {
+}
+
+#mode {
+    border-bottom: 3px solid #ffffff;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#mpd {
+    padding: 0 10px;
+    margin: 0 4px;
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
+
+#clock {
+}
+
+#battery {
+    color: #fe8019;
+}
+
+#battery.charging {
+    color: #ffffff;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f53c3c;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+label:focus {
+}
+
+#cpu {
+}
+
+#memory {
+}
+
+#backlight {
+}
+
+#network {
+}
+
+#network.disconnected {
+}
+
+#pulseaudio {
+}
+
+#pulseaudio.muted {
+    color: #2a5c45;
+}
+
+#custom-media {
+    color: #2a5c45;
+    min-width: 100px;
+}
+
+#custom-media.custom-spotify {
+}
+
+#custom-media.custom-vlc {
+}
+
+#temperature {
+}
+
+#temperature.critical {
+    color: @bright_red;
+}
+#memory {
+    color: @color_fg;
+}
+
+#memory.medium {
+    color: @faded_orange;
+}
+
+#memory.high {
+    color: @bright_red;
+}
+
+#tray {
+}
+
+#idle_inhibitor {
+}
+
+#idle_inhibitor.activated {
+    color: #2d3436;
+}
+
+#mpd {
+    color: #2a5c45;
+}
+
+#mpd.disconnected {
+}
+
+#mpd.stopped {
+}
+
+#mpd.paused {
+}
+
+@keyframes cavapalette {
+0%{   color: @bright_red;}
+17%{  color: @bright_yellow;}
+34%{  color: @bright_orange;}
+51%{  color: @bright_purple;}
+68%{  color: @bright_blue;}
+85%{  color: @bright_green;}
+100%{ color: @bright_aqua;}
+}
+
+#cava {
+    padding: 0;
+    margin: 0;
+    color: @bright_orange;
+    /* animation-name: cavapalette; */
+    /* animation-duration: 5s; */
+    /* animation-iteration-count: infinite; */
+    /* animation-direction: alternate; */
+    border: none;
+    font-size: 25px;
+}
+
+#custom-dunst {
+    color: @bright_yellow;
+}
+
+#custom-mail {
+    color: @dark4;
+}
+#custom-mail.hasmail {
+    color: @bright_yellow;
+}

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+time="$(bash-fuzzy-clock)"
+echo -n "$time\nthetime\nclock"
