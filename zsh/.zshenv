@@ -59,6 +59,7 @@ export BAT_PAGER="less"
 
 export NNN_FIFO=/tmp/nnn.fifo
 export NNN_TRASH=1
+# export NNN_OPENER="$HOME/.config/nnn/plugins/nuke"
 export NNN_OPENER="$HOME/.config/nnn/plugins/nuke"
 export NNN_PLUG='f:finder;z:autojump;o:fzopen;p:preview-tabbed;t:preview-tui;d:dragdrop;m:mediainf;s:suedit;v:nmount'
 export NNN_BMS='d:~/docs;m:/mnt;d:~/downloads/;D:/data;p:/data/pics'
@@ -74,4 +75,10 @@ PERL_MM_OPT="INSTALL_BASE=/home/pinusc/.local/lib/perl5"; export PERL_MM_OPT;
 BABASHKA_PRELOADS="(require '[selmer.parser :refer [<<]])"
 export BABASHKA_PRELOADS;
 
+export ANTHROPIC_API_KEY="$(cat ~/.local/share/ANTHROPIC_API_KEY)"
+export OPENAI_API_KEY="$(cat ~/.local/share/OPENAI_API_KEY)"
+export DICTIONARY_API_KEY="$(cat ~/.local/share/DICTIONARYAPI_API_KEY)"
+
 export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring # poetry fails on ssh otherwise
+
+source "$HOME/.config/user-dirs.dirs"
