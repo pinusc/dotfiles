@@ -125,7 +125,9 @@ c.aliases = {'q': 'close',
              'wqa': 'quit --save',
              'bk': 'spawn --userscript buku',
              'bukumark-add': 'bookmark-add;;spawn --userscript buku add',
-             'wallabag': "jseval (function(){var url=location.href||url;var wllbg=window.open('https://bag.g3l.org/bookmarklet?url=' + encodeURIComponent(url),'_blank');})();"}
+             'zotero': 'spawn --userscript zotero',
+             'Zotero': 'hint links userscript zotero',
+             'wallabag': "jseval (function(){var url=location.href||url;var wllbg=window.open('https://wb.giusb.party/bookmarklet?url=' + encodeURIComponent(url),'_blank');})();"}
 
 # Load a restored tab as soon as it takes focus.
 # Type: Bool
@@ -205,7 +207,7 @@ c.content.headers.do_not_track = True
 # between 5.12 and 5.14 (inclusive), changing the value exposed to
 # JavaScript requires a restart.
 # Type: FormatString
-c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
+# c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
 
 # Enable the ad/host blocker
 # Type: Bool
@@ -396,7 +398,7 @@ c.fileselect.handler = 'external'
 # the file to be written to. If not contained in any argument, the
 # standard output of the command is read instead.
 # Type: ShellCommand
-c.fileselect.single_file.command = ['foot', '-e', 'nnn', '-p', '{}']
+c.fileselect.single_file.command = ['foot', '--app-id', 'fileselect', '-e', 'nnn', '-p', '{}']
 
 # Command (and arguments) to use for selecting multiple files in forms.
 # The command should write the selected file paths to the specified file
@@ -405,7 +407,7 @@ c.fileselect.single_file.command = ['foot', '-e', 'nnn', '-p', '{}']
 # contained in any argument, the   standard output of the command is
 # read instead.
 # Type: ShellCommand
-c.fileselect.multiple_files.command = ['st', '-e', 'nnn', '-p', '{}']
+c.fileselect.multiple_files.command = ['foot','--app-id', 'fileselect', '-e', 'nnn', '-p', '{}']
 
 # When a hint can be automatically followed without pressing Enter.
 # Type: String
@@ -553,7 +555,8 @@ c.url.open_base_url = True
 c.url.searchengines = {
     '!amazon': 'https://www.amazon.com/s/?tag=duc0c-20&search-alias%3Daps&field-keywords={}',
     '!lb': 'https://letterboxd.com/search/{}/',
-    'DEFAULT': 'ddg.gg/?q={}',
+    'DEFAULT': 'https://duckduckgo.com/?q={}',
+    'kagi': 'https://kagi.com/search?q={}',
     'aa': 'https://annas-archive.org/search?q={}',
     'aasci': 'https://annas-archive.org/scidb/{}',
     'aw': 'https://wiki.archlinux.org/index.php/{}',
@@ -577,6 +580,7 @@ c.url.searchengines = {
     'yt': 'https://yewtu.be/search?q={}',
     'core': 'https://core.ac.uk/search?q={}',
     'scholar': 'https://scholar.google.com/scholar?q={}',
+    'minerva': 'https://unimi.primo.exlibrisgroup.com/discovery/search?query=any,contains,{}&search_scope=MyInst_and_CI&vid=39UMI_INST:VU1',
     'philp': 'https://philpapers.org/s/{}'
 }
 
@@ -673,6 +677,8 @@ c.fonts.web.family.fixed = 'default_family'
 c.fonts.web.size.minimum = 14
 
 # Bindings for normal mode
+config.bind('<Ctrl+o>', ':tab-focus stack-prev')
+config.bind('<Ctrl+i>', ':tab-focus stack-next')
 config.bind(',a', ':open -tr http://archive.is/newest/{url}')
 config.bind(',A', ':open -tr http://web.archive.org/web/*/{url}')
 config.bind(',w', ':wallabag')
@@ -719,3 +725,4 @@ config.bind('Ctrl-J', ':prompt-item-focus-next', mode='prompt')
 # buku stuff
 config.bind('M', ':bukumark-add')
 config.bind('B', ':spawn buku_run')
+
