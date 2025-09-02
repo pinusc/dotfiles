@@ -1,0 +1,5 @@
+[Unit]
+Description=Backup system
+
+[Service]
+ExecStart=systemd-inhibit %h/.config/restic/restic-backup.sh
