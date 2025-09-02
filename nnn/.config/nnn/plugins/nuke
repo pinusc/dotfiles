@@ -92,7 +92,7 @@ handle_pdf() {
         if is_mac; then
             nohup open "${FPATH}" >/dev/null 2>&1 &
         elif type zathura >/dev/null 2>&1; then
-            nohup zathura "${FPATH}" >/dev/null 2>&1 &
+            zathura --fork "${FPATH}" >/dev/null 2>&1
         else
             return
         fi
