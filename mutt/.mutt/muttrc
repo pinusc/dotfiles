@@ -117,6 +117,9 @@ mailboxes  +gstelluto \
            +logins/inbox \
            +logins/sent \
            +logins/archive \
+           +unimi \
+           +unimi/inbox \
+           +unimi/sent \
            +gmail \
            +gmail/inbox \
            +gmail/sent \
