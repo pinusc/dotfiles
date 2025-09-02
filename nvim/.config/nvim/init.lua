@@ -406,11 +406,16 @@ require("lazy").setup({
 
 
     -- Jupyter
-    -- This setup requires `pip install --user jupytext qtconsole`
-    -- Afterwards, just opening .ipynb files should convert them correctly
+    -- This setup requires, in your venv:
+    -- pip install ipykernel
+    -- python -m ipykernel install --user --name $VENVNAME
+    -- jupytext qtconsole --kernel $VENVNAME
+    --
     -- To execute cells, run `jupytext qtconsole` in a terminal (disown it too)
     -- Then run :JupyterConnect in vim
     -- Now pressing alt+Enter on a cell will run it and move to the next one
+    --
+    -- Just opening .ipynb files should convert them correctly
     {
         'jupyter-vim/jupyter-vim',
         init = function()
