@@ -3,7 +3,7 @@
  * Rofi version: 1.7.5+wayland3-dev
  **/
 * {
-    font:        "Liberation Sans";
+    font: "Comic Neue 12";
     red:                         rgba ( 220, 50, 47, 100 % );
     lightbg:                     #ffffcc;
     selected-active-foreground:  var(background);

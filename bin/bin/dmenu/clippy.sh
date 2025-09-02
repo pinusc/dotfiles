@@ -42,6 +42,7 @@ make_history() {
 
 dmenu () {
     res="$(rofi -dmenu -sep '|' -format 'f' -theme "$script_dir/clippy.rasi" -theme-str "$(make_history "$nmess") $history")"
+    # res="$(rofi -dmenu -sep '|' -format 'f' -theme "$script_dir/clippy.rasi")"
     ex="$?"
     echo "$res"
     return "$ex"
@@ -50,10 +51,10 @@ dmenu () {
 ai_run=0
 ai_command () {
     if [ "$ai_run" -eq 0 ]; then
-        aichat -s clippy --empty-session --save-session -m claude:claude-3-5-haiku-20241022 -r "clippy" "$1" | sed -z 's/\n/\\n/g'
+        aichat --role "clippy" --session clippy --empty-session --save-session -m gemini:gemini-2.5-flash "$1" | sed -z 's/\n/\\n/g'
 
     else
-        aichat -s clippy --save-session -m claude:claude-3-5-haiku-20241022 -r "clippy" "$1" | sed -z 's/\n/\\n/g'
+        aichat --role "clippy" --session clippy --save-session -m gemini:gemini-2.5-flash --role "clippy" "$1" | sed -z 's/\n/\\n/g'
     fi
 }
 
