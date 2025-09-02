@@ -56,3 +56,9 @@ nnoremap <leader>TODO :vimgrep TODO **/*.py
 
 " make
 map <F5> :!make<cr>
+
+"copy
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
