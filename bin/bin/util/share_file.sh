@@ -125,7 +125,7 @@ function create_qrcode() {
         qrurl="$(get_ip):$port"
     fi
     msg "${GREEN}Encoded QR for: ${NOFORMAT} http://$qrurl/$prettyname"
-    if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+    if [ "${XDG_SESSION_TYPE-}" = "tty" ]; then
         qrencode "http://$qrurl/$prettyname" -t UTF8
     else
         qrencode "http://$qrurl/$prettyname" -o "$qrfile"
@@ -140,7 +140,7 @@ function start_pyserver() {
 
 function open_qrcode() {
     local openwith=""
-    if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+    if [ "${XDG_SESSION_TYPE-}" = "tty" ]; then
         openwith="echo"
     elif which termux-open &>/dev/null; then
         openwith="termux-open"
