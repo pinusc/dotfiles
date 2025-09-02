@@ -1,0 +1,60 @@
+#!/bin/bash
+
+LAUNCH=1
+if [ "$1" = "--no-launch" ]; then
+    LAUNCH=0
+    shift
+fi
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+
+cat <<EOF
+lxd-launch: Initialize lxd instances with a .profile and remote logging
+
+Usage:
+    lxd-launch [options] INSTANCE_NAME [IMAGE]
+
+Options:
+    -h, --help    Show this help message
+    --no-launch   Do not launch a new lxd instance; instead, initialize an existing one
+    
+EOF
+fi
+
+name="$1"
+image="${2:-"images:alpine/edge"}"
+
+if [ "$LAUNCH" = 1 ]; then
+    echo "Launching $name -- $image"
+    lxc launch "$image" "$name"
+fi
+
+echo "Initializing /root/.profile"
+lxc exec "$name" -- sh -c "echo '"'
+set -o vi
+alias apk="apk --no-cache"
+start () {
+        rc-service "$1" start
+}
+restart () {
+        rc-service "$1" restart
+}
+status () {
+        rc-service "$1" status
+}
+enable () {
+        rc-update add "$1" default
+}
+alias log="tail -f /var/log/messages"
+alias ssps="netstat -tlnup"
+alias ll="ls -l"
+alias la="ls -la"
+'"' > .profile"
+
+echo "Initializing /etc/conf.d/syslog"
+lxc exec "$name" -- sh -c "echo '"'SYSLOGD_OPTS="-t -O /var/log/messages -R rsyslog:514 -L"'"' > /etc/conf.d/syslog"
+
+echo "Restarting..."
+lxc restart "$name"
+
+echo "All done!"
