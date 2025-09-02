@@ -388,9 +388,17 @@ require("lazy").setup({
         },
         config = function()
             require("papis").setup({
-                -- Your configuration goes here
+                enable_keymaps = true,
+                init_filetypes = { "markdown", "norg", "yaml", "typst" }
+                -- Configuration of the search module.
             })
         end,
+        keys = {
+            { "@@", "@<cmd>Papis search<cr>", mode = "i"},
+            { "gf", "<cmd>Papis at-cursor open-file<cr>", mode = "n"},
+            { "gn", "<cmd>Papis at-cursor open-note<cr>", mode = "n"},
+        },
+        ft = {"markdown", "latex"}
     },
 
     -- org and more
