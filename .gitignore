@@ -37,3 +37,7 @@ bin/bin/panel/api_keys.sh
 w3m/.w3m/*
 !w3m/.w3m/config
 !w3m/.w3m/keymap
+aichat/.config/aichat/.env
+aichat/.config/aichat/rags/
+aichat/.config/aichat/sessions/
+aichat/.config/aichat/messages.md
