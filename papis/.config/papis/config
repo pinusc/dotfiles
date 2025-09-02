@@ -1,5 +1,5 @@
 [papers]
-dir = ~/papers
+dir = ~/docs/papers
 
 [settings]
 opentool = zathura --fork
@@ -10,5 +10,5 @@ editor = nvim
 add-folder-name = {doc[author]}-{doc[year]}-{doc[title]}
 add-file-name = {doc[author]}-{doc[year]}-{doc[title]}
 add-subfolder = misc
-add-edit = True
-ref-format = '{doc[author_list][0][family]} {doc[year]}'
+add-confirm = True
+ref-format = '{doc[author_list][0][family]!l}{doc[year]}'
