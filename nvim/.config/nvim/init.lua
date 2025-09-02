@@ -125,7 +125,15 @@ require("lazy").setup({
                 sources = {
                     { name = 'nvim_lsp' },
                     { name = "ultisnips" },
-                    -- { name = "papis" },
+                    -- sources = {
+                    --     {
+                    --         name = 'omni',
+                    --         option = {
+                    --             disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' }
+                    --         }
+                    --     }
+                    -- },
+                    { name = "papis" },
                     {
                         name = 'buffer',
                         option = {
@@ -358,7 +366,9 @@ require("lazy").setup({
             keywords = {
                 TODO = { color = "warning" },
             },
+            merge_keywords = true,
             highlight = {
+                comments_only = false,
                 pattern = [[.*<(KEYWORDS)\s*]],
             }
         }
