@@ -111,6 +111,11 @@ require("lazy").setup({
 
             local cmp = require('cmp')
             local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
+            cmp.setup.filetype({ 'markdown', 'pandoc', 'markdown.pandoc'}, {
+                sources = {
+                    { name = 'path' },
+                }
+            });
             cmp.setup {
                 snippet = {
                     expand = function(args)
@@ -120,7 +125,7 @@ require("lazy").setup({
                 sources = {
                     { name = 'nvim_lsp' },
                     { name = "ultisnips" },
-                    { name = "papis" },
+                    -- { name = "papis" },
                     {
                         name = 'buffer',
                         option = {
@@ -370,24 +375,24 @@ require("lazy").setup({
     "reedes/vim-wheel",
 
     -- papis/citations
-    {
-        "jghauser/papis.nvim",
-        dependencies = {
-            "kkharji/sqlite.lua",
-            "MunifTanjim/nui.nvim",
-            "pysan3/pathlib.nvim",
-            "nvim-neotest/nvim-nio",
-            -- if not already installed, you may also want:
-            -- "nvim-telescope/telescope.nvim",
-            -- "hrsh7th/nvim-cmp",
-
-        },
-        config = function()
-            require("papis").setup({
-                -- Your configuration goes here
-            })
-        end,
-    },
+    -- {
+    --     "jghauser/papis.nvim",
+    --     dependencies = {
+    --         "kkharji/sqlite.lua",
+    --         "MunifTanjim/nui.nvim",
+    --         "pysan3/pathlib.nvim",
+    --         "nvim-neotest/nvim-nio",
+    --         -- if not already installed, you may also want:
+    --         -- "nvim-telescope/telescope.nvim",
+    --         -- "hrsh7th/nvim-cmp",
+    --
+    --     },
+    --     config = function()
+    --         require("papis").setup({
+    --             -- Your configuration goes here
+    --         })
+    --     end,
+    -- },
 
     -- org and more
     "dhruvasagar/vim-table-mode",
@@ -454,6 +459,7 @@ require("gruvbox").setup({
     transparent_mode = true,
     overrides = {
 
+        Normal = { fg = palette.light2 },
         Search = { bg = palette.dark0, fg = palette.light2 },
         SignColumn = {bg = palette.dark0_hard},
         StatusLine = {fg = palette.dark1, bold = true},

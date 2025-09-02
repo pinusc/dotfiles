@@ -2,7 +2,7 @@
 dir = ~/docs/papers
 
 [settings]
-opentool = zathura --fork
+opentool = sioyek
 file-browser = nnn
 picktool = fzf
 fzf-binary = /usr/bin/fzf

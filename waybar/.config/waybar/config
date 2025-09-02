@@ -6,7 +6,7 @@
         "width": 1800, 
         "modules-left": ["cpu", "temperature", "memory", "mpris", "pulseaudio", "bluetooth"],
         "modules-center": ["hyprland/workspaces"],
-        "modules-right": ["network", "custom/mail", "custom/dunst", "battery", "clock", "custom/fuzzyclock", "systemd-failed-units",],
+        "modules-right": ["network", "custom/mail", "custom/dunst", "custom/rgb", "battery", "clock", "custom/fuzzyclock", "systemd-failed-units",],
         // "modules-right": ["idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "battery", "custom/fuzzyclock", "tray"],
         "hyprland/workspaces": {
             "format": "{name} {windows}",
@@ -215,6 +215,12 @@
             "exec": "~/.config/waybar/scripts/dunst.sh",
             "on-click-right": "dunstctl set-paused toggle",
             "on-click": "dunstctl history-pop",
+            "restart-interval": 1,
+        },
+        "custom/rgb": {
+            "exec": "~/.config/waybar/scripts/rgb.sh",
+            // "on-click-right": "dunstctl set-paused toggle",
+            // "on-click": "dunstctl history-pop",
             "restart-interval": 1,
         },
         "custom/fuzzyclock": {

@@ -6,10 +6,11 @@ _url="$1"
 _qb_version='1.0.4'
 _proto_version=1
 _ipc_socket="${XDG_RUNTIME_DIR}/qutebrowser/ipc-$(echo -n "$USER" | md5sum | cut -d' ' -f1)"
-_qute_bin="$HOME/dev/qutebrowser/qutebrowser.py"
+_qute_venv="$HOME/dev/qutebrowser/.venv/bin/python3"
+# _qute_bin="$HOME/dev/qutebrowser/qutebrowser.py"
 
 if [ "$#" -gt 1 ]; then
-    "$_qute_bin" "$@" &
+    "$_qute_venv" -m qutebrowser "$@" &
     exit
 fi
 
@@ -17,4 +18,4 @@ printf '{"args": ["%s"], "target_arg": null, "version": "%s", "protocol_version"
        "${_url}" \
        "${_qb_version}" \
        "${_proto_version}" \
-       "${PWD}" | socat -lf /dev/null - UNIX-CONNECT:"${_ipc_socket}" || "$_qute_bin" "$@" &
+       "${PWD}" | socat -lf /dev/null - UNIX-CONNECT:"${_ipc_socket}" || "$_qute_venv" -m qutebrowser "$@" &

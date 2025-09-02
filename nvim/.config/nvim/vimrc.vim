@@ -117,10 +117,28 @@ endfunction
 
 
 function! UpdateWordCount()
-    let words = system("pandoc ".. expand('%') .. " --to plain | perl -ne 'print if //../Word Count/' | wc -w")
+    let words = system("pandoc ".. expand('%') .. " --to plain --reference-location block | perl -ne 'print if //../Word Count/' | wc -w")
     exe "%s/Word Count:.*/Word Count: " . trim(words) . "/"
 endfunction
 command! -nargs=0 UpdateWordCount call UpdateWordCount()
+
+function! UpdateCharCount()
+    let chars = system("pandoc ".. expand('%') .. " --to plain --reference-location block | perl -ne 'print if //../Character Count/' | wc -c")
+    exe "%s/Character Count:.*/Character Count: " . trim(chars) . "/"
+endfunction
+command! -nargs=0 UpdateCharCount call UpdateCharCount()
+
+function! UpdateWordCountNoFootnotes()
+    let words = system("pandoc ".. expand('%') .. " --to plain | perl -ne 'print if //../Word Count/' | wc -w")
+    exe "%s/Word Count:.*/Word Count: " . trim(words) . "/"
+endfunction
+command! -nargs=0 UpdateWordCountnoFootnotes call UpdateWordCountNoFootnotes()
+
+function! UpdateCharCountNoFootnotes()
+    let chars = system("pandoc ".. expand('%') .. " --to plain | perl -ne 'print if //../Character Count/' | wc -c")
+    exe "%s/Character Count:.*/Character Count: " . trim(chars) . "/"
+endfunction
+command! -nargs=0 UpdateCharCountNoFootnotes call UpdateCharCountNoFootnotes()
 
 " automatically initialize buffer by file type
 " augroup prose

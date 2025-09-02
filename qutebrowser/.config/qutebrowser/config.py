@@ -23,9 +23,9 @@ import sys, os
 # sys.path.append(os.path.join(sys.path[0], 'jblock'))
 # config.source("jblock/jblock/integrations/qutebrowser.py")
 
-if os.path.exists('/home/pinusc/.local/share/colors'):
+if os.path.exists('/home/giusb/.local/share/colors'):
     colors = {}
-    with open('/home/pinusc/.local/share/colors') as f:
+    with open('/home/giusb/.local/share/colors') as f:
         for line in f:
             name, color = line.split('=')
             color = color.strip().strip('"')
@@ -379,7 +379,7 @@ c.downloads.remove_finished = 30000
 # `{line0}`: Same as `{line}`, but starting from index 0. * `{column0}`:
 # Same as `{column}`, but starting from index 0.
 # Type: ShellCommand
-c.editor.command = ['st', '-e', 'sh', '-c', 'nvim {file}']
+c.editor.command = ['foot', '-e', 'sh', '-c', 'nvim {file}']
 
 # Handler for selecting file(s) in forms. If `external`, then the
 # commands specified by `fileselect.single_file.command`,
@@ -592,7 +592,7 @@ c.window.hide_decoration = True
 # Format to use for the window title. The same placeholders like for
 # `tabs.title.format` are defined.
 # Type: FormatString
-c.window.title_format = 'zoom'
+c.window.title_format = '{perc}{current_title}{title_sep}qutebrowser'
 
 # Set the main window background to transparent.  This allows having a
 # transparent tab- or statusbar (might require a compositor such as
@@ -679,18 +679,22 @@ c.fonts.web.size.minimum = 14
 # Bindings for normal mode
 config.bind('<Ctrl+o>', ':tab-focus stack-prev')
 config.bind('<Ctrl+i>', ':tab-focus stack-next')
+config.bind(',k', 'spawn -m kdeconnect-autoshare.sh {url}')
+config.bind(';k', 'hint links spawn -m kdeconnect-autoshare.sh {url}')
 config.bind(',a', ':open -tr http://archive.is/newest/{url}')
 config.bind(',A', ':open -tr http://web.archive.org/web/*/{url}')
 config.bind(',w', ':wallabag')
 config.bind(',lb', "jseval --quiet -w main imdbu = $('.itemExternalLinks').children()[0].href; window.open('https://letterboxd.com/imdb/' + imdbu.substring(imdbu.lastIndexOf('/') + 1))")
 config.bind(',m', 'spawn qmpv {url}')
-config.bind(',otp', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383 --totp')
+config.bind(',otp', 'spawn --userscript qute-keepassxc --key A26070DA8919272FE983354E823A3D2B46E4FA45 --totp')
 config.bind(',r', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/readability')
 config.bind(';m', 'hint links spawn qmpv {hint-url}')
 config.bind(';o', 'hint links spawn url_opener.sh "{hint-url}"')
 config.bind('<Ctrl+Shift+c>', ':yank selection')
 config.bind('<Ctrl+c>', ':yank selection')
-config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383')
+config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key A26070DA8919272FE983354E823A3D2B46E4FA45')
+# insert
+config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key A26070DA8919272FE983354E823A3D2B46E4FA45', mode='insert')
 config.bind('`', 'config-cycle tabs.show always never')
 config.bind('insert', '<Ctrl+Shift+C> :yank selection')
 config.bind('tSH', 'spawn -u domcycle content.javascript.enabled')
@@ -716,7 +720,6 @@ config.bind('<Ctrl+w>', ':rl-filename-rubout', mode='prompt')
 
 
 # Bindings for insert mode
-config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key 3418E230220BD88F97FAC49DBB044A25A4F8F383', mode='insert')
 
 # Bindings for prompt mode
 config.bind('<Ctrl+j>', ':prompt-item-focus-next', mode='prompt')

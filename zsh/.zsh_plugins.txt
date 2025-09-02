@@ -8,9 +8,11 @@ zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
 mafredri/zsh-async
 changyuheng/zsh-interactive-cd
+# whjvenyl/fasd
 
-/home/pinusc/builds/clean
+/home/giusb/builds/clean
 zsh-users/zsh-history-substring-search
 ptavares/zsh-direnv
 # jreese/zsh-titles
+kevinywlui/zlong_alert.zsh
 z-shell/F-Sy-H

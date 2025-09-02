@@ -7,7 +7,7 @@ alias pingg="ping -a perdu.com"
 alias rsync="rsync --info=progress2"
 
 # Python aliases
-alias v="source venv/bin/activate"
+alias venv="source venv/bin/activate"
 alias d="deactivate"
 
 if [ "$XDG_SESSION_TYPE" = "x11" ]; then
@@ -564,3 +564,23 @@ alias mount='sudo mount -o uid=1000,gid=1000'
 alias ncdu="echo You probably want gdu instead"
 
 alias whitespace="sed 's/ /·/g;s/\t/￫/g;s/\r/§/g;s/$/¶/g'"
+
+ce() {
+    cd dot
+    nvim "$(fzf --walker=file)"
+}
+
+alias papis="PYTHONWARNINGS=ignore papis"
+alias v='f -e nvim' # use fasd to open files with vim
+
+umu-create-desktop-file() {
+    file="$1"
+    name="$2"
+    echo "[Desktop Entry]
+Name=$name
+Exec=env WINEPREFIX=/home/giusb/games/umu/umu-prefix umu-run \"$(realpath "$file")\"
+Terminal=false
+Type=Application
+Categories=Game;" > ~/.local/share/applications/"$name".desktop
+    update-desktop-database ~/.local/share/applications
+}

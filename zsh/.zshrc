@@ -12,6 +12,9 @@ setopt share_history
 setopt hist_find_no_dups hist_ignore_dups hist_ignore_all_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
+setopt inc_append_history # Immediately append new commands to history file
+setopt append_history # Append history instead of overwriting it
+setopt extended_history # Save timestamps for each command
 bindkey -v
 
 setopt AUTO_PUSHD
@@ -94,16 +97,31 @@ gpg-connect-agent updatestartuptty /bye &> /dev/null
 if which zoxide &>/dev/null; then
     eval "$(zoxide init zsh)"
 fi
+if which fasd &>/dev/null; then
+    eval "$(fasd --init auto)"
+fi
+
 
 if which fzf &>/dev/null; then
     source /usr/share/fzf/key-bindings.zsh
     source /usr/share/fzf/completion.zsh
 
     export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+    export FZF_DEFAULT_COMMAND='fd --type f --follow --strip-cwd-prefix'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
     export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 
     which fd &>/dev/null && export FZF_ALT_C_COMMAND="fd --type directory --follow --min-depth 1"
+
+    _fzf_compgen_path() {
+        fd --hidden --follow --exclude ".git" . "$1"
+    }
+
+    # Use fd to generate the list for directory completion
+    _fzf_compgen_dir() {
+        fd --type d --hidden --follow --exclude ".git" . "$1"
+    }
 
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
@@ -120,12 +138,12 @@ fi
 # In ~/.ssh/config, put
 # AddKeysToAgent yes
 # for automatic key adding
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
-fi
-if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
-    source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
-fi
+#if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+#    ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+#fi
+#if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
+#    source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
+#fi
 
 # ===== Code that MUST be run after logins. Otherwise run it before. =======
 if which history-substring-search-up &>/dev/null; then
@@ -158,5 +176,8 @@ function precmd() {
     unset timer
   fi
 }
+
+zlong_duration=20
+zlong_ignore_cmds="nvim ssh mosh pacman paru paci"
 
 # wait # so we don't get a prompt before background jobs
