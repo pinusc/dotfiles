@@ -233,7 +233,10 @@ require("lazy").setup({
     "tpope/vim-vinegar",
     "mbbill/undotree",
     "nvim-lua/plenary.nvim", --telescope dependency
-    "nvim-telescope/telescope.nvim",
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = { 'rafi/telescope-thesaurus.nvim' },
+    },
     "junegunn/fzf",
     "chrisbra/Recover.vim", -- diff when swap file found
     "ggandor/leap.nvim", -- sneak
@@ -370,29 +373,25 @@ require("lazy").setup({
     "reedes/vim-litecorrect",
     "reedes/vim-wordy",
     "reedes/vim-lexical",
-    "ron89/thesaurus_query.vim",
     "dbmrq/vim-ditto",
     "reedes/vim-wheel",
 
     -- papis/citations
-    -- {
-    --     "jghauser/papis.nvim",
-    --     dependencies = {
-    --         "kkharji/sqlite.lua",
-    --         "MunifTanjim/nui.nvim",
-    --         "pysan3/pathlib.nvim",
-    --         "nvim-neotest/nvim-nio",
-    --         -- if not already installed, you may also want:
-    --         -- "nvim-telescope/telescope.nvim",
-    --         -- "hrsh7th/nvim-cmp",
-    --
-    --     },
-    --     config = function()
-    --         require("papis").setup({
-    --             -- Your configuration goes here
-    --         })
-    --     end,
-    -- },
+    {
+        "jghauser/papis.nvim",
+        dependencies = {
+            "kkharji/sqlite.lua",
+            "MunifTanjim/nui.nvim",
+            "nvim-telescope/telescope.nvim",
+            "hrsh7th/nvim-cmp",
+
+        },
+        config = function()
+            require("papis").setup({
+                -- Your configuration goes here
+            })
+        end,
+    },
 
     -- org and more
     "dhruvasagar/vim-table-mode",
@@ -791,6 +790,9 @@ end, {desc = "DAP scopes"})
 -- }}}
 
 -- {{{ Plugins
+-- thesaurus
+vim.keymap.set('n', '<leader>TT', '<cmd>Telescope thesaurus lookup<CR>')
+vim.keymap.set('n', '<leader>ts', '<cmd>Telescope thesaurus lookup<CR>')
 
 -- leap
 require('leap').add_default_mappings()
