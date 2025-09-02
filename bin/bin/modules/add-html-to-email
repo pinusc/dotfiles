@@ -86,6 +86,10 @@ def clean_plain(text):
 
 if __name__ == "__main__":
     # Use CRLF newlines as per RFC.
-    msg = Parser(policy=policy.SMTP).parse(sys.stdin)
-    msg = add_html(msg)
-    os.write(1, msg.as_bytes())
+    try:
+        msg = Parser(policy=policy.SMTP).parse(sys.stdin)
+        msg = add_html(msg)
+        os.write(1, msg.as_bytes())
+    except Exception:
+        print(sys.stdin, file=sys.stderr, flush=True)
+        raise Exception(sys.stdin)
