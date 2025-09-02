@@ -794,6 +794,20 @@ end, {desc = "DAP scopes"})
 
 -- leap
 require('leap').add_default_mappings()
+require('leap').opts.preview_filter =
+  function (ch0, ch1, ch2)
+    return not (
+      ch1:match('%s') or
+      ch0:match('%a') and ch1:match('%a') and ch2:match('%a')
+    )
+  end
+-- remote editing
+vim.keymap.set({'n', 'x', 'o'}, 'gs', function ()
+  require('leap.remote').action()
+end)
+
+-- add z as a motion for use with operators
+vim.keymap.set({'x', 'o'}, 'z', '<Plug>(leap-forward-till)')
 
 -- {{{ Telescope
 local actions = require('telescope.actions')
