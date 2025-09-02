@@ -1,0 +1,10 @@
+[Unit]
+Description=Borg Backup for docs
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/tarsnap/borg-backup.sh
+Restart=on-failure
+RestartSec=120
+StartLimitBurst=2
+#StartLimitIntervalSec=1000

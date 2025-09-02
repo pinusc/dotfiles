@@ -1,0 +1,10 @@
+[Unit]
+Description=Borg timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=borg.service
+
+[Install]
+WantedBy=timers.target
