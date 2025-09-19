@@ -2,13 +2,15 @@
 dir = ~/docs/papers
 
 [settings]
-opentool = sioyek
+opentool = zathura
 file-browser = nnn
 picktool = fzf
 fzf-binary = /usr/bin/fzf
 editor = nvim
-add-folder-name = {doc[author]}-{doc[year]}-{doc[title]}
-add-file-name = {doc[author]}-{doc[year]}-{doc[title]}
+add-folder-name = '{{doc[ref]}}-{{doc[title]}}'
+add-file-name = '{{doc[ref]}}-{{doc[title]}}'
 add-subfolder = misc
 add-confirm = True
+#formatter=jinja2
+#ref-format = '{{ doc["ref"] if doc["ref"] else doc["author_list"][0]["family"].lower() ~ doc["year"]}}'
 ref-format = '{doc[author_list][0][family]!l}{doc[year]}'
