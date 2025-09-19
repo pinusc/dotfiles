@@ -220,16 +220,10 @@ require("lazy").setup({
     --         ]])
     --     end,
     -- },
-    { 
-        "ellisonleao/gruvbox.nvim", 
-        priority = 1000, 
-        lazy = false,
-    },
-    -- {
-    --     "folke/tokyonight.nvim",
+    -- { 
+    --     "ellisonleao/gruvbox.nvim", 
+    --     priority = 1000, 
     --     lazy = false,
-    --     priority = 1000,
-    --     opts = {},
     -- },
     "mhinz/vim-startify",
     -- debugging
@@ -527,6 +521,9 @@ require("lazy").setup({
     }
 })
 
+
+local base16 = require("base16");
+vim.api.nvim_set_hl(0, 'Visual', { bg = base16.gui03 })
 --[[
 " {{{ Jupytext
 
@@ -542,23 +539,23 @@ let g:pymode_motion = 0
 " }}}
 --]]
 
-local palette = require('gruvbox').palette
-require("gruvbox").setup({
-    contrast = "hard";
-    transparent_mode = true,
-    overrides = {
-
-        Normal = { fg = palette.light2 },
-        Search = { bg = palette.dark0, fg = palette.light2 },
-        SignColumn = {bg = palette.dark0_hard},
-        StatusLine = {fg = palette.dark1, bold = true},
-        StatusLineNC = {fg = palette.dark0_soft},
-        Folded = {bg = palette.dark0_soft},
-        ["@method.call"] = {bold = false},
-    }
-})
-vim.o.background = "dark" -- or "light" for light mode
-vim.cmd([[colorscheme gruvbox]])
+-- local palette = require('gruvbox').palette
+-- require("gruvbox").setup({
+--     contrast = "hard";
+--     transparent_mode = true,
+--     overrides = {
+--
+--         Normal = { fg = palette.light2 },
+--         Search = { bg = palette.dark0, fg = palette.light2 },
+--         SignColumn = {bg = palette.dark0_hard},
+--         StatusLine = {fg = palette.dark1, bold = true},
+--         StatusLineNC = {fg = palette.dark0_soft},
+--         Folded = {bg = palette.dark0_soft},
+--         ["@method.call"] = {bold = false},
+--     }
+-- })
+-- vim.o.background = "dark" -- or "light" for light mode
+-- vim.cmd([[colorscheme gruvbox]])
 
 --[[
 "neomake/neomake"
