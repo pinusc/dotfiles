@@ -208,6 +208,7 @@ c.content.headers.do_not_track = True
 # JavaScript requires a restart.
 # Type: FormatString
 # c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {qt_key}/{qt_version} {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
+c.content.headers.user_agent = 'Mozilla/5.0 ({os_info}) AppleWebKit/{webkit_version} (KHTML, like Gecko) {upstream_browser_key}/{upstream_browser_version_short} Safari/{webkit_version}'
 
 # Enable the ad/host blocker
 # Type: Bool
