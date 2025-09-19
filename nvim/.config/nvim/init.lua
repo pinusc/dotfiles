@@ -399,7 +399,7 @@ require("lazy").setup({
         end,
         keys = {
             { "@@", "@<cmd>Papis search<cr>", mode = "i"},
-            { "gf", "<cmd>Papis at-cursor open-file<cr>", mode = "n"},
+            { "gp", "<cmd>Papis at-cursor open-file<cr>", mode = "n"},
             { "gn", "<cmd>Papis at-cursor open-note<cr>", mode = "n"},
         },
         ft = {"markdown", "latex"}
