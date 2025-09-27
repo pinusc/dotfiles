@@ -1,5 +1,14 @@
 #!/bin/bash
+set -euo pipefail
 
+die() {
+    echo "$1" >&2
+    exit 1
+}
+
+if ! which ebook-meta &>/dev/null; then
+    die "No ebook-meta found. Install Calibre."
+fi
 original_file="$1"
 original_basename="$(basename -- "$original_file")"
 original_extension="${original_basename##*.}"
@@ -15,7 +24,7 @@ ebook-meta "$filename" > "$metafile"
 
 metadata_list=()
 
-while IFS="" read -r line || [ -n "$p" ]
+while IFS="" read -r line # || [ -n "$p" ]
 do
     case "$line" in
         Title*)
@@ -49,7 +58,7 @@ result="$(ebook-meta "$filename")"
 # We HAVE to re-read the data, because author_sort might have been automagically set
 title=""
 author_sort=""
-while IFS="" read -r line || [ -n "$p" ]
+while IFS="" read -r line # || [ -n "$p" ]
 do
     case "$line" in
         Title*)
@@ -67,6 +76,7 @@ echo
 echo "Writing this to: $new_filename"
 read -p "Is this okay? " -n 1 -r
 if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    echo ""
     echo mv "$filename" "$new_filename"
     mv "$filename" "$new_filename"
     rm -i "$original_file"
