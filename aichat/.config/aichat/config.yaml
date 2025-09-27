@@ -1,6 +1,7 @@
 keybindings: vi
 model: deepseek:deepseek-chat
-prelude: 'role:default'
+repl_prelude: 'role:default'
+cmd_prelude: 'role:default'
 clients:
 - type: claude
 - type: openai
