@@ -16,6 +16,10 @@
                 "class<mpv>": "", // Windows whose titles contain "youtube"
                 "class<org.qutebrowser.qutebrowser>": "", // Windows whose classes are "firefox"
                 "class<foot>": "", // Windows that contain "foot" in either class or title. For optimization reasons, it will only match against a title if at least one other window explicitly matches against a title.
+                "class<footclient>": "",
+                "class<vesktop>": "",
+                "class<discord>": "",
+                "class<steam>": "",
             },
         },
         "mpris": {
