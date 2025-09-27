@@ -26,7 +26,9 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 if [[ ! $DISPLAY && XDG_VTNR -eq 1 ]]; then
     # logverbose 20 is useful for detecting Modelines
     # startx -logverbose 100 &> X.log
-    exec Hyprland
+    if uwsm check may-start; then
+        exec uwsm start hyprland.desktop
+    fi
 fi
 
 # start tmux IFF the shell is remote 
