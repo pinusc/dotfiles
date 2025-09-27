@@ -584,3 +584,6 @@ Type=Application
 Categories=Game;" > ~/.local/share/applications/"$name".desktop
     update-desktop-database ~/.local/share/applications
 }
+
+alias birdsound="mpv 'https://www.youtube.com/watch?v=aIHcLXpvYLk&t=40'"
+alias audiotest="speaker-test -t sine -l 1"
