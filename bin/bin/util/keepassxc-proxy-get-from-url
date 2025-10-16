@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+if [ -z "$1" ] || [ "$1" = -h ] || [ "$1" = --help ]; then
+    echo "Usage: keepassxc-proxy-get-from-url URL"
+    echo "Where URL is an URL associated with the login requested. Will always return the first matching entry."
+    echo "Uses keepassxc_proxy_client"
+fi
+
+keepassxc_proxy_client get <(gpg --quiet --decrypt ~/.local/share/keepassxc-proxy-client-key.gpg) "$1"
