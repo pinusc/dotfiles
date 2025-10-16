@@ -15,9 +15,9 @@ fileext = ".vcf"
 type = "carddav"
 # We can simplify this URL here as well. In theory it shouldn't matter.
 # url = "https://dav.gstelluto.com/"
-url = "http://dav.gstelluto.com/radicale/pinusc/9bf128d5-fb63-bb8f-8fca-ed7c60e2f2ff/"
+url = "https://dav.gstelluto.com/radicale/pinusc/9bf128d5-fb63-bb8f-8fca-ed7c60e2f2ff/"
 username = "pinusc"
-password.fetch = ["command", "sh", "-c", "pass servers/dav.gstelluto.com | head -n  1"]
+password.fetch = ["command", "sh", "-c", "keepassxc-proxy-get-from-url 'https:/''/dav.gstelluto.com'"]
 
 [pair my_cal]
 a = "my_cal_local"
@@ -34,4 +34,4 @@ type = "caldav"
 # We can simplify this URL here as well. In theory it shouldn't matter.
 url = "https://dav.gstelluto.com/radicale/pinusc/"
 username = "pinusc"
-password.fetch = ["command", "sh", "-c", "pass servers/dav.gstelluto.com | head -n  1"]
+password.fetch = ["command", "sh", "-c", "keepassxc-proxy-get-from-url 'https:/''/dav.gstelluto.com'"]
