@@ -587,3 +587,4 @@ Categories=Game;" > ~/.local/share/applications/"$name".desktop
 
 alias birdsound="mpv 'https://www.youtube.com/watch?v=aIHcLXpvYLk&t=40'"
 alias audiotest="speaker-test -t sine -l 1"
+alias ntfy="curl ntfy.sh/giusb2dot0 -d "
