@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# vim: ft=bash
 
 set -Eeuo pipefail
 trap cleanup SIGINT SIGTERM ERR
@@ -20,7 +21,7 @@ tmpfile="$(mktemp --tmpdir mailmessage.XXXX)"
     #sleep $(( 5 * 60 )) 
 
     if [[ -f "$tmpfile" ]]; then
-      < "$tmpfile" sendmail "$@"
+      < "$tmpfile" msmtp "$@"
     else
       cleanup
     fi

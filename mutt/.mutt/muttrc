@@ -22,6 +22,12 @@ set abort_noattach   = ask-yes
 set attribution      = "On %d, %n wrote:\n"  # adding a newline fixes pandoc blockquote
 set abort_noattach_regex = "^[^>].*attach(|ed|ments?)"
 set sendmail = "~/bin/util/mutt-sendmail-markdown-wrapper"
+set use_from = yes
+set envelope_from = yes
+
+# set smtp_url    = "smtp://giulia.stelluto@studenti.unimi.it@smtp.office365.com:587"
+# set smtp_authenticators ="xoauth2"
+# set smtp_oauth_refresh_command = "mutt_oauth2.py -t .local/share/giulia_unimi_office_oauth.gpg"
 
 # set folder=~/mail/giuseppe@gstelluto.com/INBOX
 # set spoolfile=+/
