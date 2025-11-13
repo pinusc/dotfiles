@@ -680,6 +680,7 @@ c.fonts.web.family.fixed = 'default_family'
 c.fonts.web.size.minimum = 14
 
 # Bindings for normal mode
+GPG_KEY='A26070DA8919272FE983354E823A3D2B46E4FA45'
 config.bind('<Ctrl+o>', ':tab-focus stack-prev')
 config.bind('<Ctrl+i>', ':tab-focus stack-next')
 config.bind(',k', 'spawn -m kdeconnect-autoshare.sh {url}')
@@ -689,15 +690,18 @@ config.bind(',A', ':open -tr http://web.archive.org/web/*/{url}')
 config.bind(',w', ':wallabag')
 config.bind(',lb', "jseval --quiet -w main imdbu = $('.itemExternalLinks').children()[0].href; window.open('https://letterboxd.com/imdb/' + imdbu.substring(imdbu.lastIndexOf('/') + 1))")
 config.bind(',m', 'spawn qmpv {url}')
-config.bind(',otp', 'spawn --userscript qute-keepassxc --key A26070DA8919272FE983354E823A3D2B46E4FA45 --totp')
 config.bind(',r', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/readability')
 config.bind(';m', 'hint links spawn qmpv {hint-url}')
 config.bind(';o', 'hint links spawn url_opener.sh "{hint-url}"')
 config.bind('<Ctrl+Shift+c>', ':yank selection')
 config.bind('<Ctrl+c>', ':yank selection')
-config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key A26070DA8919272FE983354E823A3D2B46E4FA45')
-# insert
-config.bind('<Ctrl+a>', 'spawn --userscript qute-keepassxc --key A26070DA8919272FE983354E823A3D2B46E4FA45', mode='insert')
+
+config.bind(',otp', f'spawn --userscript qute-keepassxc --key {GPG_KEY} --totp')
+config.bind('<Ctrl+a>', f"spawn --userscript qute-keepassxc --key {GPG_KEY}")
+config.bind('<Ctrl+a>', f"spawn --userscript qute-keepassxc --key {GPG_KEY}", mode='insert')
+# config.bind(',otp', f'spawn --userscript qute-keepassxc --insecure --totp')
+# config.bind('<Ctrl+a>', f"spawn --userscript qute-keepassxc --insecure")
+# config.bind('<Ctrl+a>', f"spawn --userscript qute-keepassxc --insecure", mode='insert')
 config.bind('`', 'config-cycle tabs.show always never')
 config.bind('insert', '<Ctrl+Shift+C> :yank selection')
 config.bind('tSH', 'spawn -u domcycle content.javascript.enabled')
