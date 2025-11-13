@@ -1,0 +1,46 @@
+defaults
+set_from_header on
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.local/state/msmtp.log
+
+account giulia.stelluto@studenti.unimi.it
+from giulia.stelluto@studenti.unimi.it
+user giulia.stelluto@studenti.unimi.it
+auth xoauth2
+# setup with $ oama authorize microsoft "giulia.stelluto@studenti.unimi.it"
+# passwordeval mutt_oauth2.py -t ~/.local/share/giulia_unimi_office_oauth.gpg
+passwordeval oama access giulia.stelluto@studenti.unimi.it
+host smtp.office365.com
+port 587
+tls on
+
+account giulia@gstelluto.com
+from giulia@gstelluto.com
+user giulia@gstelluto.com
+passwordeval keepassxc_proxy_client get ~/tmp/proxyc 'https://purelymail.com'
+host smtp.purelymail.com
+port 465
+tls on
+tls_starttls off
+
+account logins@gstelluto.com
+from logins@gstelluto.com
+user logins@gstelluto.com
+passwordeval keepassxc_proxy_client get ~/tmp/proxyc 'https://purelymail.com'
+host smtp.purelymail.com
+port 465
+tls on
+tls_starttls off
+
+account giuseppe@gstelluto.com
+from giuseppe@gstelluto.com
+user giuseppe@gstelluto.com
+passwordeval keepassxc_proxy_client get ~/tmp/proxyc 'https://purelymail.com'
+host smtp.purelymail.com
+port 465
+tls on
+tls_starttls off
+
+# account default : giulia.stelluto@studenti.unimi.it
