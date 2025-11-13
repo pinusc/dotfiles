@@ -33,11 +33,11 @@ set envelope_from = yes
 # set spoolfile=+/
 # set header_cache=~/.cache/mutt
 
-set realname="Giuseppe Stelluto"
+set realname="Giulia Stelluto"
 
-set from="giuseppe@gstelluto.com"
+set from="giulia@gstelluto.com"
 
-folder-hook . set from="giuseppe@gstelluto.com"
+folder-hook . set from="giulia@gstelluto.com"
 folder-hook . set record="+gstelluto/sent"
 folder-hook . set copy=yes
 
@@ -45,7 +45,8 @@ folder-hook . set copy=yes
 # folder-hook +colby* set from="giuseppe.stelluto@colby.edu"
 # folder-hook +colby* set copy=no
 folder-hook +logins* set from="logins@gstelluto.com"
-folder-hook +gstelluto* set from="giuseppe@gstelluto.com"
+folder-hook +gstelluto* set from="giulia@gstelluto.com"
+folder-hook +unimi* set from="giulia.stelluto@studenti.unimi.it"
 
 
 set edit_headers=yes
@@ -131,15 +132,6 @@ mailboxes  +gstelluto \
            +gmail/sent \
            +gmail/spam \
            +local \
-           +colby \
-           +colby/inbox \
-           +colby/logins \
-           +colby/classes \
-           +colby/gdrive \
-           +colby/sent \
-           +colby/spam \
-           +protonmail-gstell \
-           +protonmail-gstell/inbox
 
 # by default, deleted mail will go in ~/mail/trash
 folder-hook . set trash = +trash
