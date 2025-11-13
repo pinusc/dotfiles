@@ -102,9 +102,9 @@ if os.path.exists('/home/giusb/.local/share/colors'):
     c.colors.tabs.even.fg = colors['base05']
     c.colors.tabs.even.bg = colors['base00']
     c.colors.tabs.selected.odd.fg = colors['base05']
-    c.colors.tabs.selected.odd.bg = colors['base02']
+    c.colors.tabs.selected.odd.bg = colors['base03']
     c.colors.tabs.selected.even.fg = colors['base05']
-    c.colors.tabs.selected.even.bg = colors['base02']
+    c.colors.tabs.selected.even.bg = colors['base03']
     c.colors.tabs.pinned.odd.fg = colors['base00']
     c.colors.tabs.pinned.odd.bg = colors['base0A']
     c.colors.tabs.pinned.even.fg = colors['base00']
@@ -113,6 +113,8 @@ if os.path.exists('/home/giusb/.local/share/colors'):
     c.colors.tabs.pinned.selected.odd.bg = colors['base0D']
     c.colors.tabs.pinned.selected.even.fg = colors['base00']
     c.colors.tabs.pinned.selected.even.bg = colors['base0D']
+
+c.colors.webpage.preferred_color_scheme = 'dark'
 
 
 # Aliases for commands. The keys of the given dictionary are the
