@@ -566,6 +566,7 @@ c.url.searchengines = {
     'bgg': 'https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q={}&B1=Go',
     'd': 'https://thefreedictionary.com/{}',
     'ddg': 'https://duckduckgo.com/?t=h_&q={}',
+    'oniw': 'https://oxygennotincluded.wiki.gg/wiki/{}',
     'enit': 'https://www.wordreference.com/enit/{}',
     'gh': 'https://github.com/search?q={}&type=Repositories',
     'hn': 'https://duckduckgo.com/?q=site:news.ycombinator.com+{}',
