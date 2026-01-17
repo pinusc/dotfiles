@@ -14,6 +14,7 @@ REDIRECT_MAP = {
     "www.twitter.com": operator.methodcaller('setHost', 'nitter.poast.org'),
     "x.com": operator.methodcaller('setHost', 'nitter.poast.org'),
     "www.x.com": operator.methodcaller('setHost', 'nitter.poast.org'),
+    "imgur.com": operator.methodcaller('setHost', 'imgur.artemislena.eu'),
     # "termbin.com": operator.methodcaller('setHost', 'l.termbin.com'),
     # "youtu.be": operator.methodcaller('setHost', 'yewtu.be'),
     "medium.com": operator.methodcaller('setHost', 'scribe.rip'),
@@ -26,10 +27,12 @@ def int_fn(info: interceptor.Request):
         info.request_url.scheme() in {"data", "blob"}):
         return
     url = info.request_url
+    oldurl = url.url()
+    # message.info(url)
     redir = REDIRECT_MAP.get(url.host())
     if redir is not None and redir(url) is not False:
         # __import__('pdb').set_trace()
-        message.info("Redirecting to " + url.toString())
+        message.info(f"Redirecting {oldurl} to {url.toString()}")
         info.redirect(url)
 
 
