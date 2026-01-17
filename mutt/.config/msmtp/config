@@ -19,7 +19,7 @@ tls on
 account giulia@gstelluto.com
 from giulia@gstelluto.com
 user giulia@gstelluto.com
-passwordeval keepassxc_proxy_client get ~/tmp/proxyc 'https://purelymail.com'
+passwordeval keepassxc-proxy-get-from-url 'https://purelymail.com'
 host smtp.purelymail.com
 port 465
 tls on
@@ -28,7 +28,7 @@ tls_starttls off
 account logins@gstelluto.com
 from logins@gstelluto.com
 user logins@gstelluto.com
-passwordeval keepassxc_proxy_client get ~/tmp/proxyc 'https://purelymail.com'
+passwordeval keepassxc-proxy-get-from-url 'https://purelymail.com'
 host smtp.purelymail.com
 port 465
 tls on
@@ -37,10 +37,10 @@ tls_starttls off
 account giuseppe@gstelluto.com
 from giuseppe@gstelluto.com
 user giuseppe@gstelluto.com
-passwordeval keepassxc_proxy_client get ~/tmp/proxyc 'https://purelymail.com'
+passwordeval keepassxc-proxy-get-from-url 'https://purelymail.com'
 host smtp.purelymail.com
 port 465
 tls on
 tls_starttls off
 
-# account default : giulia.stelluto@studenti.unimi.it
+account default : giulia@gstelluto.com
