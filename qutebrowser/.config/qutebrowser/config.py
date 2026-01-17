@@ -694,6 +694,7 @@ config.bind(',m', 'spawn qmpv {url}')
 config.bind(',r', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/readability')
 config.bind(';m', 'hint links spawn qmpv {hint-url}')
 config.bind(';o', 'hint links spawn url_opener.sh "{hint-url}"')
+config.bind(';i', 'hint images download')
 config.bind('<Ctrl+Shift+c>', ':yank selection')
 config.bind('<Ctrl+c>', ':yank selection')
 
