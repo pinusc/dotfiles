@@ -462,21 +462,49 @@ require("lazy").setup({
     -- ai
     {
         "yetone/avante.nvim",
+        -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+        -- ⚠️ must add this setting! ! !
+        build = vim.fn.has("win32") ~= 0
+            and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+            or "make",
         event = "VeryLazy",
-        lazy = false,
-        version = false, -- set this to "*" if you want to always pull the latest change, false to update on release
+        version = false, -- Never set this value to "*"! Never!
+        ---@module 'avante'
+        ---@type avante.Config
         opts = {
             -- add any opts here
+            -- this file can contain specific instructions for your project
+            instructions_file = "avante.md",
+            -- for example
+            provider = "deepseek",
+            providers = {
+                claude = {
+                    endpoint = "https://api.anthropic.com",
+                    model = "claude-sonnet-4-5-20250929",
+                    timeout = 30000, -- Timeout in milliseconds
+                    extra_request_body = {
+                        temperature = 0.75,
+                        max_tokens = 20480,
+                    },
+                },
+                deepseek = {
+                    __inherited_from = "openai",
+                    api_key_name = "DEEPSEEK_API_KEY",
+                    endpoint = "https://api.deepseek.com",
+                    model = "deepseek-coder",
+                },
+            },
         },
-        -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-        build = "make",
-        -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
         dependencies = {
-            "stevearc/dressing.nvim",
             "nvim-lua/plenary.nvim",
             "MunifTanjim/nui.nvim",
             --- The below dependencies are optional,
+            "nvim-mini/mini.pick", -- for file_selector provider mini.pick
+            "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
             "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+            "ibhagwan/fzf-lua", -- for file_selector provider fzf
+            "stevearc/dressing.nvim", -- for input provider dressing
+            "folke/snacks.nvim", -- for input provider snacks
             "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
             "zbirenbaum/copilot.lua", -- for providers='copilot'
             {
@@ -494,37 +522,88 @@ require("lazy").setup({
                         -- required for Windows users
                         use_absolute_path = true,
                     },
-                    provider = "deepseek", -- Recommend using Claude
-                    auto_suggestions_provider = "deepseek", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
-                    claude = {
-                        endpoint = "https://api.anthropic.com",
-                        model = "claude-3-5-sonnet-20241022",
-                        temperature = 0,
-                        max_tokens = 4096,
-                    },
-                    vendors = {
-                        deepseek = {
-                            endpoint = "https://api.deepseek.com",
-                            temperature = 0,
-                            max_tokens = 4096,
-                            __inherited_from = "openai",
-                            api_key_name = "DEEPSEEK_API_KEY",
-                        },
-
-                    }
-
                 },
             },
             {
                 -- Make sure to set this up properly if you have lazy=true
                 'MeanderingProgrammer/render-markdown.nvim',
                 opts = {
-                    file_types = {"Avante" },
+                    file_types = { "markdown", "Avante" },
                 },
-                ft = {"Avante"},
+                ft = { "markdown", "Avante" },
             },
         },
-    }
+    },
+    --
+    -- {
+    --     "yetone/avante.nvim",
+    --     event = "VeryLazy",
+    --     version = false, -- Never set this value to "*"! Never!
+    --     ---@module 'avante'
+    --     ---@type avante.Config
+    --     opts = {
+    --         -- add any opts here
+    --         -- this file can contain specific instructions for your project
+    --         instructions_file = "avante.md",
+    --         -- for example
+    --         provider = "ollama",
+    --         providers = {
+    --             ollama = {
+    --                 __inherited_from = 'ollama',
+    --                 model = "deepseek-r1",
+    --                 endpoint = "http://127.0.0.1:11434",
+    --                 timeout = 600000,
+    --             },
+    --
+    --             --             provider = "ollama",
+    --             --             providers = {
+    --         },
+    --     },
+    --     dependencies = {
+    --         "nvim-lua/plenary.nvim",
+    --         "MunifTanjim/nui.nvim",
+    --         --- The below dependencies are optional,
+    --         "nvim-mini/mini.pick", -- for file_selector provider mini.pick
+    --         "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+    --         "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+    --         "ibhagwan/fzf-lua", -- for file_selector provider fzf
+    --         "stevearc/dressing.nvim", -- for input provider dressing
+    --         "folke/snacks.nvim", -- for input provider snacks
+    --         "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+    --         "zbirenbaum/copilot.lua", -- for providers='copilot'
+    --         'MeanderingProgrammer/render-markdown.nvim',
+    --         {
+    --             -- support for image pasting
+    --             "HakonHarnes/img-clip.nvim",
+    --             event = "VeryLazy",
+    --             opts = {
+    --                 -- recommended settings
+    --                 default = {
+    --                     embed_image_as_base64 = false,
+    --                     prompt_for_file_name = false,
+    --                     drag_and_drop = {
+    --                         insert_mode = true,
+    --                     },
+    --                     -- required for Windows users
+    --                     use_absolute_path = true,
+    --                 },
+    --             },
+    --         },
+    --     },
+    -- },
+    {
+      -- Make sure to set this up properly if you have lazy=true
+      'MeanderingProgrammer/render-markdown.nvim',
+        -- System dependencies for cool latex output:
+        -- aur/libtexprintf
+        -- python-pylatexenc
+
+      opts = {
+        file_types = { "Avante", 'markdown', 'pandoc', 'markdown.pandoc'},
+      },
+      ft = { "Avante", 'markdown', 'pandoc', 'markdown.pandoc'},
+    },
+
 })
 
 
@@ -613,7 +692,7 @@ let g:pymode_motion = 0
 
 
 -- {{{ LSP
-local nvim_lsp = require('lspconfig')
+-- local nvim_lsp = require('lspconfig')
 
 -- Use an on_attach function to only map the following keys 
 -- after the language server attaches to the current buffer
@@ -680,9 +759,10 @@ local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 --
 -- bashls requires extra/bash-language-server
 -- perlls requires `cpan Perl::LanguageServer`
-local servers = {"pylsp", "typescript-tools", "bashls", "perlls" }
+local servers = {"pylsp", "bashls", "perlls", "harper_ls"}
 for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
+  vim.lsp.enable(lsp)
+  vim.lsp.config(lsp, {
     capabilities = cmp_capabilities,
     on_attach = on_attach,
     flags = {
@@ -691,10 +771,92 @@ for _, lsp in ipairs(servers) do
     diagnostics = {
         update_in_insert = false,
     }
-  }
+  })
 end
 
-nvim_lsp["pylsp"].setup {
+
+-- {{{ Some helper functions
+local function make_action_filter(pattern)
+    return function(action)
+        return string.find(action.title, pattern)
+    end
+end
+
+local function make_code_action_binding(pattern, desc)
+    return function()
+        vim.lsp.buf.code_action({
+            filter = make_action_filter(pattern),
+            apply = true
+        })
+    end
+end
+-- }}}
+
+vim.lsp.config('harper_ls', {
+    settings = {
+        ["harper-ls"] = {
+            userDictPath = "~/.config/nvim/spell/en.utf-8.add",
+            linters = {
+                SpellCheck = true,
+                SpelledNumbers = false,
+                AnA = true,
+                SentenceCapitalization = true,
+                UnclosedQuotes = true,
+                WrongQuotes = false,
+                LongSentences = true,
+                RepeatedWords = true,
+                Spaces = true,
+                Matcher = true,
+                CorrectNumberSuffix = true,
+                Dashes = false,
+            },
+
+        }
+    },
+    on_attach = function(client, bufnr)
+        local bindings = {
+            zg = { 'Add.*to the user dictionary', 'Harper: Add to dictionary' },
+            ['z='] = { 'Replace with:', 'Harper: Replace' },
+            -- Add more: ['<leader>ca'] = { 'Fix.*import', 'Fix import' },
+        }
+
+        for key, spec in pairs(bindings) do
+            local pattern, desc = spec[1], spec[2]
+            vim.keymap.set('n', key, make_code_action_binding(pattern, desc), { buffer = bufnr })
+        end
+        vim.keymap.set('n', '<C-l>', function() 
+            vim.diagnostic.goto_prev()
+            vim.lsp.buf.code_action()
+            vim.api.nvim_feedkeys('``', 'n', false)
+        end)
+    end
+})
+-- vim.lsp.config('ltex_plus', {
+--     filetypes = { "markdown", "text", "tex", "plaintex", "pandoc", "markdown.pandoc", "latex"},
+--     settings = {
+--         ltex = {
+--             language = "en-US",
+--             -- Add custom dictionary words
+--             dictionary = {
+--                 ["en-US"] = {},  -- Words added via code actions go here
+--             },
+--             -- Disable specific rules if needed
+--             disabledRules = {
+--                 ["en-US"] = {},
+--             },
+--         },
+--     },
+--     -- Performance: only check on save, not live
+--     on_attach = function(client, bufnr)
+--         -- Optional: disable continuous checking
+--         -- vim.api.nvim_create_autocmd("InsertLeave", {
+--         --   buffer = bufnr,
+--         --   callback = function() vim.lsp.buf.code_action() end
+--         -- })
+--     end,
+-- })
+
+vim.lsp.config("pylsp", {
     on_attach = on_attach,
     filetypes = { "python", "python.ipynb" },
     settings = {
@@ -707,8 +869,8 @@ nvim_lsp["pylsp"].setup {
             }
         }
     }
-}
-vim.lsp.set_log_level("debug")
+})
+-- vim.lsp.set_log_level("debug")
 
 local border = {
       {"┌", "FloatBorder"},
