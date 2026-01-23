@@ -15,6 +15,8 @@ if [ "$count" -gt 0 ]; then
     text="$IC_MAIL  $count_important$count"
     echo "{\"text\": \"$text\", \"class\": \"hasmail\"}"
 else
-    text="$IC_MAIL  "
-    echo "{\"text\": \"$text\"}"
+    text="$IC_MAIL"
+    echo "{\"text\": \"$text\", \"class\": \"hasmail\"}"
+    # text="$IC_MAIL  "
+    # echo "{\"text\": \"$text\"}"
 fi
