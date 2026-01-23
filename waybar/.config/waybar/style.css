@@ -34,8 +34,8 @@ vim:ft=css
     border: none;
     border-radius: 0 0 5px 5px;
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: "monospace";
-    font-size: 14px;
+    font-family: "Terminess Nerd Font";
+    font-size: 16px;
     min-height: 0;
 }
 
@@ -103,6 +103,7 @@ window#waybar.chromium {
 }
 
 #clock,
+#custom-fuzzyclock,
 #battery,
 #cpu,
 #memory,
@@ -115,13 +116,24 @@ window#waybar.chromium {
 #mode,
 #idle_inhibitor,
 #mpd {
-    padding: 0 10px;
+}
+
+.module {
+    padding: 0 4px;
     margin: 0 4px;
+    /* border: 1px solid white; */
 }
 
 #window,
 #workspaces {
     margin: 0 4px;
+}
+
+.modules-right {
+    margin-right: 1em;
+}
+.modules-left {
+    margin-left: 1em;
 }
 
 /* If workspaces is the leftmost module, omit left margin */
@@ -184,6 +196,18 @@ label:focus {
 
 #pulseaudio.muted {
     color: #2a5c45;
+}
+
+#custom-tomat.work, #custom-pomodorosh.work {
+    background-color: @base08;
+    color: @base00;
+    border-radius: 5px;
+}
+
+#custom-tomat.work, #custom-pomodorosh.break {
+    background-color: @base0B;
+    color: @base00;
+    border-radius: 5px;
 }
 
 #custom-media {
@@ -267,6 +291,15 @@ label:focus {
 #custom-mail {
     color: @base02;
 }
+
+#custom-mail:not(hasmail) {
+
+}
+
 #custom-mail.hasmail {
     color: @base0A;
+}
+
+#custom-uair.resumed {
+  color: #f87171;
 }
