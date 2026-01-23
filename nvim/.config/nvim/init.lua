@@ -5,6 +5,7 @@ vim.g.python3_host_prog = '/usr/bin/python' -- so that pynvim not necessary in v
 -- vim.o.t_Co = 16
 -- vim.o.background = dark
 vim.o.number = true
+vim.o.signcolumn = 'yes:1'
 -- vim.o.filetype = false
 -- vim.filetype plugin indent on
 vim.o.ignorecase = true
