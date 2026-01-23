@@ -85,7 +85,12 @@ vim.g.mapleader = " "
 require("lazy").setup({
     -- essentials
     "neovim/nvim-lspconfig",
-    {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
+    {"nvim-treesitter/nvim-treesitter", 
+        build = ":TSUpdate",
+        event = function()
+            return { "BufReadPost", "BufNewFile" }
+        end,
+    },
     -- {{{ completion
     { 
         "hrsh7th/nvim-cmp", 
