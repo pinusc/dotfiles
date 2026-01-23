@@ -23,6 +23,8 @@ setopt PUSHD_SILENT
 setopt promptsubst
 
 set -o noclobber
+MAILCHECK=0
+
 # not in alias file because security feature
 alias cp='cp -i'
 alias mv='mv -i'
@@ -177,7 +179,29 @@ function precmd() {
   fi
 }
 
-zlong_duration=20
+zlong_duration=1
 zlong_ignore_cmds="nvim ssh mosh pacman paru paci"
+
+zlong_alert_func () {
+	local cmd="$1" 
+	local secs="$2" 
+	local ftime="$(printf '%dh:%dm:%ds\n' $(($secs / 3600)) $(($secs % 3600 / 60)) $(($secs % 60)))" 
+	if [[ "$zlong_internal_send_notifications" != false ]]
+	then
+		if [[ "$OSTYPE" == "linux-gnu"* ]]
+		then
+			eval notify-send $zlong_message &|
+		elif [[ "$OSTYPE" == "darwin"* ]]
+		then
+			(
+				alerter -timeout 3 -message $zlong_message &> /dev/null &
+			)
+		fi
+	fi
+	if [[ "$zlong_terminal_bell" == 'true' ]]
+	then
+		echo -n "\a"
+	fi
+}
 
 # wait # so we don't get a prompt before background jobs
