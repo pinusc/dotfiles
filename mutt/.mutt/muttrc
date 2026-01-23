@@ -24,6 +24,7 @@ set abort_noattach_regex = "^[^>].*attach(|ed|ments?)"
 set sendmail = "~/bin/util/mutt-sendmail-markdown-wrapper"
 set use_from = yes
 set envelope_from = yes
+set send_charset = "us-ascii:utf-8"
 
 # set smtp_url    = "smtp://giulia.stelluto@studenti.unimi.it@smtp.office365.com:587"
 # set smtp_authenticators ="xoauth2"
@@ -122,6 +123,8 @@ mailboxes  +gstelluto \
            +gstelluto/sent \
            +logins \
            +logins/inbox \
+           +logins/ads \
+           +logins/junk \
            +logins/sent \
            +logins/archive \
            +unimi \
