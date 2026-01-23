@@ -1,7 +1,7 @@
 export EDITOR='nvim'
 export VISUAL='nvim'
 export MAIL="$HOME/mail"
-command -v bat &>/dev/null && export PAGER='bat'
+command -v bat &>/dev/null && export PAGER='bat --paging=always'
 command -v bat &>/dev/null && export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 command -v bat &>/dev/null && export MANROFFOPT="-c"
 command -v bat &>/dev/null && export SYSTEMD_PAGER="bat -l syslog -p'"
@@ -76,6 +76,7 @@ BABASHKA_PRELOADS="(require '[selmer.parser :refer [<<]])"
 export BABASHKA_PRELOADS;
 
 export ANTHROPIC_API_KEY="$(cat ~/.local/share/ANTHROPIC_API_KEY)"
+export DEEPSEEK_API_KEY="$(cat ~/.local/share/DEEPSEEK_API_KEY)"
 export OPENAI_API_KEY="$(cat ~/.local/share/OPENAI_API_KEY)"
 export DICTIONARY_API_KEY="$(cat ~/.local/share/DICTIONARYAPI_API_KEY)"
 
@@ -86,3 +87,5 @@ source "$HOME/.config/user-dirs.dirs"
 # umu stuff
 export WINEPREFIX="$HOME/games/umu/"
 export PROTONPATH="GE-Proton"
+
+export MANGOHUD=1
