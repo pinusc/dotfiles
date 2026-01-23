@@ -1,1 +1,4 @@
 set selection-clipboard clipboard
+set window-title-basename true
+set window-title-home-tilde true
+set zoom-step 5
