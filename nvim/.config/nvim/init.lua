@@ -733,7 +733,7 @@ local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 --
 -- bashls requires extra/bash-language-server
 -- perlls requires `cpan Perl::LanguageServer`
-local servers = {"pylsp", "bashls", "perlls", "harper_ls"}
+local servers = {"pylsp", "bashls", "perlls"}
 for _, lsp in ipairs(servers) do
   vim.lsp.enable(lsp)
   vim.lsp.config(lsp, {
@@ -766,45 +766,6 @@ local function make_code_action_binding(pattern, desc)
 end
 -- }}}
 
-vim.lsp.config('harper_ls', {
-    settings = {
-        ["harper-ls"] = {
-            userDictPath = "~/.config/nvim/spell/en.utf-8.add",
-            linters = {
-                SpellCheck = true,
-                SpelledNumbers = false,
-                AnA = true,
-                SentenceCapitalization = true,
-                UnclosedQuotes = true,
-                WrongQuotes = false,
-                LongSentences = true,
-                RepeatedWords = true,
-                Spaces = true,
-                Matcher = true,
-                CorrectNumberSuffix = true,
-                Dashes = false,
-            },
-
-        }
-    },
-    on_attach = function(client, bufnr)
-        local bindings = {
-            zg = { 'Add.*to the user dictionary', 'Harper: Add to dictionary' },
-            ['z='] = { 'Replace with:', 'Harper: Replace' },
-            -- Add more: ['<leader>ca'] = { 'Fix.*import', 'Fix import' },
-        }
-
-        for key, spec in pairs(bindings) do
-            local pattern, desc = spec[1], spec[2]
-            vim.keymap.set('n', key, make_code_action_binding(pattern, desc), { buffer = bufnr })
-        end
-        vim.keymap.set('n', '<C-l>', function() 
-            vim.diagnostic.goto_prev()
-            vim.lsp.buf.code_action()
-            vim.api.nvim_feedkeys('``', 'n', false)
-        end)
-    end
-})
 -- vim.lsp.config('ltex_plus', {
 --     filetypes = { "markdown", "text", "tex", "plaintex", "pandoc", "markdown.pandoc", "latex"},
 --     settings = {
