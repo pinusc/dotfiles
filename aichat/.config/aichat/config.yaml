@@ -1,5 +1,5 @@
 keybindings: vi
-model: deepseek:deepseek-chat
+model: deepseek:deepseek-v4-flash
 repl_prelude: 'role:default'
 cmd_prelude: 'role:default'
 clients:
@@ -10,6 +10,13 @@ clients:
 - type: openai-compatible
   name: deepseek
   api_base: https://api.deepseek.com
+- type: openai-compatible
+  name: ollama
+  api_base: http://localhost:11434/v1
+  models:
+  - name: deepseek-r1
+    max_input_tokens: 131072
+    supports_reasoning: true
 # - type: openai-compatible
 #   name: deepseek
 #   api_base: https://api.deepseek.com
