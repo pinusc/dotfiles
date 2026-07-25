@@ -98,22 +98,28 @@ if hash exa >&/dev/null; then
 fi
 
 if [ "$SHELL" = /bin/zsh ]; then 
-    if [[ "$PAGER" = 'bat' || "$PAGER" =~ ".*bat.*" ]]; then
-        alias -g LL="| $PAGER --plain"
-        alias -g LLH="--help | $PAGER --plain --language=cmd-help"
-        alias -g LLC="--color=always | $PAGER --plain"
-        alias -g LLA="2>&1 | $PAGER"
-        alias -g BB="| $PAGER --style auto"
-        alias -g BBC="--color=always | $PAGER --style auto"
-        alias -g BBA="2>&1 | $PAGER --style auto"
-        alias -g JQ="| jq | $PAGER --language=json"
-        alias -g LLJ="| $PAGER --language=json"
-    else
+    if [[ -n "$PAGER" ]]; then
         alias -g LL="| $PAGER"
         alias -g LLH="--help | $PAGER"
         alias -g LLC="--color=always | $PAGER"
         alias -g LLA="2>&1 | $PAGER"
         alias -g JQ="| jq | $PAGER"
+    elif command -v bat &>/dev/null; then
+        alias -g LL="| bat --plain"
+        alias -g LLH="--help | bat --plain --language=cmd-help"
+        alias -g LLC="--color=always | bat --plain"
+        alias -g LLA="2>&1 | bat"
+        alias -g BB="| bat --style auto"
+        alias -g BBC="--color=always | bat --style auto"
+        alias -g BBA="2>&1 | bat --style auto"
+        alias -g JQ="| jq | bat --language=json"
+        alias -g LLJ="| bat --language=json"
+    else
+        alias -g LL="| less -R"
+        alias -g LLH="--help | less -R"
+        alias -g LLC="--color=always | less -R"
+        alias -g LLA="2>&1 | less -R"
+        alias -g JQ="| jq | less -R"
     fi
     alias -g G="| grep --ignore-case --extended-regexp"
     alias -g NNNSEL='$(nnn -p -)'
