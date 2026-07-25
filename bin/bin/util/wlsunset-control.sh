@@ -7,9 +7,9 @@ if [ "$1" = "disable" ]; then
     fi
 elif [ "$1" = "enable" ]; then
     if ! pgrep -x wlsunset >/dev/null 2>&1; then
-        geolocate="$(curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue")" 
-        lat="$(echo "$geolocate" | jq -r '"\(.location.lat)"')"
-        lng="$(echo "$geolocate" | jq -r '"\(.location.lng)"')"
+        location="$(geolocate)"
+        lat="$(echo "$location" | cut -d, -f1)"
+        lng="$(echo "$location" | cut -d, -f2)"
         nohup wlsunset -l "$lat" -L "$lng" -t 3000 -T 6500 > /tmp/wlsunset.log 2>&1 &
     fi
 else

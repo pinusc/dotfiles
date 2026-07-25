@@ -1,14 +1,28 @@
 #!/bin/bash
 
-# returns GPS coordinates 
-# if connected to a known wifi network, using hard-coded places 
-# otherwise uses an ip geolocation service
-case "$(iw dev wlp3s0 link | awk '/SSID/{ print $2; }')" in
+fail() {
+    notify-send -u critical "geolocate failed"
+    exit 1
+}
+
+interface=$(ip link show | awk -F': ' '/^[0-9]+: wl/{print $2; exit}')
+[ -z "$interface" ] && fail
+
+ssid=$(iw dev "$interface" link 2>/dev/null | awk '/SSID/{ print $2; }')
+[ -z "$ssid" ] && fail
+
+case "$ssid" in
     "ColpaD'Alfredo" )
         echo 41.4620482,15.5432595
         exit 0
         ;;
+    "ludovico-arrosto" )
+        echo 45.4643,9.1895
+        exit 0
+        ;;
     *)
-        curl -s ipinfo.io | jq -r .loc
+        result=$(curl --interface "$interface" -s ipinfo.io | jq -r .loc 2>/dev/null)  # use --interface in case VPN active
+        [ -z "$result" ] || [ "$result" = "null" ] && fail
+        echo "$result"
         ;;
 esac
