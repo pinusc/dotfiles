@@ -401,7 +401,7 @@ c.fileselect.handler = 'external'
 # the file to be written to. If not contained in any argument, the
 # standard output of the command is read instead.
 # Type: ShellCommand
-c.fileselect.single_file.command = ['foot', '--app-id', 'fileselect', '-e', 'nnn', '-p', '{}']
+c.fileselect.single_file.command = ['foot', '--app-id', 'fileselect', '-e', 'lf', '-selection-path', '{}']
 
 # Command (and arguments) to use for selecting multiple files in forms.
 # The command should write the selected file paths to the specified file
@@ -410,7 +410,7 @@ c.fileselect.single_file.command = ['foot', '--app-id', 'fileselect', '-e', 'nnn
 # contained in any argument, the   standard output of the command is
 # read instead.
 # Type: ShellCommand
-c.fileselect.multiple_files.command = ['foot','--app-id', 'fileselect', '-e', 'nnn', '-p', '{}']
+c.fileselect.multiple_files.command = ['foot','--app-id', 'fileselect', '-e', 'lf', '-selection-path', '{}']
 
 # When a hint can be automatically followed without pressing Enter.
 # Type: String
