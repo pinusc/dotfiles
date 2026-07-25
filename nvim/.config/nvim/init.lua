@@ -1179,6 +1179,12 @@ augroup mail
 augroup END
     ]])
 
+vim.cmd([[
+augroup md
+    autocmd FileType md set columns=90
+augroup END
+]])
+
 -- {{{ Orgmode
 vim.g.org_heading_shade_leading_stars = 1
 require('orgmode').setup({
