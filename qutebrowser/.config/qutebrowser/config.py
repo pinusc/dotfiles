@@ -533,7 +533,7 @@ c.tabs.position = 'left'
 #   - never: Always hide the tab bar.
 #   - multiple: Hide the tab bar if only one tab is open.
 #   - switching: Show the tab bar when switching tabs.
-c.tabs.show = 'always'
+c.tabs.show = 'multiple'
 
 # Alignment of the text inside of tabs.
 # Type: TextAlignment
@@ -758,7 +758,7 @@ config.bind('<Ctrl+a>', f"spawn --userscript qute-keepassxc --key {GPG_KEY}", mo
 # config.bind(',otp', f'spawn --userscript qute-keepassxc --insecure --totp')
 # config.bind('<Ctrl+a>', f"spawn --userscript qute-keepassxc --insecure")
 # config.bind('<Ctrl+a>', f"spawn --userscript qute-keepassxc --insecure", mode='insert')
-config.bind('`', 'config-cycle tabs.show always never')
+config.bind('`', 'config-cycle tabs.show always multiple never')
 config.bind('insert', '<Ctrl+Shift+C> :yank selection')
 config.bind('tSH', 'spawn -u domcycle content.javascript.enabled')
 config.bind('ti', 'spawn --userscript tor_identity')
