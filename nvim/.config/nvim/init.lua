@@ -1209,3 +1209,16 @@ local vimrc = vim.fn.stdpath("config") .. "/vimrc.vim" vim.cmd.source(vimrc)
 local mappings = vim.fn.stdpath("config") .. "/mappings.vim" 
 vim.cmd.source(mappings)
 
+
+-- Smart open split
+vim.keymap.set('n', '<C-CR>', function()
+    -- winwidth/height return CHARACTERS, not pixels (obviously)
+    -- so the *2 roughly handles geometry since characters are much taller than they are wide
+    -- bit of a hack but it mostly works
+    if vim.fn.winwidth(0) > vim.fn.winheight(0) * 2 then
+        return vim.cmd("vsplit")
+    else
+        return vim.cmd("split")
+    end
+end
+)
