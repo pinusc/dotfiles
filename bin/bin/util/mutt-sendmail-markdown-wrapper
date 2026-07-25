@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# vim: ft=bash
 
 set -Eeuo pipefail
 trap cleanup SIGINT SIGTERM ERR
@@ -7,7 +6,7 @@ trap cleanup SIGINT SIGTERM ERR
 cleanup() {
   trap - SIGINT SIGTERM ERR
   # script cleanup here
-  notify-send "MAIL SEND FAILED"
+  notify-send --urgency=critical "MAIL SEND FAILED"
 }
 
 tmpfile="$(mktemp --tmpdir mailmessage.XXXX)"
@@ -22,9 +21,11 @@ tmpfile="$(mktemp --tmpdir mailmessage.XXXX)"
 
     if [[ -f "$tmpfile" ]]; then
       < "$tmpfile" msmtp "$@"
+      notify-send "Mail sent successfully"
     else
       cleanup
     fi
 
-    rm "$tmpfile"
+    # rm "$tmpfile"
 } &
+# vim: ft=bash
