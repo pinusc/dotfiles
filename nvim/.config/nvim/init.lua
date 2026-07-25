@@ -247,7 +247,7 @@ require("lazy").setup({
     },
     "junegunn/fzf",
     "chrisbra/Recover.vim", -- diff when swap file found
-    "ggandor/leap.nvim", -- sneak
+    "https://codeberg.org/andyg/leap.nvim", -- sneak
     "mg979/vim-visual-multi", --{'branch': 'master"}
     "sunaku/tmux-navigate",
     "tpope/vim-unimpaired",
