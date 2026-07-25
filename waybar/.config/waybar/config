@@ -4,21 +4,36 @@
         "position": "top", // Waybar position (top|bottom|left|right)
         "height": 40,
         "width": 1800, 
-        "modules-left": ["cpu", "temperature", "memory", "network", "systemd-failed-units", "mpris", "pulseaudio", "bluetooth"],
-        "modules-center": ["hyprland/workspaces"],
-        "modules-right": ["custom/pomodorosh", "tray", "custom/mail", "custom/dunst", "battery", "clock", "custom/fuzzyclock",],
+        "modules-left": ["cpu", "temperature", "memory", "network", "systemd-failed-units", "wireplumber", "bluetooth", "mpris" ],
+        "modules-center": ["sway/workspaces", "sway/mode"],
+        "modules-right": ["privacy", "custom/pomodorosh", "tray", "custom/mail", "custom/dunst", "battery", "clock", "custom/fuzzyclock",],
         // "modules-right": ["idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "battery", "custom/fuzzyclock", "tray"],
+        // 
+        "sway/workspaces": {
+            "format": "{name} {windows}",
+            "format-window-separator":  "  ",
+            "window-rewrite-default": "",
+            "window-rewrite": {
+                "class<mpv|.*stremio.*|.*freetube.*|.*vlc.*>": "",
+                "class<org.qutebrowser.qutebrowser|.*firefox.*|.*chrom.*>": "", // Windows whose classes are "firefox"
+                "class<foot.*>": "",
+                "title<nvim.*>": "",
+                "class<.*pavucontrol>": "",
+                "class<.*saturn>": "",
+                "class<discord|vesktop>": "",
+                "class<steam>": "",
+                "class<org.pwmt.zathura>": "󰈙",
+            },
+        },
         "hyprland/workspaces": {
             "format": "{name} {windows}",
             "format-window-separator":  "  ",
             "window-rewrite-default": "",
             "window-rewrite": {
-                "class<mpv>": "", // Windows whose titles contain "youtube"
-                "class<org.qutebrowser.qutebrowser>": "", // Windows whose classes are "firefox"
-                "class<foot>": "", // Windows that contain "foot" in either class or title. For optimization reasons, it will only match against a title if at least one other window explicitly matches against a title.
-                "class<footclient>": "",
-                "class<vesktop>": "",
-                "class<discord>": "",
+                "class<mpv|.*stremio.*|.*freetube.*|.*vlc.*>": "",
+                "class<org.qutebrowser.qutebrowser|.*firefox.*|.*chrom.*>": "", // Windows whose classes are "firefox"
+                "class<foot.*>": "",
+                "class<discord|vesktop>": "",
                 "class<steam>": "",
                 "class<org.pwmt.zathura>": "󰈙",
             },
@@ -35,6 +50,7 @@
             "status-icons": {
                 "paused": "⏸"
             },
+            "hide-empty-text": true,
             // "ignored-players": ["firefox"]
         },
         "cava": {

@@ -1,0 +1,241 @@
+# Sway configuration converted from Hyprland config.
+# Some features (animations, hy3 tiling, gradients, etc.) cannot be replicated.
+# Adjust monitor positions, environment variables, and app names as needed.
+
+# Monitor outputs (replace with actual values)
+# Hyprland used auto-left positioning; set explicit coordinates or use default.
+# output LVDS-1 resolution preferred scale 1
+# output HDMI-A-2 resolution preferred position 0,0 scale 1
+# output DP-2 resolution preferred position 1920,0 scale 1
+# output HDMI-A-1 resolution preferred position 3840,0 scale 1
+
+set $mod super
+
+# Workspace to monitor mapping
+workspace 1 output HDMI-A-2
+workspace 2 output HDMI-A-2
+workspace 3 output HDMI-A-2
+workspace 4 output HDMI-A-2
+workspace 5 output HDMI-A-2
+
+# Environment variables (set these before starting Sway, e.g. in ~/.profile)
+# export HYPRCURSOR_THEME=rose-pine-hyprcursor
+# export HYPRCURSOR_SIZE=25
+
+# Input settings
+input "*" {
+    xkb_layout "my_it_us"
+    xkb_variant "basic"
+    xkb_options "lv3:ralt_switch"
+}
+input "type:touchpad" {
+    natural_scroll disabled
+}
+# pointer_accel not explicitly set (0 = no modification)
+
+# Focus follows mouse globally
+focus_follows_mouse yes
+
+# Gaps and borders
+gaps inner 2
+gaps outer 4
+default_border pixel 3
+hide_edge_borders none
+
+font monospace 1
+
+# Border colors (solid, no gradient)
+client.focused     #b8bb26 #b8bb26 #000000 #ff0000 #bb9af7
+client.unfocused   #595959aa #595959aa #000000 #000000 #000000
+client.urgent      #cc241d #cc241d #000000 #cc241d #cc241d
+
+output * bg /home/giusb/.wallpaper/ducks.jpg fill
+
+default_border none
+for_window [title="^.*"] title_format ""
+default_border normal 0
+default_floating_border normal 0
+font pango:monospace 1
+titlebar_border_thickness 0
+titlebar_padding 2
+
+# Remove title bars for a cleaner look (optional)
+
+# Startup applications
+exec swayidle -w
+exec waybar
+exec wlsunset-control.sh enable
+exec dunst
+exec systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME
+exec wl-paste --type text --watch sh -c '[ "$CLIPBOARD_STATE" != sensitive ] && cliphist store'
+exec wl-paste --type image --watch cliphist store
+exec wl-paste --type text --watch sh -c 'if [ "$CLIPBOARD_STATE" != sensitive ]; then clip_content="$(cat)"; else clip_content="**********"; fi; notify-send -e "Copied to clipboard" "$clip_content"'
+
+# Quake‑like scratchpad windows using marks
+# Quaketerm
+# for_window [app_id="quaketerm"] move scratchpad
+# for_window [workspace="scratchpad"] focus, scratchpad show
+for_window [app_id="quake*"] floating enable
+bindsym $mod+semicolon exec ~/.config/sway/sway-scratchpad.sh -t footclient -a quaketerm
+
+bindsym $mod+m exec ~/.config/sway/sway-scratchpad.sh -t footclient -a quakemail neomutt
+
+bindsym $mod+apostrophe exec ~/.config/sway/sway-scratchpad.sh -t footclient -a quakechat nchat
+
+bindsym $mod+backslash exec ~/.config/sway/sway-scratchpad.sh -t footclient -a quakeai aichat
+
+for_window [app_id="qalculate-gtk"] floating enable
+bindsym $mod+c exec ~/.config/sway/sway-scratchpad.sh -t qalculate-gtk
+
+# Standard window rules
+for_window [app_id="org.keepassxc.KeePassXC"] floating enable
+for_window [app_id="fileselect"] floating enable
+for_window [app_id="SGDBoop"] floating enable
+for_window [class="steam_proton"] floating enable
+for_window [app_id="org.pulseaudio.pavucontrol"] floating enable, resize set width 50 ppt height 50 ppt
+for_window [app_id="gamescope"] fullscreen enable, move container to workspace number 9
+
+
+# Focus movement (vim keys)
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move containers
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Focus between visible outputs (Ctrl+arrow)
+bindsym $mod+Ctrl+h focus left
+bindsym $mod+Ctrl+j focus down
+bindsym $mod+Ctrl+k focus up
+bindsym $mod+Ctrl+l focus right
+bindsym $mod+Ctrl+Left focus left
+bindsym $mod+Ctrl+Down focus down
+bindsym $mod+Ctrl+Up focus up
+bindsym $mod+Ctrl+Right focus right
+
+# Move containers between visible outputs (Ctrl+Shift+arrow)
+bindsym $mod+Ctrl+Shift+h move left
+bindsym $mod+Ctrl+Shift+j move down
+bindsym $mod+Ctrl+Shift+k move up
+bindsym $mod+Ctrl+Shift+l move right
+bindsym $mod+Ctrl+Shift+Left move left
+bindsym $mod+Ctrl+Shift+Down move down
+bindsym $mod+Ctrl+Shift+Up move up
+bindsym $mod+Ctrl+Shift+Right move right
+
+# bindsym $mod+] resize shrink right 2 ppt; resize shrink down 2 ppt
+bindsym $mod+bracketleft resize shrink right 2 ppt
+bindsym $mod+bracketright resize grow right 2 ppt
+bindsym $mod+shift+bracketleft resize shrink down 2 ppt
+bindsym $mod+shift+bracketright resize grow down 2 ppt
+
+bindsym $mod+Alt+j mark --add "_swap", focus down, swap container with mark "_swap", focus down, unmark "_swap"; [floating con_id="__focused__"] move down 20px
+
+bindsym $mod+Alt+h mark --add "_swap", focus left, swap container with mark "_swap", focus left, unmark "_swap"; [floating con_id="__focused__"] move left 20px
+
+bindsym $mod+Alt+l mark --add "_swap", focus right, swap container with mark "_swap", focus right, unmark "_swap"; [floating con_id="__focused__"] move right 20px
+
+bindsym $mod+Alt+k mark --add "_swap", focus up, swap container with mark "_swap", focus up, unmark "_swap"; [floating con_id="__focused__"] move up 20px
+
+
+
+# Workspace navigation
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+D workspace next
+bindsym $mod+U workspace prev
+bindsym $mod+shift+D exec ~/.config/sway/workspace.sh next
+bindsym $mod+shift+U exec ~/.config/sway/workspace.sh prev
+
+# Move containers to workspaces (silent)
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# layout stuff
+bindsym $mod+s split toggle
+bindsym $mod+Alt+s split none
+bindsym $mod+z layout toggle tabbed split
+bindsym $mod+a focus parent
+bindsym $mod+shift+a focus child
+bindsym $mod+Shift+s floating toggle
+
+# Fullscreen
+bindsym $mod+f fullscreen toggle
+bindsym $mod+t fullscreen toggle global
+# bindsym $mod+e layout toggle split
+
+# Actions
+bindsym $mod+Return exec footclient
+bindsym $mod+w kill
+bindsym $mod+Alt+w kill                      # force kill (SIGTERM)
+bindsym $mod+space exec rofi -show combi -modes combi -combi-modes "drun,run" -combi-display-format '{text}'
+bindsym $mod+v exec sh -c 'cliphist list | rofi -dmenu | cliphist decode | wl-copy'
+bindsym $mod+o exec pdf_menu.sh
+bindsym $mod+Shift+o exec papis-open.sh
+bindsym $mod+b exec sh -c 'swaymsg "[app_id=\"qutebrowser\"] focus" || qutebrowser'
+bindsym $mod+equal exec wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym $mod+minus exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym $mod+p exec ~/bin/dmenu/power_menu.sh
+bindsym $mod+Shift+r exec ~/bin/dmenu/rgb-dmenu.sh
+bindsym $mod+Shift+v exec pavucontrol
+bindsym $mod+Shift+b exec audiomenu select-sink
+bindsym XF86Launch1 exec mpv --fullscreen /data/kommunism.webm
+
+# Screenshots (using hyprshot; requires hyprshot and grim+slurp+wf-recorder)
+bindsym Print exec sh -c 'hyprshot --mode active --mode output --output-folder ~/shots -f "$(date +"%Y-%m-%dT%H:%M:%S,%N%:z.png")"'
+bindsym Shift+Print exec sh -c 'hyprshot --mode region --output-folder ~/shots -f "$(date +"%Y-%m-%dT%H:%M:%S,%N%:z.png")"'
+bindsym Alt+Print exec sh -c 'hyprshot --mode active --mode window --output-folder ~/shots -f "$(date +"%Y-%m-%dT%H:%M:%S,%N%:z")-$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .name')".png'
+
+# Floating modifier (mouse drag to move/resize)
+floating_modifier $mod
+bindsym $mod+button1 move
+bindsym $mod+button3 resize
+
+# Exit session
+bindsym $mod+Alt+Escape exec uwsm stop
+bindsym $mod+Shift+c reload
+
+# # Dictation mode (toggle with $mod+i)
+# bindsym $mod+i exec ~/bin/util/toggle-transcript.sh; mode "dictation"
+# mode "dictation" {
+#     bindsym $mod+i exec ~/bin/util/toggle-transcript.sh; mode "default"
+#     bindsym $mod+q nop
+#     bindsym $mod+r nop
+#     bindsym $mod+space nop
+#     # Press Escape to leave dictation mode (optional)
+#     # bindsym Escape mode "default"
+# }
+
+# Remaining misc binds from original (if any)
+# ...

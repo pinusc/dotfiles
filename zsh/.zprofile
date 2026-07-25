@@ -27,7 +27,8 @@ if [[ ! $DISPLAY && XDG_VTNR -eq 1 ]]; then
     # logverbose 20 is useful for detecting Modelines
     # startx -logverbose 100 &> X.log
     if uwsm check may-start; then
-        exec uwsm start hyprland.desktop
+        export SWAY_UNSUPPORTED_GPU=true
+        exec uwsm start sway.desktop
     fi
 fi
 
