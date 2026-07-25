@@ -18,27 +18,26 @@ fi
 
 profile_file="${profile_dir}/${profile_name}.orp"
 
-killall openrgb
 case "$profile_name" in
     breathing )
-        openrgb --mode "breathing" --startminimized
+        openrgb --mode "breathing" --client localhost
         ;;
     rainbow )
-        openrgb --mode "rainbow" --startminimized
+        openrgb --mode "rainbow" --client localhost
         ;;
     random )
-        openrgb --color "random" --startminimized
+        openrgb --color "random" --client localhost
         ;;
     pick )
         color="$(kcolorchooser --print | tr -d '#')"
-        openrgb --color "$color" --startminimized
+        openrgb --color "$color" --client localhost
         ;;
     hwmonitor )
-        openrgb --config /home/giusb/.config/OpenRGB/hwmonitor-mode --startminimized
+        openrgb --config /home/giusb/.config/OpenRGB/hwmonitor-mode --client localhost
         ;;
     "" )
         ;;
     * )
-        openrgb -p "$profile_file" --startminimized
+        openrgb -p "$profile_file" --client localhost
         ;;
 esac
