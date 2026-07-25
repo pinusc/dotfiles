@@ -4,7 +4,7 @@
         "position": "top", // Waybar position (top|bottom|left|right)
         "height": 40,
         "width": 1800, 
-        "modules-left": ["cpu", "temperature", "memory", "network", "systemd-failed-units", "wireplumber", "bluetooth", "mpris" ],
+        "modules-left": ["cpu", "temperature", "memory", "network", "systemd-failed-units", "custom/syncthing-failed", "wireplumber", "bluetooth", "mpris" ],
         "modules-center": ["sway/workspaces", "sway/mode"],
         "modules-right": ["privacy", "custom/pomodorosh", "tray", "custom/mail", "custom/dunst", "battery", "clock", "custom/fuzzyclock",],
         // "modules-right": ["idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "battery", "custom/fuzzyclock", "tray"],
@@ -175,7 +175,7 @@
         "network": {
             "interface": "wlan0",
             "format": "{ifname}",
-            "format-wifi": "{frequency} GHz {signalStrength}%  ",
+            "format-wifi": "  {signalStrength}%",
             "format-ethernet": "{ipaddr}/{cidr} 󰊗 ",
             "format-disconnected": "", //An empty format will hide the module.
             "tooltip-format": "{ifname} via {gwaddr} 󰊗 ",
@@ -184,7 +184,7 @@
             "tooltip-format-disconnected": "Disconnected",
             "max-length": 50
         },
-        "pulseaudio": {
+        "wireplumber": {
             // "scroll-step": 1, // %, can be a float
             "format": "{volume}% {icon}",
             "format-bluetooth": "{volume}% {icon}",
@@ -227,7 +227,7 @@
             "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}"
         },
         "custom/mail": {
-            "format": "{} ",
+            "format": "{}",
             "exec": "~/.config/waybar/scripts/mail.sh",
             "return-type": "json", 
             "restart-interval": 1,
@@ -245,7 +245,7 @@
         //     "restart-interval": 1,
         // },
         "custom/fuzzyclock": {
-            "format": "{} ",
+            "format": "{}",
             //"return-type": "text",
             //"max-length": 40,
             //"format-icons": {
@@ -271,10 +271,21 @@
             "exec": "pomodoro.sh status --json",
             "interval": 1,
             "return-type": "json",
-            "format": "  {text}",
+            "format": " {text}",
             "on-click": "pomodoro.sh start",
             "on-click-right": "pomodoro.sh skip",
             "on-click-middle": "pomodoro.sh stop"
+        },
+        "custom/syncthing-failed": {
+            "exec": "~/.config/waybar/scripts/syncthing-fail.sh",
+            "return-type": "json",
+            "format": "󰓧 {text}",
+            "interval": 600,
+            "tooltip": true,
+            "tooltip-format": "󰓧 {alt}",
+            "on-click": "xdg-open http://localhost:8384",
+            "hide-empty-text": true,
+
         }
         // "custom/uair": {
         //     "format": "{icon} {text}",
