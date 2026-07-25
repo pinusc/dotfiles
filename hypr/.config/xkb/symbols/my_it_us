@@ -1,0 +1,5 @@
+partial alphanumeric_keys
+xkb_symbols "basic" {
+    include "it(us)"
+    key <AE11> { [ minus, underscore, emdash, endash ] };
+};
