@@ -139,7 +139,6 @@ require("lazy").setup({
                     --         }
                     --     }
                     -- },
-                    { name = "papis" },
                     {
                         name = 'buffer',
                         option = {
@@ -385,31 +384,6 @@ require("lazy").setup({
     "reedes/vim-lexical",
     "dbmrq/vim-ditto",
     "reedes/vim-wheel",
-
-    -- papis/citations
-    {
-        "jghauser/papis.nvim",
-        dependencies = {
-            "kkharji/sqlite.lua",
-            "MunifTanjim/nui.nvim",
-            "nvim-telescope/telescope.nvim",
-            "hrsh7th/nvim-cmp",
-
-        },
-        config = function()
-            require("papis").setup({
-                enable_keymaps = true,
-                init_filetypes = { "markdown", "norg", "yaml", "typst" }
-                -- Configuration of the search module.
-            })
-        end,
-        keys = {
-            { "@@", "@<cmd>Papis search<cr>", mode = "i"},
-            { "gp", "<cmd>Papis at-cursor open-file<cr>", mode = "n"},
-            { "gn", "<cmd>Papis at-cursor open-note<cr>", mode = "n"},
-        },
-        ft = {"markdown", "latex"}
-    },
 
     -- org and more
     "dhruvasagar/vim-table-mode",
