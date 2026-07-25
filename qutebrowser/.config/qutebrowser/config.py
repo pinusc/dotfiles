@@ -116,6 +116,59 @@ if os.path.exists('/home/giusb/.local/share/colors'):
 
 c.colors.webpage.preferred_color_scheme = 'dark'
 
+# Load environment variables from .env file
+# Place this early in config.py before using any WALLABAG_* variables
+
+
+## WALLABAG .env setup
+import os
+from pathlib import Path
+
+# Set this to the path of your .env file relative to config.py
+# Example: ".env" for same directory, "../.env" for parent directory
+ENV_FILE_PATH = ".env"
+
+def load_env_file(env_path):
+    """Load environment variables from a .env file."""
+    try:
+        env_file = Path(env_path).resolve()
+        if not env_file.exists():
+            print(f"Warning: .env file not found at {env_file}")
+            return
+        
+        with open(env_file, 'r') as f:
+            for line in f:
+                line = line.strip()
+                # Skip empty lines and comments
+                if not line or line.startswith('#'):
+                    continue
+                
+                # Parse KEY=VALUE pairs
+                if '=' in line:
+                    key, value = line.split('=', 1)
+                    key = key.strip()
+                    value = value.strip()
+                    
+                    # Remove quotes if present
+                    if (value.startswith('"') and value.endswith('"')) or \
+                       (value.startswith("'") and value.endswith("'")):
+                        value = value[1:-1]
+                    
+                    # Set environment variable if not already set
+                    if key and key not in os.environ:
+                        os.environ[key] = value
+                        print(f"Loaded: {key}")
+    
+    except Exception as e:
+        print(f"Error loading .env file: {e}")
+
+# Get the directory containing config.py
+config_dir = Path(__file__).parent.resolve()
+full_env_path = config_dir / ENV_FILE_PATH
+
+# Load environment variables
+load_env_file(full_env_path)
+
 
 # Aliases for commands. The keys of the given dictionary are the
 # aliases, while the values are the commands they map to.
@@ -688,7 +741,8 @@ config.bind(',k', 'spawn -m kdeconnect-autoshare.sh {url}')
 config.bind(';k', 'hint links spawn -m kdeconnect-autoshare.sh {url}')
 config.bind(',a', ':open -tr http://archive.is/newest/{url}')
 config.bind(',A', ':open -tr http://web.archive.org/web/*/{url}')
-config.bind(',w', ':wallabag')
+config.bind(',w', ':spawn --userscript wallabag')
+config.bind(',pw', ':spawn --userscript wallabag --paywallskip')
 config.bind(',lb', "jseval --quiet -w main imdbu = $('.itemExternalLinks').children()[0].href; window.open('https://letterboxd.com/imdb/' + imdbu.substring(imdbu.lastIndexOf('/') + 1))")
 config.bind(',m', 'spawn qmpv {url}')
 config.bind(',r', 'spawn --userscript ~/.local/share/qutebrowser/userscripts/readability')
