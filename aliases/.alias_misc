@@ -594,3 +594,19 @@ Categories=Game;" > ~/.local/share/applications/"$name".desktop
 alias birdsound="mpv 'https://www.youtube.com/watch?v=aIHcLXpvYLk&t=40'"
 alias audiotest="speaker-test -t sine -l 1"
 alias ntfy="curl ntfy.sh/giusb2dot0 -d "
+
+alias screenshot-last-open="sxiv shots/*(om[1])"
+alias screenshot-last-drag="dragon-drop shots/*(om[1])"
+
+hyprland_list_keybindings() {
+    hyprctl binds -j | jq -r '.[] | {"64": "mod", "65": "mod+shift", "68": "mod+ctrl", "69": "mod+shift+ctrl", "72": "mod+alt"}[.modmask | tostring] + "+" + .key + " " + .dispatcher + " " + .arg'
+}
+
+transcribe() {
+    ffmpeg -loglevel quiet -i "$1" -f wav - | whisper-cli --print-progress -m ~/.local/share/whisper/ggml-large-v2.bin -l it -f - -otxt | tee /dev/stderr | copyclip
+}
+
+sioyek() {
+    __GLX_VENDOR_LIBRARY_NAME=mesa __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json MESA_LOADER_DRIVER_OVERRIDE=zink GALLIUM_DRIVER=zink LIBGL_KOPPER_DRI2=1 command sioyek "$@" &>/dev/null &|
+}
+alias vvp=sioyek
