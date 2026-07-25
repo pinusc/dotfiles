@@ -88,7 +88,7 @@ alias lt='ls -l --tree'
 alias ltg='ls -l --tree --git'
 
 if hash exa >&/dev/null; then
-    alias ls='exa --sort=name --icons'   
+    alias ls='exa --sort=name --icons auto'   
     alias lt='exa -T'
     alias lg='exa --long --git'
     alias ll='ls -lh --git'
